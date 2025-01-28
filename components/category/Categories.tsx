@@ -187,7 +187,7 @@ const Categories = ({ initialCategories, count }: { initialCategories: any, coun
                 <h4 className='font-bold text-lg md:text-xl lg:text-2xl'>{t('category')}</h4>
                 <button
                     onClick={() => setOpen(true)}
-                    className='px-5 py-2 bg-primary rounded-md text-white font-medium'
+                    className='px-5 py-2  rounded-md text-white font-medium'
                 >
                     <div className='flex gap-3 border-2 border-[#02161e] rounded-md px-2 py-1 bg-[#02161e] text-white'>
                         <PluseCircelIcon className='size-6 text-teal-500' />
@@ -272,7 +272,7 @@ const Categories = ({ initialCategories, count }: { initialCategories: any, coun
             <div className='flex items-center justify-center'> 
             <button
                     onClick={() => setOpen(true)}
-                    className='px-5 py-2 bg-primary rounded-md text-white font-medium'
+                    className='px-5 py-2 rounded-md text-white font-medium'
                 >
                     <div className='transform hover:scale-105 transition duration-300 ease-in-out '>
                         <AddPlusIcon className='size-6 text-teal-500 hover:bg-teal-900 hover:text-white transition-all  transform hover:scale-105 transition duration-300 ease-in-out' />

@@ -1,11 +1,13 @@
 "use client";
 import { useLocale, useTranslations } from "next-intl";
-import { chevleft,LoadingIcon } from "@/components/icons";
+// import { ChevronLeftIcon, ChevronRightIcon } from "@icons/material";
 import clsx from "clsx";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon,ChevronLeftIcon,ChevronRightIcon } from "@heroicons/react/24/outline";
+// import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { MdOutlineDownload } from "react-icons/md";
+import { chevleft,LoadingIcon } from "@/components/icons";
 
 interface PaginationProps {
   count: number;
@@ -235,9 +237,7 @@ const Pagination = ({
             }`}
             aria-label="Previous page"
           >
-                                <LoadingIcon className="animate-spin size-6" />
-            
-            {/* <chevleft className={clsx("w-5 h-5", { "rotate-180": locale === "ar" })} /> */}
+            <ChevronLeftIcon className={clsx("w-5 h-5", { "rotate-180": locale === "ar" })} />
           </button>
           <button 
             disabled={currentPage >= totalPages}
@@ -247,9 +247,7 @@ const Pagination = ({
             }`}
             aria-label="Next page"
           >
-                                <LoadingIcon className="animate-spin size-6" />
-            
-            {/* <ChevronRightIcon className={clsx("w-5 h-5", { "rotate-180": locale === "ar" })} /> */}
+            <ChevronRightIcon className={clsx("w-5 h-5", { "rotate-180": locale === "ar" })} />
           </button>
         </div>
         
