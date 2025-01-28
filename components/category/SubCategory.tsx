@@ -5,7 +5,7 @@ import React from 'react'
 import ImageApi from '../ImageApi'
 
 const SubCategory = async ({ categoryId, locale }: { categoryId: any, locale: string }) => {
-    const { data, error } = await fetchData(`/api/categories?parentId=${categoryId}&lang=${locale}`, {
+    const { data, error } = await fetchData(`/api/category?parentId=${categoryId}&lang=${locale}`, {
         cache: "no-cache"
     })
 

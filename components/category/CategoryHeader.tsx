@@ -48,7 +48,7 @@ const CategoryHeader = ({ category }: { category: any }) => {
                 formData.append('namear', fData.namear);
                 if (fData.parentId) formData.append("parentId", fData.parentId);
                 if (fData?.imageFile) formData.append('imageUrl', fData.imageFile[0]);
-                const { data } = await axios.put(`/api/categories/${category.id}`, formData, {
+                const { data } = await axios.put(`/api/category/${category.id}`, formData, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -76,9 +76,9 @@ const CategoryHeader = ({ category }: { category: any }) => {
                         <ImageApi
                             src={image ? image : category.imageUrl}
                             alt={category.name}
-                            className='size-full object-cover rounded-md'
-                            width={500}
-                            height={500}
+                            className='object-contain h-48 w-96 rounded-md'
+                            width={90}
+                            height={90}
                         />
                         <div className='absolute p-2'>
                             <div ref={btnRef} className='bg-white rounded-md p-1 cursor-pointer'>

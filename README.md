@@ -8,6 +8,9 @@ First, run the development server:
 npm run dev
 npm install 
 npm install chart.js react-chartjs-2
+npm i @mui/icons-material
+npm i react-icons
+npm install jspdf jspdf-autotable
 # or
 yarn dev
 # or

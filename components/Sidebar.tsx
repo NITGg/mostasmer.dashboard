@@ -39,7 +39,7 @@ const Sidebar = ({
             label: t('brands'),
             icon: <PetsIcon className={clsx('size-6',
                 { 'fill-white': pathname.includes('brands') },
-                { 'stroke-black': !pathname.includes('brands') },
+                { 'stroke-white': !pathname.includes('brands') },
             )} />,
             href: '/brands',
             role: 'normal'
@@ -48,7 +48,7 @@ const Sidebar = ({
         {
             label: t('category'),
             icon: <CategoryIcon className='size-6' />,
-            href: '/category',
+            href: '/brands',
             role: 'admin'
         },
         {
@@ -65,7 +65,7 @@ const Sidebar = ({
         },
         {
             label: t('ads'),
-            icon: <AdsIcon className={clsx('size-6 fill-black', { 'fill-white': pathname.includes('ads') })} />,
+            icon: <AdsIcon className={clsx('size-6 fill-white stroke-white', { 'fill-white': pathname.includes('ads') })} />,
             href: '/ads',
             role: 'admin'
         },
@@ -73,7 +73,7 @@ const Sidebar = ({
             label: t('Digitalcards'),
             icon: <ProductIcon className='size-6' />,
             href: '/digitalcards',
-            role: 'normal'
+            role: 'admin'
         },
         {
             label: t('aboutapp'),
@@ -84,7 +84,7 @@ const Sidebar = ({
 
         {
             label: t('onBoarding'),
-            icon: <OnBoardingIcon className={clsx('size-6 fill-black', { 'fill-white s': pathname.includes('on-boarding') })} />,
+            icon: <OnBoardingIcon className={clsx('size-6 fill-white stroke-wwhite', { 'fill-white s': pathname.includes('on-boarding') })} />,
             href: '/on-boarding',
             role: 'admin'
         },

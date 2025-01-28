@@ -26,7 +26,7 @@ const SelectParent = memo(({
     const handleSearch = async () => {
         if (keyword) {
             setloading(false)
-            const { data } = await axios.get(`/api/categories?fields=name,id&keyword=${keyword}&items=name&limit=2&lang=${locale}`)
+            const { data } = await axios.get(`/api/category?fields=name,id&keyword=${keyword}&items=name&limit=2&lang=${locale}`)
             setCate(c => [{ name: 'Top', id: null }, ...data.categories] as any)
         }
     }
