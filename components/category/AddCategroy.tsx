@@ -51,24 +51,28 @@ const PopupCategory: React.FC<PopupCategoryProps> = ({ setOpen, category, locale
                 const formData = new FormData();
                 formData.append('name', fData.name);
                 formData.append('namear', fData.namear);
-                formData.append('imageUrl', fData.imageFile[0])
+                formData.append('imageUrl', fData.imageFile[0]);
 
-                const { data } = await axios.post('/api/categories', formData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                const { data } = await axios.post(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/api/category`,
+                    formData,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data',
+                        }
                     }
-                });
-                dispatch(addCategory(data.category))
-
+                );
+                
+                dispatch(addCategory(data.category));
                 toast.success(t('success'));
                 URL.revokeObjectURL(image);
-
                 setLoading(false);
-                setOpen(false)
+                setOpen(false);
             } catch (error: any) {
                 setLoading(false);
                 console.error('Submit Error:', error);
-                toast.error(error.message);
+                toast.error(error?.response?.data?.message || 'Failed to add category');
             }
         }
     );
@@ -81,24 +85,29 @@ const PopupCategory: React.FC<PopupCategoryProps> = ({ setOpen, category, locale
                 formData.append('name', fData.name);
                 formData.append('namear', fData.namear);
                 if (fData.imageFile[0]) {
-                    formData.append('imageUrl', fData.imageFile[0])
+                    formData.append('imageUrl', fData.imageFile[0]);
                 }
-                const { data } = await axios.put(`/api/categories/${category?.id}`, formData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                dispatch(updateCategory(data.category))
 
+                const { data } = await axios.put(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/api/category/${category?.id}`,
+                    formData,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }
+                );
+                
+                dispatch(updateCategory(data.category));
                 toast.success(t('success'));
                 URL.revokeObjectURL(image);
-
                 setLoading(false);
-                setOpen(false)
+                setOpen(false);
             } catch (error: any) {
                 setLoading(false);
                 console.error('Submit Error:', error);
-                toast.error(error.message);
+                toast.error(error?.response?.data?.message || 'Failed to update category');
             }
         }
     );
