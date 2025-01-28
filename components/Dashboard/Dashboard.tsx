@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { 
     UsersIcon, 
@@ -10,81 +10,19 @@ import {
     ArrowTrendingUpIcon,
     ArrowTrendingDownIcon
 } from '@heroicons/react/24/outline'
-import { useAppContext } from '@/context/appContext'
-import LoadingSkeleton from '../ui/LoadingSkeleton'
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js'
-import { Line, Bar } from 'react-chartjs-2'
+import LoadingSkeleton from '@/components/ui/LoadingSkeleton'
+import { DashboardProps, DashboardCardStats } from '@/types/dashboard'
 
-// Register ChartJS components
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-)
-
-interface DashboardStats {
-    totalUsers: number
-    totalBrands: number
-    totalOffers: number
-    totalCoupons: number
-    totalCategories: number
-    recentActivity?: {
-        users: number[]
-        offers: number[]
-        dates: string[]
-    }
-    topCategories?: {
-        names: string[]
-        counts: number[]
-    }
-}
-
-const Dashboard = () => {
-    const [stats, setStats] = useState<DashboardStats>({
-        totalUsers: 0,
-        totalBrands: 0,
-        totalOffers: 0,
-        totalCoupons: 0,
-        totalCategories: 0
+const Dashboard: React.FC<DashboardProps> = ({ data }) => {
+    const [stats, setStats] = useState<DashboardCardStats>({
+        totalUsers: data.user?.length || 0,
+        totalBrands: data.supplier?.length || 0,
+        totalOffers: data.pro?.length || 0,
+        totalCoupons: data.coupon?.length || 0,
+        totalCategories: data.cate?.length || 0
     })
-    const [loading, setLoading] = useState(true)
-    const { token } = useAppContext()
+    const [loading, setLoading] = useState(false)
     const t = useTranslations('dashboard')
-
-    useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                const response = await fetch('/api/dashboard/stats', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-                const data = await response.json()
-                setStats(data)
-            } catch (error) {
-                console.error('Error fetching dashboard stats:', error)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        fetchStats()
-    }, [token])
 
     if (loading) {
         return <LoadingSkeleton />
@@ -96,7 +34,7 @@ const Dashboard = () => {
             value: stats.totalUsers,
             icon: UsersIcon,
             color: 'border-blue-500',
-            trend: 12, // Example trend percentage
+            trend: 12,
         },
         {
             title: t('totalBrands'),
@@ -128,39 +66,6 @@ const Dashboard = () => {
         }
     ]
 
-    const activityData = {
-        labels: stats.recentActivity?.dates || [],
-        datasets: [
-            {
-                label: 'Users',
-                data: stats.recentActivity?.users || [],
-                borderColor: 'rgb(59, 130, 246)',
-                tension: 0.4,
-            },
-            {
-                label: 'Offers',
-                data: stats.recentActivity?.offers || [],
-                borderColor: 'rgb(147, 51, 234)',
-                tension: 0.4,
-            }
-        ]
-    }
-
-    const categoryData = {
-        labels: stats.topCategories?.names || [],
-        datasets: [{
-            label: 'Popular Categories',
-            data: stats.topCategories?.counts || [],
-            backgroundColor: [
-                'rgba(59, 130, 246, 0.5)',
-                'rgba(147, 51, 234, 0.5)',
-                'rgba(234, 179, 8, 0.5)',
-                'rgba(239, 68, 68, 0.5)',
-                'rgba(34, 197, 94, 0.5)',
-            ],
-        }]
-    }
-
     return (
         <div className="p-6 space-y-6">
             <h2 className="text-2xl font-bold mb-6">{t('dashboardTitle')}</h2>
@@ -171,43 +76,19 @@ const Dashboard = () => {
                     <StatCard key={index} {...card} />
                 ))}
             </div>
-
-            {/* Charts Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-lg font-semibold mb-4">{t('recentActivity')}</h3>
-                    <Line data={activityData} options={{
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top' as const,
-                            }
-                        }
-                    }} />
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-lg font-semibold mb-4">{t('popularCategories')}</h3>
-                    <Bar data={categoryData} options={{
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        }
-                    }} />
-                </div>
-            </div>
         </div>
     )
 }
 
-const StatCard = ({ title, value, icon: Icon, color, trend }: {
-    title: string
-    value: number
-    icon: any
-    color: string
-    trend: number
-}) => {
+interface StatCardProps {
+    title: string;
+    value: number;
+    icon: React.ElementType;
+    color: string;
+    trend: number;
+}
+
+const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, color, trend }) => {
     return (
         <div className={`p-6 rounded-lg shadow-md bg-white border-l-4 ${color}`}>
             <div className="flex items-center justify-between">
