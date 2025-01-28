@@ -25,6 +25,8 @@ const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, 
     const [cateUpdate, setCateUpdate] = useState(null as any);
     const [loading, setLoading] = useState(false);
     const [totalRecords, setTotalRecords] = useState(count);
+    const [currentItems, setCurrentItems] = useState<number>(0);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
@@ -49,14 +51,11 @@ const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, 
         await fetchCategories(page, limit);
     };
 
-    // Fetch categories with pagination
-    const fetchCategories = async (page: number, limit: number) => {
+    // Add new function to fetch total count
+    const fetchTotalCount = async () => {
         try {
-            setLoading(true);
-            const skip = (page - 1) * limit;
-
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/api/category?lang=${locale}&limit=${limit}&skip=${skip}`,
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/category?lang=${locale}&limit=0&skip=0`,
                 {
                     cache: 'no-store',
                     headers: {
@@ -65,15 +64,44 @@ const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, 
                 }
             );
 
+            if (!response.ok) throw new Error('Failed to fetch total count');
+
+            const data = await response.json();
+            setTotalRecords(data.totalCount || data.categories?.length || 0);
+        } catch (error) {
+            console.error('Error fetching total count:', error);
+        }
+    };
+
+    // Modify fetchCategories to use the total count
+    const fetchCategories = async (page: number, limit: number) => {
+        try {
+            setLoading(true);
+            const skip = (page - 1) * limit;
+            
+            let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/category?lang=${locale}`;
+            
+            // Handle "All" case
+            if (limit === 0) {
+                url += '&limit=0&skip=0';
+            } else {
+                url += `&limit=${limit}&skip=${skip}`;
+            }
+
+            const response = await fetch(url, {
+                cache: 'no-store',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
             if (!response.ok) throw new Error('Failed to fetch categories');
 
             const data = await response.json();
             
-            // Get total count from initial count prop if not provided in API response
-            const totalCount = data.totalCount || count || 15; // Fallback to 15 if no count available
-            
+            // Update current items count
+            setCurrentItems(data.categories.length);
             dispatch(setcategories(data.categories));
-            setTotalRecords(totalCount);
         } catch (error) {
             console.error('Error fetching categories:', error);
             toast.error('Failed to fetch categories');
@@ -82,15 +110,41 @@ const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, 
         }
     };
 
-    // Initialize data on component mount
+    // Modify the initialization useEffect
     useEffect(() => {
-        // Set initial URL parameters if not present
-        if (!searchParams.has('page') || !searchParams.has('limit')) {
-            updatePaginationAndFetch(1, 10);
-        } else {
-            fetchCategories(currentPage, pageSize);
+        const initializeData = async () => {
+            setIsInitialLoading(true);
+            
+            // Set initial data
+            dispatch(setcategories(initialCategories));
+            setCurrentItems(initialCategories?.length || 0);
+
+            try {
+                // Fetch total count first
+                await fetchTotalCount();
+
+                // Then fetch paginated data
+                if (!searchParams.has('page') || !searchParams.has('limit')) {
+                    await updatePaginationAndFetch(1, 10);
+                } else {
+                    await fetchCategories(currentPage, pageSize);
+                }
+            } catch (error) {
+                console.error('Error initializing data:', error);
+            } finally {
+                setIsInitialLoading(false);
+            }
+        };
+
+        initializeData();
+    }, [locale]);
+
+    // Also fetch new total count when items are added/deleted
+    useEffect(() => {
+        if (!isInitialLoading) {
+            fetchTotalCount();
         }
-    }, [locale]); // Re-fetch when locale changes
+    }, [categories?.length]);
 
     // Handle page change
     const handlePageChange = (newPage: number) => {
@@ -202,10 +256,10 @@ const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, 
             </div>
 
             <Table
-                data={categories}
+                data={categories || initialCategories}
                 headers={tableHeaders}
                 count={totalRecords}
-                loading={loading}
+                loading={loading || isInitialLoading}
                 showDateFilter={false}
                 pageSize={pageSize}
                 currentPage={currentPage}
@@ -213,6 +267,8 @@ const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, 
                 onPageSizeChange={handlePageSizeChange}
                 showExport={true}
                 bgColor="#02161e"
+                currentItems={currentItems}
+                initialData={initialCategories}
             >
                 {renderTableRows()}
             </Table>

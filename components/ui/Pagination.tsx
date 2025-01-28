@@ -20,6 +20,7 @@ interface PaginationProps {
   bgColor?: 'white' | 'black' | '#02161e' | '#dfe2e8';
   data: any[];
   length: number;
+  isLoading?: boolean;
 }
 
 const Pagination = ({
@@ -34,7 +35,8 @@ const Pagination = ({
   showDateFilter = false,
   bgColor = '#02161e',
   data,
-  length
+  length,
+  isLoading = false,
 }: PaginationProps) => {
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<'pdf' | 'csv'>('pdf');
@@ -44,6 +46,7 @@ const Pagination = ({
   });
   const [isPageSizeOpen, setIsPageSizeOpen] = useState(false);
   const pageSizeRef = useRef<HTMLDivElement>(null);
+  const exportMenuRef = useRef<HTMLDivElement>(null);
 
   const t = useTranslations("pagination");
   const locale = useLocale();
@@ -51,11 +54,14 @@ const Pagination = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Handle clicking outside of the page size dropdown
+  // Handle clicking outside of both dropdowns
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (pageSizeRef.current && !pageSizeRef.current.contains(event.target as Node)) {
         setIsPageSizeOpen(false);
+      }
+      if (exportMenuRef.current && !exportMenuRef.current.contains(event.target as Node)) {
+        setIsExportOpen(false);
       }
     };
 
@@ -99,9 +105,26 @@ const Pagination = ({
     }
   };
 
-  const totalPages = Math.ceil(count / (limit || count));
-  const startRecord = ((currentPage - 1) * limit) + 1;
-  const endRecord = Math.min(startRecord + limit - 1, count);
+  const calculateRecords = () => {
+    if (limit === 0) { // When showing all records
+      return {
+        start: 1,
+        end: count,
+        total: count
+      };
+    }
+
+    const start = ((currentPage - 1) * limit) + 1;
+    const end = Math.min(currentPage * limit, count);
+    
+    return {
+      start: count > 0 ? start : 0,
+      end,
+      total: count
+    };
+  };
+
+  const { start, end, total } = calculateRecords();
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -110,7 +133,7 @@ const Pagination = ({
   };
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) {
+    if (currentPage < Math.ceil(total / (limit || total))) {
       onPageChange(currentPage + 1);
     }
   };
@@ -126,37 +149,29 @@ const Pagination = ({
           {showExport && onExport && (
             <>
               <span>{t('downloadas')}</span>
-              <div className="relative">
+              <div ref={exportMenuRef} className="relative">
                 <button
                   onClick={() => setIsExportOpen(!isExportOpen)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#ffffff] border-1  rounded-2xl hover:bg-teal-600 text-[#9c9c9c] hover:text-white"
+                  className="flex items-center gap-2 px-3 py-1 rounded border border-[#2ab09c] text-[#2ab09c] hover:bg-[#2ab09c]/10"
                 >
-                  {selectedFormat === 'pdf' ? t('pdfformat') : t('csvformat')}
-                  
-                  <ChevronDownIcon className="w-4 h-4 text-[#2ab09c]" />
+                  <MdOutlineDownload className="w-4 h-4" />
+                  {selectedFormat.toUpperCase()}
                 </button>
 
                 {isExportOpen && (
-                  <div className="absolute bottom-full left-0 mb-2 w-48 bg-white rounded-lg shadow-lg border z-50">
-                    <button
-                      onClick={() => handleExport('pdf')}
-                      className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-200 rounded-t-lg hover:text-teal-700"
-                    >
-                      {t('pdfformat')}
-                    </button>
-                    <button
-                      onClick={() => handleExport('csv')}
-                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-200 rounded-b-lg transition-colors duration-200 text-gray-700 hover:text-teal-700"
-                    >
-                      {t('csvformat')}
-                    </button>
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-50">
+                    {['pdf', 'csv'].map((format) => (
+                      <button
+                        key={format}
+                        onClick={() => handleExport(format as 'pdf' | 'csv')}
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg"
+                      >
+                        {format.toUpperCase()}
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>
-              <MdOutlineDownload 
-                onClick={() => handleExport(selectedFormat)}
-                className="bg-[#2ab09c] text-2xl rounded-full p-1 text-[#fff] cursor-pointer hover:bg-[#2ab09c] transition-colors  hover:border-white hover:border-2"
-              />
             </>
           )}
 
@@ -213,14 +228,16 @@ const Pagination = ({
           )}
         </div>
 
-        {/* Page info display */}
+        {/* Updated Page info display */}
         <div className="min-w-[100px] text-center">
-          {count > 0 ? (
-            <span>
-              {startRecord}-{endRecord} {t('of')} {count}
+          {isLoading ? (
+            <span className="text-sm">Loading...</span>
+          ) : total > 0 ? (
+            <span className="text-sm">
+              {start}-{end} {t('of')} {total}
             </span>
           ) : (
-            <span>0 {t('of')} 0</span>
+            <span className="text-sm">0 {t('of')} 0</span>
           )}
         </div>
 
@@ -237,10 +254,10 @@ const Pagination = ({
             <ChevronLeftIcon className={clsx("w-5 h-5", { "rotate-180": locale === "ar" })} />
           </button>
           <button 
-            disabled={currentPage >= totalPages}
+            disabled={currentPage >= Math.ceil(total / (limit || total))}
             onClick={handleNextPage}
             className={`p-1 rounded transition-colors duration-200 ${
-              currentPage >= totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/10'
+              currentPage >= Math.ceil(total / (limit || total)) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/10'
             }`}
             aria-label="Next page"
           >
@@ -248,10 +265,10 @@ const Pagination = ({
           </button>
         </div>
         
-        {/* Optional: Add page numbers display */}
+        {/* Current page display */}
         <div className="ml-2">
           <span className="text-sm">
-            {currentPage} / {totalPages}
+            {currentPage} / {Math.ceil(total / (limit || total))}
           </span>
         </div>
       </div>

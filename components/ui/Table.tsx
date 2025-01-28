@@ -40,6 +40,8 @@ interface TableProps {
   onDateFilter?: (startDate: string, endDate: string) => void;
   currentPage: number;
   showCount?: boolean;
+  currentItems?: number;
+  initialData?: any[];
 }
 
 const Table = ({
@@ -57,6 +59,8 @@ const Table = ({
   onExport,
   bgColor = 'white',
   onDateFilter,
+  currentItems,
+  initialData,
 }: TableProps) => {
   const t = useTranslations("Tablecomponent");
   const [filteredData, setFilteredData] = useState(data);
@@ -114,40 +118,63 @@ const Table = ({
       const tableType = getTableType();
       
       if (format === 'pdf') {
-        const doc = new jsPDF({
-          orientation: 'p',
-          unit: 'mm',
-          format: 'a4',
-        });
+        try {
+          const doc = new jsPDF({
+            orientation: 'p',
+            unit: 'mm',
+            format: 'a4',
+            putOnlyUsedFonts: true,
+            hotfixes: ["px_scaling"],
+          });
 
-        // Get visible headers and their text
-        const visibleHeaders = headers.map(header => t(header.name));
-        
-        // Format table data
-        const tableData = currentData.map((item: any) => {
-          return headers.map(header => item[header.name] || '');
-        });
+          // Set font and RTL for Arabic
+          if (locale === 'ar') {
+            doc.setR2L(false);
+            doc.setFont('NotoNaskhArabic-Regular', 'normal');
+          }
 
-        // Add table
-        doc.autoTable({
-          head: [visibleHeaders],
-          body: tableData,
-          startY: 25,
-          theme: 'grid',
-          styles: {
-            fontSize: 8,
-            cellPadding: 2,
-          },
-          headStyles: {
-            fillColor: [2, 22, 30],
-            textColor: [255, 255, 255],
-            fontSize: 8,
-            fontStyle: 'bold',
-          },
-        });
+          // Add title
+          doc.setFontSize(18);
+          const title = `${tableType.charAt(0).toUpperCase() + tableType.slice(1)} Export`;
+          doc.text(title, 105, 15, { align: 'center' });
 
-        // Save the PDF
-        doc.save(`${tableType}-${new Date().toISOString()}.pdf`);
+          // Filter out action columns and get visible headers
+          const visibleHeaders = headers
+            .filter(header => !header.name.toLowerCase().includes('action'))
+            .map(header => t(header.name));
+
+          // Generate table data
+          const tableData = currentData.map((item: any) => [
+            item.imageUrl || 'No image',
+            locale === 'ar' ? item.nameAr || item.name : item.name || item.nameEn
+          ]);
+
+          // Add table
+          doc.autoTable({
+            head: [visibleHeaders],
+            body: tableData,
+            startY: 25,
+            theme: 'grid',
+            styles: {
+              font: locale === 'ar' ? 'NotoNaskhArabic-Regular' : undefined,
+              fontSize: 10,
+              cellPadding: 5
+            },
+            columnStyles: {
+              0: { cellWidth: 80 },
+              1: { cellWidth: 'auto' }
+            },
+            margin: { top: 30, left: 20, right: 20 }
+          });
+
+          // Save PDF
+          const timestamp = new Date().toISOString().split('T')[0];
+          doc.save(`${tableType}-export-${timestamp}.pdf`);
+
+        } catch (pdfError) {
+          console.error('PDF generation error:', pdfError);
+          toast.error('Failed to generate PDF');
+        }
       } else if (format === 'csv') {
         // Generate CSV
         const visibleHeaders = headers
@@ -202,6 +229,10 @@ const Table = ({
       onPageSizeChange(newSize);
     }
   };
+
+  // Use initial data while loading
+  const displayData = loading ? (initialData || []) : (filteredData || data);
+  const displayCount = loading ? (initialData?.length || 0) : count;
 
   return (
     <div className="w-full mx-auto">
@@ -261,7 +292,7 @@ const Table = ({
       </div>
 
       <Pagination
-        count={count}
+        count={displayCount}
         limit={pageSize}
         setLimit={onPageSizeChange || (() => {})}
         currentPage={currentPage}
@@ -271,8 +302,9 @@ const Table = ({
         showExport={showExport}
         showDateFilter={showDateFilter}
         bgColor={bgColor}
-        data={data}
-        length={data?.length || 0}
+        data={displayData}
+        length={displayData?.length || 0}
+        isLoading={loading}
       />
 
     </div>

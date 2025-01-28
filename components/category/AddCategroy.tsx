@@ -15,6 +15,7 @@ import ImageApi from '../ImageApi';
 interface PopupCategoryProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     category?: any;
+    locale?: string;
 }
 
 const PopupCategory: React.FC<PopupCategoryProps> = ({ setOpen, category }) => {
@@ -36,6 +37,12 @@ const PopupCategory: React.FC<PopupCategoryProps> = ({ setOpen, category }) => {
     const t = useTranslations('category');
     const { token } = useAppContext();
     const dispatch = useAppDispatch();
+
+    interface PopupCategoryProps {
+        setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+        category?: any;
+        locale?: string;  // Make locale optional since it might not always be needed
+    }
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
