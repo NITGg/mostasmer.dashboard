@@ -9,6 +9,8 @@ import useClickOutside from '../hooks/useClickOutSide';
 import { deleteCookie } from '@/lib/deleteCookie';
 import { useAppContext } from '@/context/appContext';
 
+import { BellIcon, GlobeAltIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+
 const Navbar = ({ setOpen }: {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
@@ -33,10 +35,11 @@ const Navbar = ({ setOpen }: {
 
     return (
         <nav className='p-container flex justify-between lg:justify-end py-5 items-center'>
-            {/* <button onClick={() => { setOpen(o => !o) }} className='lg:hidden'>
+            <button onClick={() => { setOpen(o => !o) }} className='lg:hidden'>
                 <MenuIcon className='size-8' />
-            </button> */}
+            </button>
             <div ref={eleRef} className='relative'>
+            <div className='flex items-center space-x-4'>   
                 <button onClick={() => { setOpenAvater(!openAvatar) }}>
                     <Image
                         src={'/imgs/avatar.png'}
@@ -46,6 +49,10 @@ const Navbar = ({ setOpen }: {
                         className='size-11 rounded-full'
                     />
                 </button>
+                <BellIcon className="h-6 w-6 text-gray-500" />
+                <GlobeAltIcon className="h-6 w-6 text-gray-500" />
+                </div>
+
                 {
                     openAvatar &&
                     <div className={clsx(

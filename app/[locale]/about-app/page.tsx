@@ -9,7 +9,8 @@ const page = async () => {
 
     return (
         <div className='p-container space-y-10 pb-5'>
-            <AboutDataDetails aboutApp={data.aboutApp} />
+            {/* <AboutDataDetails aboutApp={data.aboutApp} /> */}
+            about us
         </div>
     )
 }

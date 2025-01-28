@@ -50,11 +50,12 @@ const Users = async ({ searchParams }: { searchParams: any }) => {
             <div className='space-y-10'>
                 <UserHeader type='users' />
                 <div className='bg-white border rounded-xl overflow-hidden'>
-                    <UsersRows
+                    {/* <UsersRows
                         loading={loading}
                         users={data?.users}
                         count={data?.count}
-                    />
+                    /> */}
+                    users
                 </div>
             </div>
         </div>

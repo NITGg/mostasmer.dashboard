@@ -1,4 +1,3 @@
-import Products from '@/components/products/Products'
 import { fetchData } from '@/lib/fetchData';
 import { cookies } from 'next/headers';
 import React from 'react'
@@ -30,7 +29,8 @@ const page = async ({ searchParams }: { searchParams: any }) => {
 
     return (
         <div>
-            <Products products={data?.products} count={data?.count} />
+        
+        Digital Cards
         </div>
     )
 }

@@ -8,7 +8,7 @@ const page = async () => {
     return (
         <><div className='p-container space-y-10 pb-5'>
             {/* <AdsHeader data={data} /> */}
-        </div><div>ads</div></>
+        </div><div>badges</div></>
     )
 }
 
