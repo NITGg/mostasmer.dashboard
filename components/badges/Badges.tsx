@@ -67,7 +67,7 @@ const Badges = ({
     try {
       setPending(true);
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_BASE_URL11}/api/badges/${deleteBadgeId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges/${deleteBadgeId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -96,7 +96,7 @@ const BadgePopupForm = ({
       if (formData.logoFile?.[0]) badgeData.logo = formData.logoFile[0];
 
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL11}/api/badges`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges`,
         badgeData,
         {
           headers: {
@@ -145,7 +145,7 @@ const BadgePopupForm = ({
       if (formData.logoFile?.[0]) badgeData.logo = formData.logoFile[0];
 
       await axios.put(
-        `${process.env.NEXT_PUBLIC_BASE_URL11}/api/badges/${badge.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges/${badge.id}`,
         badgeData,
         {
           headers: {

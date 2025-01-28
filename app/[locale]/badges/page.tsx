@@ -38,7 +38,7 @@ const Page = async ({ searchParams }: { searchParams: any }) => {
       // );
       const res = await fetch(
         // `${process.env.NEXT_PUBLIC_BASE_URL}/api/user-types`,
-        `${process.env.NEXT_PUBLIC_BASE_URL11}/api/badges`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges`,
         {
           method: "GET",
           credentials: "include",
