@@ -134,7 +134,20 @@ const Sidebar = ({
                 </div>
 
                 {/* Navigation Items */}
-                <div className='flex-1 overflow-y-auto sidebar-scrolling px-2'>
+                <div 
+                    className={`
+                        flex-1 overflow-y-auto px-2
+                        custom-scrollbar sidebar-scrolling
+                        [&::-webkit-scrollbar]:w-1
+                        [&::-webkit-scrollbar-track]:bg-[#003e35]
+                        [&::-webkit-scrollbar-track]:rounded-[2000px]
+                        [&::-webkit-scrollbar-track]:border-l
+                        [&::-webkit-scrollbar-track]:border-dotted
+                        [&::-webkit-scrollbar-thumb]:bg-[#3dbba8f0]
+                        [&::-webkit-scrollbar-thumb]:rounded-[2000px]
+                        hover:[&::-webkit-scrollbar-thumb]:bg-[#59be8f]
+                    `}
+                >
                     {items
                         .filter(item => item.role === 'normal' || (item.role === 'admin' && user.role === 'admin') || (item.role == 'supplier' && user.role == 'supplier'))
                         .map((item, index) => (

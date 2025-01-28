@@ -3,6 +3,7 @@ import { DashboardStats } from '@/types/dashboard'
 import { cookies } from 'next/headers'
 import React from 'react'
 
+
 const Home = async () => {
   const token = cookies().get('token')?.value
 

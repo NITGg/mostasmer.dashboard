@@ -90,21 +90,44 @@ input[type="number"]::-webkit-inner-spin-button {
     margin: 0;
 }
 
-.sidebar-scrolling::-webkit-scrollbar {
-    width: 5px;
-}
+@layer components {
+  /* Base scrollbar styles */
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-1;
+    transition-duration: 500ms;
+    animation-duration: 500ms;
+  }
 
-.sidebar-scrolling::-webkit-scrollbar-track {
-    background: transparent;
-}
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-[#003e35] rounded-[2000px] border-l border-dotted;
+  }
 
-.sidebar-scrolling::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-}
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-[#3dbba8f0] rounded-[2000px];
+  }
 
-.sidebar-scrolling::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+  .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    @apply bg-[#59be8f];
+  }
+
+  /* Sidebar specific scrollbar */
+  .sidebar-scrolling.custom-scrollbar::-webkit-scrollbar {
+    @apply w-1;
+    transition-duration: 500ms;
+    animation-duration: 500ms;
+  }
+
+  .sidebar-scrolling.custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-[#003e35] rounded-[2000px] border-l border-dotted;
+  }
+
+  .sidebar-scrolling.custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-[#3dbba8f0] rounded-[2000px];
+  }
+
+  .sidebar-scrolling.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    @apply bg-[#59be8f];
+  }
 }
 
 @media (max-width: 1024px) {
