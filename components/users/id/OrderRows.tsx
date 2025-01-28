@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { EyeIcon, LoadingIcon } from '@/components/icons';
-import Pagination from '@/components/Pagination';
+import Pagination from '@/components/ui/Pagination';
 import Status from '@/components/Status';
 import { Link } from '@/i18n/routing';
 

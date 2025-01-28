@@ -2,7 +2,7 @@
 import { EyeIcon, LoadingIcon, } from '../icons';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import Pagination from '../Pagination';
+import Pagination from '@/components/ui/Pagination';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import ImageApi from '../ImageApi';
