@@ -90,8 +90,9 @@ const OrderRows = ({ loading, orders, count }: { loading: boolean, orders: any, 
                 limit={limit}
                 setLimit={setLimit}
                 length={orders?.length}
-                count={count}
-            />
+                count={count} currentPage={0} onPageChange={function (page: number): void {
+                    throw new Error('Function not implemented.');
+                } } data={[]}            />
         </div>
     )
 }

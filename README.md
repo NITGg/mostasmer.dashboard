@@ -11,6 +11,11 @@ npm install chart.js react-chartjs-2
 npm i @mui/icons-material
 npm i react-icons
 npm install jspdf jspdf-autotable
+npm i --save-dev @types/pdfkit
+npm install pdfkit
+npm i @radix-ui/react-select
+npm i @radix-ui/react-switch
+
 # or
 yarn dev
 # or

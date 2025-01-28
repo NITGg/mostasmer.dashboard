@@ -1,6 +1,6 @@
 "use client";
 import { useTranslations, useLocale } from "next-intl";
-import React, { ReactNode, useState, useEffect } from "react";
+import React, { ReactNode, useState, useEffect, ReactElement } from "react";
 import Pagination from "./Pagination";
 import { LoadingIcon } from "../icons";
 import toast from 'react-hot-toast';
@@ -9,15 +9,25 @@ import 'jspdf-autotable';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
-import customFont from '../../public/fonts/NotoNaskhArabic-Regular.ttf';
+// Add this type declaration for jsPDF with autoTable
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: any) => jsPDF;
+  }
+}
 
 import 'jspdf-autotable';
 import '../NotoNaskhArabic-Regular-normal.js';
 
+// Add interface for child components
+interface TableRowProps {
+  data: any[];
+}
+
 interface TableProps {
   data: any[];
   headers: { name: string; className?: string }[];
-  children: React.ReactNode;
+  children: ReactElement<TableRowProps> | ReactElement<TableRowProps>[];
   count?: number;
   loading?: boolean;
   showDateFilter?: boolean;
@@ -29,6 +39,7 @@ interface TableProps {
   onExport?: (format: 'pdf' | 'csv') => void;
   onDateFilter?: (startDate: string, endDate: string) => void;
   currentPage: number;
+  showCount?: boolean;
 }
 
 const Table = ({
@@ -103,63 +114,40 @@ const Table = ({
       const tableType = getTableType();
       
       if (format === 'pdf') {
-        try {
-          const doc = new jsPDF({
-            orientation: 'p',
-            unit: 'mm',
-            format: 'a4',
-            putOnlyUsedFonts: true,
-            hotfixes: ["px_scaling"],
-          });
+        const doc = new jsPDF({
+          orientation: 'p',
+          unit: 'mm',
+          format: 'a4',
+        });
 
-          // Set font and RTL for Arabic
-          if (locale === 'ar') {
-            doc.setR2L(false);
-            doc.setFont('NotoNaskhArabic-Regular', 'normal');
-          }
+        // Get visible headers and their text
+        const visibleHeaders = headers.map(header => t(header.name));
+        
+        // Format table data
+        const tableData = currentData.map((item: any) => {
+          return headers.map(header => item[header.name] || '');
+        });
 
-          // Add title
-          doc.setFontSize(18);
-          const title = `${tableType.charAt(0).toUpperCase() + tableType.slice(1)} Export`;
-          doc.text(title, 105, 15, { align: 'center' });
+        // Add table
+        doc.autoTable({
+          head: [visibleHeaders],
+          body: tableData,
+          startY: 25,
+          theme: 'grid',
+          styles: {
+            fontSize: 8,
+            cellPadding: 2,
+          },
+          headStyles: {
+            fillColor: [2, 22, 30],
+            textColor: [255, 255, 255],
+            fontSize: 8,
+            fontStyle: 'bold',
+          },
+        });
 
-          // Filter out action columns and get visible headers
-          const visibleHeaders = headers
-            .filter(header => !header.name.toLowerCase().includes('action'))
-            .map(header => t(header.name));
-
-          // Generate table data
-          const tableData = currentData.map((item: any) => [
-            item.imageUrl || 'No image',
-            locale === 'ar' ? item.nameAr || item.name : item.name || item.nameEn
-          ]);
-
-          // Add table
-          doc.autoTable({
-            head: [visibleHeaders],
-            body: tableData,
-            startY: 25,
-            theme: 'grid',
-            styles: {
-              font: locale === 'ar' ? 'NotoNaskhArabic-Regular' : undefined,
-              fontSize: 10,
-              cellPadding: 5
-            },
-            columnStyles: {
-              0: { cellWidth: 80 },
-              1: { cellWidth: 'auto' }
-            },
-            margin: { top: 30, left: 20, right: 20 }
-          });
-
-          // Save PDF
-          const timestamp = new Date().toISOString().split('T')[0];
-          doc.save(`${tableType}-export-${timestamp}.pdf`);
-
-        } catch (pdfError) {
-          console.error('PDF generation error:', pdfError);
-          toast.error('Failed to generate PDF');
-        }
+        // Save the PDF
+        doc.save(`${tableType}-${new Date().toISOString()}.pdf`);
       } else if (format === 'csv') {
         // Generate CSV
         const visibleHeaders = headers
@@ -257,9 +245,11 @@ const Table = ({
                     </td>
                   </tr>
                 ) : (
-                  React.Children.map(children, child => {
-                    if (React.isValidElement(child)) {
-                      return React.cloneElement(child, { data: filteredData });
+                  React.Children.map(children, (child) => {
+                    if (React.isValidElement<TableRowProps>(child)) {
+                      return React.cloneElement(child, {
+                        data: filteredData,
+                      });
                     }
                     return child;
                   })
@@ -273,9 +263,9 @@ const Table = ({
       <Pagination
         count={count}
         limit={pageSize}
-        setLimit={handlePageSizeChange}
+        setLimit={onPageSizeChange || (() => {})}
         currentPage={currentPage}
-        onPageChange={handlePageChange}
+        onPageChange={onPageChange || (() => {})}
         onExport={showExport ? handleExport : undefined}
         onDateFilter={showDateFilter ? handleDateFilter : undefined}
         showExport={showExport}

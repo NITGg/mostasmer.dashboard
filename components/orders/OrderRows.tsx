@@ -2,7 +2,7 @@
 import { EyeIcon, LoadingIcon, } from '../icons';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import Pagination from '../Pagination';
+import Pagination from '@/components/ui/Pagination';
 import Status from '../Status';
 import { DateToText } from '@/lib/DateToText';
 import { Link } from '@/i18n/routing';
@@ -116,8 +116,9 @@ const OrderRows = ({ loading, orders, count }: { loading: boolean, orders: any, 
                 limit={limit}
                 setLimit={setLimit}
                 length={orders.length}
-                count={count}
-            />
+                count={count} currentPage={0} onPageChange={function (page: number): void {
+                    throw new Error('Function not implemented.');
+                } } data={[]}            />
         </div>
     )
 }

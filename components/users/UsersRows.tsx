@@ -107,8 +107,9 @@ const UsersRows = ({ loading, users, count }: { loading: boolean, users: any, co
                 limit={limit}
                 setLimit={setLimit}
                 length={users?.length}
-                count={count}
-            />
+                count={count} currentPage={0} onPageChange={function (page: number): void {
+                    throw new Error('Function not implemented.');
+                } } data={[]}            />
         </div>
     )
 }

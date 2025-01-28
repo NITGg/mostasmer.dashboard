@@ -14,7 +14,12 @@ import Table from '@/components/ui/Table'
 import { useSearchParams, usePathname, useRouter } from 'next/navigation'
 // import Table from '../Table?'
 
-const Categories = ({ initialCategories, count }: { initialCategories: any, count: any }) => {
+interface CategoriesProps {
+  categories: any[];  // Changed from initialCategories
+  count: number;
+}
+
+const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, count }) => {
     const [open, setOpen] = useState(false);
     const [openDelete, setOpenDelete] = useState(false as any);
     const [cateUpdate, setCateUpdate] = useState(null as any);
@@ -208,7 +213,6 @@ const Categories = ({ initialCategories, count }: { initialCategories: any, coun
                 onPageSizeChange={handlePageSizeChange}
                 showExport={true}
                 bgColor="#02161e"
-                showCount={false}
             >
                 {renderTableRows()}
             </Table>
