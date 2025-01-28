@@ -3,11 +3,9 @@ import { useLocale, useTranslations } from "next-intl";
 // import { ChevronLeftIcon, ChevronRightIcon } from "@icons/material";
 import clsx from "clsx";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { ChevronDownIcon,ChevronLeftIcon,ChevronRightIcon } from "@heroicons/react/24/outline";
-// import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { MdOutlineDownload } from "react-icons/md";
-import { chevleft,LoadingIcon } from "@/components/icons";
 
 interface PaginationProps {
   count: number;
@@ -45,6 +43,44 @@ const Pagination = ({
     to: ''
   });
   const [isPageSizeOpen, setIsPageSizeOpen] = useState(false);
+  const pageSizeRef = useRef<HTMLDivElement>(null);
+
+  const t = useTranslations("pagination");
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Handle clicking outside of the page size dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (pageSizeRef.current && !pageSizeRef.current.contains(event.target as Node)) {
+        setIsPageSizeOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handlePageSizeSelect = (size: number) => {
+    const params = new URLSearchParams(searchParams);
+    
+    if (size === 0) { // "All" option
+      params.set('limit', '0');
+      params.set('skip', '0');
+      params.set('page', '1');
+    } else {
+      params.set('limit', size.toString());
+      params.set('page', '1');
+    }
+    
+    router.push(`${pathname}?${params.toString()}`);
+    setLimit(size);
+    setIsPageSizeOpen(false);
+  };
 
   const handleExport = (format: 'pdf' | 'csv') => {
     setSelectedFormat(format);
@@ -63,55 +99,20 @@ const Pagination = ({
     }
   };
 
-  const t = useTranslations("pagination");
-  const locale = useLocale();
+  const totalPages = Math.ceil(count / (limit || count));
+  const startRecord = ((currentPage - 1) * limit) + 1;
+  const endRecord = Math.min(startRecord + limit - 1, count);
 
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { push } = useRouter();
-
-  // Get page and limit from URL or use defaults
-  const pageFromUrl = Number(searchParams.get("page")) || 1;
-  const limitFromUrl = Number(searchParams.get("limit")) || 10;
-
-  const updateUrlAndFetch = (page: number, newLimit?: number) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", page.toString());
-    if (newLimit) {
-      params.set("limit", newLimit.toString());
-    }
-    push(`${pathname}?${params.toString()}`);
-    
-    // Calculate skip based on page and limit
-    const skip = (page - 1) * (newLimit || limit);
-    onPageChange(page);
-  };
-
-  // Calculate pagination values
-  const totalPages = Math.ceil(count / limit);
-  const startRecord = count > 0 ? (currentPage - 1) * limit + 1 : 0;
-  const endRecord = Math.min(currentPage * limit, count);
-
-  // Handle previous page navigation
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      const newPage = currentPage - 1;
-      onPageChange(newPage);
+      onPageChange(currentPage - 1);
     }
   };
 
-  // Handle next page navigation
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      const newPage = currentPage + 1;
-      onPageChange(newPage);
+      onPageChange(currentPage + 1);
     }
-  };
-
-  // Handle page size selection
-  const handlePageSizeSelect = (newLimit: number) => {
-    setLimit(newLimit);
-    setIsPageSizeOpen(false);
   };
 
   return (
@@ -185,31 +186,27 @@ const Pagination = ({
       {/* Pagination Controls */}
       <div className="flex items-center gap-4 ml-auto">
         {/* Page size selector */}
-        <div className="flex gap-2 items-center font-semibold">
-
-          <span>{t('rowPerPage')}</span>
-        </div>
-        <div className="relative">
+        <div ref={pageSizeRef} className="relative">
           <button
             onClick={() => setIsPageSizeOpen(!isPageSizeOpen)}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#ffffff] border-1 rounded-2xl hover:bg-teal-600 text-[#9c9c9c] hover:text-white ml-4"
+            className="flex items-center space-x-1 px-3 py-1 rounded border border-[#2ab09c] text-[#2ab09c] hover:bg-[#2ab09c]/10"
           >
-            {limit === count ? 'All' : limit}
+            {limit === 0 ? 'All' : limit}
             <ChevronDownIcon className="w-4 h-4 text-[#2ab09c] transform rotate-180" />
           </button>
 
           {isPageSizeOpen && (
             <div className="absolute bottom-full left-0 mb-2 w-48 bg-white rounded-lg shadow-lg border z-50">
-              {[10, 20, 50, count].map((size) => (
+              {[10, 20, 50, 0].map((size) => (
                 <button
                   key={size}
                   onClick={() => handlePageSizeSelect(size)}
                   className={`w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-200 hover:text-teal-700 ${
                     size === 10 ? 'rounded-t-lg' : 
-                    size === count ? 'rounded-b-lg' : ''
+                    size === 0 ? 'rounded-b-lg' : ''
                   } ${limit === size ? 'bg-gray-100' : ''}`}
                 >
-                  {size === count ? 'All' : size}
+                  {size === 0 ? 'All' : size}
                 </button>
               ))}
             </div>
