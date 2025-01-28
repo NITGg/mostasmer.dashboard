@@ -23,7 +23,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js'
-// import { Line, Bar } from 'react-chartjs-2'
+import { Line, Bar } from 'react-chartjs-2'
 
 // Register ChartJS components
 ChartJS.register(

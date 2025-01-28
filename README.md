@@ -6,6 +6,8 @@ First, run the development server:
 
 ```bash
 npm run dev
+npm install 
+npm install chart.js react-chartjs-2
 # or
 yarn dev
 # or
