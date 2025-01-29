@@ -143,72 +143,31 @@ const Table = ({
             .filter(header => !header.name.toLowerCase().includes('action'))
             .map(header => t(header.name));
 
-          // Generate table data with clickable image links
-          const tableData = currentData.map((item: any) => {
-            return headers
-              .filter(header => !header.name.toLowerCase().includes('action'))
-              .map(header => {
-                if (header.name.toLowerCase().includes('image')) {
-                  return {
-                    content: 'Click to view image',
-                    url: item.imageUrl,
-                    styles: {
-                      halign: 'center',
-                      textColor: [0, 0, 255],
-                      fontStyle: 'bold',
-                      fontSize: 10
-                    }
-                  };
-                }
-                return locale === 'ar' ? item.nameAr || item.name : item.name || item.nameEn;
-              });
-          });
+          // Generate table data
+          const tableData = currentData.map((item: any) => [
+            item.imageUrl || 'No image',
+            locale === 'ar' ? item.nameAr || item.name : item.name || item.nameEn
+          ]);
 
-          // Add table with clickable links
+          // Add table
           doc.autoTable({
             head: [visibleHeaders],
             body: tableData,
+            startY: 25,
             theme: 'grid',
             styles: {
               font: locale === 'ar' ? 'NotoNaskhArabic-Regular' : undefined,
               fontSize: 10,
-              cellPadding: 5,
-              valign: 'middle'
+              cellPadding: 5
             },
             columnStyles: {
-              0: { cellWidth: 40 }, // Image column
-              1: { cellWidth: 'auto' }  // Name column
+              0: { cellWidth: 80 },
+              1: { cellWidth: 'auto' }
             },
-            margin: { top: 30, left: 20, right: 20 },
-            didParseCell: function(data) {
-              // Handle clickable cells
-              if (data.cell.raw && typeof data.cell.raw === 'object' && data.cell.raw.url) {
-                const cell = data.cell;
-                cell.text = cell.raw.content;
-                cell.link = { 
-                  url: cell.raw.url,
-                  target: '_blank'  // Opens in new tab
-                };
-                Object.assign(cell.styles, cell.raw.styles);
-              }
-            },
-            willDrawCell: function(data) {
-              // Add underline to clickable cells
-              if (data.cell.link) {
-                const doc = data.doc;
-                const cell = data.cell;
-                doc.setDrawColor(0, 0, 255);
-                doc.line(
-                  cell.x, 
-                  cell.y + cell.height - 1,
-                  cell.x + cell.width,
-                  cell.y + cell.height - 1
-                );
-              }
-            }
+            margin: { top: 30, left: 20, right: 20 }
           });
 
-          // Save PDF with timestamp
+          // Save PDF
           const timestamp = new Date().toISOString().split('T')[0];
           doc.save(`${tableType}-export-${timestamp}.pdf`);
 
@@ -245,6 +204,7 @@ const Table = ({
       toast.error(`Failed to generate ${format.toUpperCase()}`);
     }
   };
+
 
   // Update URL and trigger data fetch when page changes
   const handlePageChange = (newPage: number) => {
