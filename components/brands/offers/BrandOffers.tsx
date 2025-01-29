@@ -294,6 +294,7 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                     <PlusIcon className="w-5 h-5" />
                 </button>
             </div>
+            {/* maz was here */}
 
             {/* Add/Edit Dialog */}
             <Dialog open={isAddDialogOpen} onOpenChange={handleCloseDialog}>
