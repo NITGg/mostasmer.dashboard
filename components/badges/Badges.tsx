@@ -92,130 +92,128 @@ const Badges = ({
 
   return (
     <>
-      <div className="flex flex-col gap-5">
-        <div className="flex gap-10 items-center w-full p-4">
-          <div className="w-[80%] h-44 flex gap-4">
-            {(badgesRedux?.length ? badgesRedux : badges)
-              ?.slice(0, 3)
-              .map((badge: Badge) => (
-                <div
-                  key={badge.id}
-                  className="bg-[#F0F2F5] overflow-hidden shadow-[0px_4px_10px_-4px_#00000040] w-48 h-44 rounded-2xl flex flex-col"
-                >
-                  <div className="h-2/3 w-full p-2 relative flex flex-col justify-end text-white">
-                    <Image
-                      src={badge.cover}
-                      alt={badge.name}
-                      quality={100}
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                    <h1 className="capitalize text-xl font-bold z-10">
-                      {badge.name}
-                    </h1>
-                    <h3 className="capitalize text-lg font-bold z-10">
-                      total purchase
-                    </h3>
-                    <p className="text-lg z-10">{badge.minAmount} SR</p>
-                  </div>
-                  <div className="h-1/3 px-2 flex justify-between items-center">
-                    <span className="capitalize text-lg font-bold">points</span>
-                    <span className="text-lg font-bold">{badge.points}%</span>
-                  </div>
+      <div className="flex gap-10 items-center w-full p-4">
+        <div className="w-[80%] h-44 flex gap-4">
+          {(badgesRedux?.length ? badgesRedux : badges)
+            ?.slice(0, 3)
+            .map((badge: Badge) => (
+              <div
+                key={badge.id}
+                className="bg-[#F0F2F5] overflow-hidden shadow-[0px_4px_10px_-4px_#00000040] w-48 h-44 rounded-2xl flex flex-col"
+              >
+                <div className="h-2/3 w-full p-2 relative flex flex-col justify-end text-white">
+                  <Image
+                    src={badge.cover}
+                    alt={badge.name}
+                    quality={100}
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                  <h1 className="capitalize text-xl font-bold z-10">
+                    {badge.name}
+                  </h1>
+                  <h3 className="capitalize text-lg font-bold z-10">
+                    total purchase
+                  </h3>
+                  <p className="text-lg z-10">{badge.minAmount} SR</p>
                 </div>
-              ))}
-            {/* {badges.length > 0 && (
+                <div className="h-1/3 px-2 flex justify-between items-center">
+                  <span className="capitalize text-lg font-bold">points</span>
+                  <span className="text-lg font-bold">{badge.points}%</span>
+                </div>
+              </div>
+            ))}
+          {/* {badges.length > 0 && (
               <BadgesSwiper
                 badges={badgesRedux?.length ? badgesRedux : badges}
               />
             )} */}
-          </div>
-          <div className="bg-[#F0F2F5] grid place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-1/5 h-44 rounded-2xl">
-            <button
-              onClick={() => setOpenForm(true)}
-              className="p-1 bg-primary rounded-md text-white font-medium"
-            >
-              <Plus className="size-6" />
-            </button>
-          </div>
         </div>
-
-        <Table
-          data={badgesRedux?.length ? badgesRedux : badges}
-          headers={headers}
-          count={count}
-          loading={loading}
-          bgColor="#dfe2e8"
-          currentPage={currentPage}
-          pageSize={pageSize}
-          onPageChange={handlePageChange}
-          showCount={true}
-          currentItems={(badgesRedux?.length || badges?.length) || 0}
-        >
-          {(badgesRedux?.length ? badgesRedux : badges)?.map(
-            (badge: Badge, index) => (
-              <tr
-                key={badge.id}
-                className="group odd:bg-white even:bg-[#F0F2F5] border-b"
-              >
-                <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                <td scope="row" className="px-6 py-4">
-                  <div className="w-7 h-7 p-1 rounded-full group-even:bg-white justify-items-center content-center">
-                    <ImageApi
-                      src={badge.logo}
-                      alt={badge.name + " logo"}
-                      height={150}
-                      width={150}
-                      priority
-                      className="object-scale-down"
-                    />
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{badge.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{badge.points}%</td>
-                <td className="px-6 py-4 whitespace-nowrap">{badge?.users}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {badge?.validFrom ? DateToText(badge?.validFrom) : "--"}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {badge?.validTo ? DateToText(badge.validTo) : "--"}
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex justify-center">
-                    <div className="flex gap-2 items-center">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setUpdateBadge(badge);
-                          setOpenForm(true);
-                        }}
-                      >
-                        <EyeIcon className="size-6 text-primary" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setOpenDelete(true);
-                          setDeleteBadgeId(badge.id);
-                        }}
-                      >
-                        <DeleteIcon className="size-6 text-primary" />
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            )
-          )}
-        </Table>
-
-        <BadgePopupForm
-          openForm={openForm}
-          setOpenForm={setOpenForm}
-          badge={updateBadge}
-          setBadge={setUpdateBadge}
-        />
+        <div className="bg-[#F0F2F5] grid place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-1/5 h-44 rounded-2xl">
+          <button
+            onClick={() => setOpenForm(true)}
+            className="p-1 bg-primary rounded-md text-white font-medium"
+          >
+            <Plus className="size-6" />
+          </button>
+        </div>
       </div>
+
+      <Table
+        data={badgesRedux?.length ? badgesRedux : badges}
+        headers={headers}
+        count={count}
+        loading={loading}
+        bgColor="#dfe2e8"
+        currentPage={currentPage}
+        pageSize={pageSize}
+        onPageChange={handlePageChange}
+        showCount={true}
+        currentItems={(badgesRedux?.length || badges?.length) || 0}
+      >
+        {(badgesRedux?.length ? badgesRedux : badges)?.map(
+          (badge: Badge, index) => (
+            <tr
+              key={badge.id}
+              className="group odd:bg-white even:bg-[#F0F2F5] border-b"
+            >
+              <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+              <td scope="row" className="px-6 py-4">
+                <div className="w-7 h-7 p-1 rounded-full group-even:bg-white justify-items-center content-center">
+                  <ImageApi
+                    src={badge.logo}
+                    alt={badge.name + " logo"}
+                    height={150}
+                    width={150}
+                    priority
+                    className="object-scale-down"
+                  />
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">{badge.name}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{badge.points}%</td>
+              <td className="px-6 py-4 whitespace-nowrap">{badge?.users}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {badge?.validFrom ? DateToText(badge?.validFrom) : "--"}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {badge?.validTo ? DateToText(badge.validTo) : "--"}
+              </td>
+              <td className="px-6 py-4">
+                <div className="flex justify-center">
+                  <div className="flex gap-2 items-center">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setUpdateBadge(badge);
+                        setOpenForm(true);
+                      }}
+                    >
+                      <EyeIcon className="size-6 text-primary" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setOpenDelete(true);
+                        setDeleteBadgeId(badge.id);
+                      }}
+                    >
+                      <DeleteIcon className="size-6 text-primary" />
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          )
+        )}
+      </Table>
+
+      <BadgePopupForm
+        openForm={openForm}
+        setOpenForm={setOpenForm}
+        badge={updateBadge}
+        setBadge={setUpdateBadge}
+      />
 
       <Dialog open={openDelete} onOpenChange={setOpenDelete}>
         <DialogContent>

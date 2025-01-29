@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 const Layout = ({ children }: { children: ReactNode }) => {
-  return <div className="w-full">{children}</div>;
+  return <>{children}</>;
 };
 
 export default Layout;
