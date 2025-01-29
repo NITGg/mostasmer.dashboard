@@ -58,7 +58,7 @@ const Sidebar = ({
             role: 'supplier'
         },
         {
-            label: t('Badges'),
+            label: t('badges'),
             icon: <AnimateIcon className='size-6' />,
             href: '/badges',
             role: 'admin'

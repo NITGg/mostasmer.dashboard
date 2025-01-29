@@ -37,19 +37,15 @@ const Page = async ({ searchParams }: { searchParams: any }) => {
   const { data, error } = await fetchDashboard(token as string);
 
   return (
-    <div className="p-container">
-      <div className="space-y-10">
-        <div className="rounded-xl py-5">
-          {error && <p>{error}</p>}
-          {!error && (
-            <Badges
-              loading={loading}
-              badges={data?.badges}
-              count={data?.badges.length}
-            />
-          )}
-        </div>
-      </div>
+    <div className="p-container space-y-10 py-3">
+      {error && <p>{error}</p>}
+      {!error && (
+        <Badges
+          loading={loading}
+          badges={data?.badges}
+          count={data?.badges.length}
+        />
+      )}
     </div>
   );
 };
