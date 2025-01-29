@@ -139,7 +139,7 @@ const Pagination = ({
   };
 
   return (
-    <div className={`px-4 py-3 flex items-center justify-between rounded-b-xl text-xs ${
+    <div className={`w-full px-4 py-3 flex flex-wrap items-center justify-between rounded-b-xl text-xs ${
       bgColor === '#02161e' ? 'bg-[#02161e] text-white' : 
       'bg-[#dfe2e8] text-gray-600'
     }`}>

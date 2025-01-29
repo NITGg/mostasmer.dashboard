@@ -39,7 +39,7 @@ const Sidebar = ({
             label: t('brands'),
             icon: <PetsIcon className={clsx('size-6',
                 { 'fill-white': pathname.includes('brands') },
-                { 'stroke-white': !pathname.includes('brands') },
+                { 'stroke-black': !pathname.includes('brands') },
             )} />,
             href: '/brands',
             role: 'normal'
@@ -65,7 +65,7 @@ const Sidebar = ({
         },
         {
             label: t('ads'),
-            icon: <AdsIcon className={clsx('size-6 fill-white stroke-white', { 'fill-white': pathname.includes('ads') })} />,
+            icon: <AdsIcon className={clsx('size-6 fill-black', { 'fill-white': pathname.includes('ads') })} />,
             href: '/ads',
             role: 'admin'
         },
@@ -73,7 +73,7 @@ const Sidebar = ({
             label: t('Digitalcards'),
             icon: <ProductIcon className='size-6' />,
             href: '/digitalcards',
-            role: 'admin'
+            role: 'normal'
         },
         {
             label: t('aboutapp'),
@@ -84,7 +84,7 @@ const Sidebar = ({
 
         {
             label: t('onBoarding'),
-            icon: <OnBoardingIcon className={clsx('size-6 fill-white stroke-wwhite', { 'fill-white s': pathname.includes('on-boarding') })} />,
+            icon: <OnBoardingIcon className={clsx('size-6 fill-black', { 'fill-white s': pathname.includes('on-boarding') })} />,
             href: '/on-boarding',
             role: 'admin'
         },
@@ -112,8 +112,10 @@ const Sidebar = ({
     const eleRef = useClickOutside(() => { setOpen(false) }, open)
 
     return (
-        <div className='lg:w-72'>
-            <div ref={eleRef} className={`w-64 lg:w-72 bg-[#001529] h-lvh max-h-lvh fixed top-0 max-md:z-50 flex flex-col ${open ? locale == 'en' ? 'rtl' : "ar-ltr" : locale == 'en' ? "ltr" : "ar-rtl"}`}>
+        <div className='lg:w-72 flex-shrink-0'>
+            <div ref={eleRef} className={`w-64 lg:w-72 bg-[#001529] h-lvh max-h-lvh fixed top-0 z-[9999] flex flex-col ${
+                open ? locale == 'en' ? 'rtl' : "ar-ltr" : locale == 'en' ? "ltr" : "ar-rtl"
+            }`}>
                 {/* Logo Section */}
                 <div className='p-4'>
                     <Link href={`/`}>

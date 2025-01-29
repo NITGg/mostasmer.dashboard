@@ -143,31 +143,72 @@ const Table = ({
             .filter(header => !header.name.toLowerCase().includes('action'))
             .map(header => t(header.name));
 
-          // Generate table data
-          const tableData = currentData.map((item: any) => [
-            item.imageUrl || 'No image',
-            locale === 'ar' ? item.nameAr || item.name : item.name || item.nameEn
-          ]);
+          // Generate table data with clickable image links
+          const tableData = currentData.map((item: any) => {
+            return headers
+              .filter(header => !header.name.toLowerCase().includes('action'))
+              .map(header => {
+                if (header.name.toLowerCase().includes('image')) {
+                  return {
+                    content: 'Click to view image',
+                    url: item.imageUrl,
+                    styles: {
+                      halign: 'center',
+                      textColor: [0, 0, 255],
+                      fontStyle: 'bold',
+                      fontSize: 10
+                    }
+                  };
+                }
+                return locale === 'ar' ? item.nameAr || item.name : item.name || item.nameEn;
+              });
+          });
 
-          // Add table
+          // Add table with clickable links
           doc.autoTable({
             head: [visibleHeaders],
             body: tableData,
-            startY: 25,
             theme: 'grid',
             styles: {
               font: locale === 'ar' ? 'NotoNaskhArabic-Regular' : undefined,
               fontSize: 10,
-              cellPadding: 5
+              cellPadding: 5,
+              valign: 'middle'
             },
             columnStyles: {
-              0: { cellWidth: 80 },
-              1: { cellWidth: 'auto' }
+              0: { cellWidth: 40 }, // Image column
+              1: { cellWidth: 'auto' }  // Name column
             },
-            margin: { top: 30, left: 20, right: 20 }
+            margin: { top: 30, left: 20, right: 20 },
+            didParseCell: function(data) {
+              // Handle clickable cells
+              if (data.cell.raw && typeof data.cell.raw === 'object' && data.cell.raw.url) {
+                const cell = data.cell;
+                cell.text = cell.raw.content;
+                cell.link = { 
+                  url: cell.raw.url,
+                  target: '_blank'  // Opens in new tab
+                };
+                Object.assign(cell.styles, cell.raw.styles);
+              }
+            },
+            willDrawCell: function(data) {
+              // Add underline to clickable cells
+              if (data.cell.link) {
+                const doc = data.doc;
+                const cell = data.cell;
+                doc.setDrawColor(0, 0, 255);
+                doc.line(
+                  cell.x, 
+                  cell.y + cell.height - 1,
+                  cell.x + cell.width,
+                  cell.y + cell.height - 1
+                );
+              }
+            }
           });
 
-          // Save PDF
+          // Save PDF with timestamp
           const timestamp = new Date().toISOString().split('T')[0];
           doc.save(`${tableType}-export-${timestamp}.pdf`);
 
@@ -236,7 +277,7 @@ const Table = ({
 
   return (
     <div className="w-full mx-auto">
-      <div className="rounded-t-xl overflow-auto max-h-[calc(100vh-350px)] border border-gray-200 bg-white">
+      <div className="rounded-t-xl overflow-auto max-h-[calc(100vh-200px)] border border-gray-200 bg-white">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead className={`text-xs uppercase sticky top-0 z-50 ${
             bgColor === '#02161e' ? 'text-white bg-[#02161e]' : 
@@ -291,22 +332,23 @@ const Table = ({
         </table>
       </div>
 
-      <Pagination
-        count={displayCount}
-        limit={pageSize}
-        setLimit={onPageSizeChange || (() => {})}
-        currentPage={currentPage}
-        onPageChange={onPageChange || (() => {})}
-        onExport={showExport ? handleExport : undefined}
-        onDateFilter={showDateFilter ? handleDateFilter : undefined}
-        showExport={showExport}
-        showDateFilter={showDateFilter}
-        bgColor={bgColor}
-        data={displayData}
-        length={displayData?.length || 0}
-        isLoading={loading}
-      />
-
+      <div className="sticky bottom-0 w-full">
+        <Pagination
+          count={displayCount}
+          limit={pageSize}
+          setLimit={onPageSizeChange || (() => {})}
+          currentPage={currentPage}
+          onPageChange={onPageChange || (() => {})}
+          onExport={showExport ? handleExport : undefined}
+          onDateFilter={showDateFilter ? handleDateFilter : undefined}
+          showExport={showExport}
+          showDateFilter={showDateFilter}
+          bgColor={bgColor}
+          data={displayData}
+          length={displayData?.length || 0}
+          isLoading={loading}
+        />
+      </div>
     </div>
   );
 };
