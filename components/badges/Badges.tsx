@@ -91,7 +91,8 @@ const Badges = ({
   };
 
   return (
-    <div className="flex-1 min-w-0 p-6 ml-72">
+    <div className="flex-1 min-w-0 ">
+    {/* <div className="flex-1 min-w-0 p-6 ml-72"> */}
       <div className="space-y-6 max-w-full">
         <div className="flex justify-between items-center">
           <h4 className="font-bold text-lg md:text-xl lg:text-2xl">{t("badges")}</h4>
