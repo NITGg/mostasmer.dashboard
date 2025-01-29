@@ -20,6 +20,7 @@ const AddOnBoarding = ({ handleClose, board }: { handleClose: any, board?: any }
     const [image, setImage] = useState('');
     const { token } = useAppContext();
     const dispatch = useAppDispatch();
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const input = document.getElementById('product-id-input-file');
@@ -33,57 +34,72 @@ const AddOnBoarding = ({ handleClose, board }: { handleClose: any, board?: any }
             btn?.removeEventListener('click', handleClickInput);
         };
     }, []);
-    const onSubmit = handleSubmit(
-        async (fData) => {
-            try {
-                setLoading(true);
-                const formData = new FormData();
-                formData.append('title', fData.title);
-                formData.append('content', fData.content);
-                formData.append('imageUrl', fData.imageFile[0]);
-                const { data } = await axios.post('/api/on-boarding', formData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                console.log(data);
-                dispatch(addOnBoarding(data.onBoarding))
-                handleClose();
+    const onSubmit = handleSubmit(async (formData) => {
+        try {
+            setLoading(true);
+            
+            const myHeaders = new Headers();
+            myHeaders.append('Authorization', `Bearer ${token}`);
+
+            const formdata = new FormData();
+            
+            // Add file if exists
+            const file = fileInputRef.current?.files?.[0];
+            if (file) {
+                formdata.append('imageUrl', file, '[PROXY]');
             }
-            catch (err: any) {
-                setLoading(false);
-                console.error(err);
-                toast.error(err?.response?.data?.message || 'There is an Error')
-            }
-        }
-    );
-    const handleUpdate = handleSubmit(
-        async (fData) => {
-            try {
-                setLoading(true);
-                const formData = new FormData();
-                if (fData.title) formData.append('title', fData.title);
-                if (fData.content) formData.append('content', fData.content);
-                formData.append('imageUrl', fData.imageFile[0]);
-                const { data } = await axios.put(`/api/on-boarding/${board.id}`, formData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+            
+            formdata.append('title', formData.title);
+            formdata.append('content', formData.content);
+
+            if (board) {
+                // Edit existing onboarding
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/on-boarding/${board.id}`, {
+                    method: 'PUT',
+                    headers: myHeaders,
+                    body: formdata,
+                    redirect: 'follow'
                 });
 
-                console.log(data);
-                dispatch(updateOnBoarding(data.onBoarding))
-                handleClose();
+                const textResult = await response.text();
+                const jsonData = JSON.parse(textResult);
+
+                if (jsonData.onBoarding) {
+                    dispatch(updateOnBoarding(jsonData.onBoarding));
+                    toast.success('OnBoarding updated successfully');
+                    handleClose();
+                } else {
+                    throw new Error('Invalid response format');
+                }
+            } else {
+                // Add new onboarding
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/on-boarding`, {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: formdata,
+                    redirect: 'follow'
+                });
+
+                const textResult = await response.text();
+                const jsonData = JSON.parse(textResult);
+
+                if (jsonData.onBoarding) {
+                    dispatch(addOnBoarding(jsonData.onBoarding));
+                    toast.success('OnBoarding added successfully');
+                    handleClose();
+                } else {
+                    throw new Error('Invalid response format');
+                }
             }
-            catch (err: any) {
-                setLoading(false);
-                console.error('Submit Error:', err);
-                toast.error(err.message);
-            }
+        } catch (error: any) {
+            console.error('Submit Error:', error);
+            toast.error(error.message || 'Failed to save onboarding');
+        } finally {
+            setLoading(false);
         }
-    );
+    });
     return (
-        <form className='block' onSubmit={board ? handleUpdate : onSubmit}>
+        <form className='block' onSubmit={onSubmit}>
             <div className='space-y-5'>
                 <div className=''>
                     <input
@@ -100,6 +116,7 @@ const AddOnBoarding = ({ handleClose, board }: { handleClose: any, board?: any }
                         })}
                         id="product-id-input-file"
                         className="hidden"
+                        ref={fileInputRef}
                     />
                     <>
                         {image ?
@@ -150,7 +167,7 @@ const AddOnBoarding = ({ handleClose, board }: { handleClose: any, board?: any }
                         })}
                         type="text"
                         className="border py-3 px-2 w-full outline-none"
-                        placeholder={t('name')}
+                        placeholder={t('titlePlaceholder')}
                     />
                     <ErrorMsg message={errors?.title?.message as string} />
                 </div>
@@ -160,7 +177,7 @@ const AddOnBoarding = ({ handleClose, board }: { handleClose: any, board?: any }
                             value: board?.content
                         })}
                         className="border py-3 px-2 w-full outline-none h-20"
-                        placeholder={t('content')}
+                        placeholder={t('contentPlaceholder')}
                     />
                     <ErrorMsg message={errors?.description?.message as string} />
                 </div>
@@ -168,7 +185,7 @@ const AddOnBoarding = ({ handleClose, board }: { handleClose: any, board?: any }
                     <button
                         // disabled={loading} 
                         className='w-full py-2 rounded-md border-2 border-primary hover:bg-primary hover:text-white duration-200 flex justify-center'>
-                        {loading ? <LoadingIcon className='w-6 h-6 animate-spin hover:stroke-white' /> : t('btn')}
+                        {loading ? <LoadingIcon className='w-6 h-6 animate-spin hover:stroke-white' /> : t('addButton')}
                     </button>
                 </div>
             </div>
