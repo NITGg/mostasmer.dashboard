@@ -17,11 +17,9 @@ const FAQsDetails = ({ faqs = [] }: { faqs?: { id: number; question: string; ans
     return (
         <div className="space-y-5">
             {faqsData.length > 0 ? (
-                faqsData
-                    .filter((aq) => aq && aq.id) // ✅ Ensure each FAQ object is valid
-                    .map((aq) => (
-                        <FaqCard key={aq.id} id={aq.id} que={aq.question} ans={aq.answer} />
-                    ))
+                faqsData.map((aq: { id: number; question: string; answer: string }) => (
+                    <FaqCard key={aq.id} id={aq.id} que={aq.question} ans={aq.answer} />
+                ))
             ) : (
                 <p className="text-center text-gray-500">No FAQs available.</p>
             )}
