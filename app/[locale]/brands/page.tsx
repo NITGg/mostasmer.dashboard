@@ -1,21 +1,52 @@
-import FAQsDetails from '@/components/faqs/FAQsDetails'
-import FAQTitle from '@/components/faqs/FAQTitle'
-import { fetchData } from '@/lib/fetchData'
+import Brands from '@/components/brands/Brands';
+import Products from '@/components/products/Products'
 import React from 'react'
+import { Brand } from '@/components/brands/Brands';
 
-const page = async () => {
-    const { data, error, loading } = await fetchData('/api/faqs', { cache: "no-store" })
-    if (loading) return <div>Loading...</div>
+interface BrandApiResponse {
+    brands: Brand[];
+    count: number;
+}
+
+const Page = async ({ searchParams }: { searchParams: any }) => {
+    let loading = false;
+    const fetchData = async (): Promise<{ data: BrandApiResponse | null, error: string | null }> => {
+        try {
+            loading = true
+            const queryParams = new URLSearchParams({
+                // fields: "id,name,images=url-id",
+                // limit: searchParams.limit ?? '10',
+                items: 'fullname,phone,email',
+                parent: 'null'
+            });
+            if (searchParams.skip) queryParams.append("skip", searchParams.skip);
+            if (searchParams.keyword) queryParams.append("keyword", searchParams.keyword);
+            const res = await fetch(`${process.env.BASE_URL}/api/brand?${queryParams.toString()}`, {
+                method: "GET",
+                credentials: "include",
+                cache: "no-cache"
+            })
+            if (!res.ok) {
+                return { data: null, error: await res.text() }
+            }
+            const data = await res.json();
+            return { data: data, error: null }
+        } catch (error: any) {
+            return { data: null, error: error?.message }
+        } finally {
+            loading = false
+        }
+    }
+    const { data, error } = await fetchData();
+
     return (
-        <div className='p-container space-y-10 pb-5'>
-            <div className='space-y-5 lg:space-y-10'>
-                <FAQTitle />
-                <div>
-                    <FAQsDetails faqs={data.faqs} />
-                </div>
-            </div>
+        <div>
+            <Brands 
+                initialBrands={data?.brands} 
+                initialCount={data?.count} 
+            />
         </div>
     )
 }
 
-export default page
+export default Page

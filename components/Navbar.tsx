@@ -56,7 +56,7 @@ const Navbar = ({ setOpen }: {
                 {
                     openAvatar &&
                     <div className={clsx(
-                        'absolute w-72 bg-white shadow-lg z-50 rounded-lg',
+                        'absolute w-72 bg-white shadow-lg z-[9999] rounded-lg ',
                         { 'right-0': locale == 'en' },
                         { 'left-0': locale == 'ar' },
                     )}>
