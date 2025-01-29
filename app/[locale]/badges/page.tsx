@@ -1,15 +1,57 @@
-import AdsHeader from '@/components/ads/AdsHeader'
-import { fetchData } from '@/lib/fetchData'
-import React from 'react'
+import Badges from "@/components/badges/Badges";
+import { cookies } from "next/headers";
+import React from "react";
 
-const page = async () => {
-    const { data, error, loading } = await fetchData('/api/ads?fields=id,imageUrl,route,title,duration,startDate,endDate,pro', { cache: "no-store" })
+const Page = async ({ searchParams }: { searchParams: any }) => {
+  const token = cookies().get("token")?.value;
+  let loading: boolean = false;
 
-    return (
-        <><div className='p-container space-y-10 pb-5'>
-            {/* <AdsHeader data={data} /> */}
-        </div><div>badges</div></>
-    )
-}
+  const fetchDashboard = async (token: string) => {
+    try {
+      loading = true;
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-export default page
+      if (!res.ok) {
+        return { data: null, error: await res.text() };
+      }
+      const data = await res.json();
+
+      return { data: data, error: null };
+    } catch (error: any) {
+      console.log(error.message);
+
+      return { data: null, error: error?.message };
+    } finally {
+      loading = false;
+    }
+  };
+  const { data, error } = await fetchDashboard(token as string);
+
+  return (
+    <div className="p-container">
+      <div className="space-y-10">
+        <div className="rounded-xl py-5">
+          {error && <p>{error}</p>}
+          {!error && (
+            <Badges
+              loading={loading}
+              badges={data?.badges}
+              count={data?.badges.length}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Page;

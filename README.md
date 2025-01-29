@@ -5,6 +5,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 First, run the development server:
 
 ```bash
+test
 npm run dev
 npm install 
 npm install chart.js react-chartjs-2
