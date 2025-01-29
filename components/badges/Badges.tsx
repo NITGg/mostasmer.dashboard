@@ -23,6 +23,7 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import ImageApi from "../ImageApi";
+import Image from "next/image";
 
 const Badges = ({
   loading,
@@ -36,7 +37,7 @@ const Badges = ({
   const t = useTranslations("badges");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-  
+
   const headers = [
     { name: "id" },
     { name: "logo" },
@@ -47,7 +48,7 @@ const Badges = ({
     { name: "validTo" },
     { name: "action", className: "text-center" },
   ];
-  
+
   const [openForm, setOpenForm] = useState<boolean>(false);
   const [updateBadge, setUpdateBadge] = useState<Badge | undefined>(undefined);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -92,9 +93,52 @@ const Badges = ({
   return (
     <>
       <div className="flex flex-col gap-5">
-        {/* Badges display section remains the same */}
         <div className="flex gap-10 items-center w-full p-4">
-          {/* ... existing badges display code ... */}
+          <div className="w-[80%] h-44 flex gap-4">
+            {(badgesRedux?.length ? badgesRedux : badges)
+              ?.slice(0, 3)
+              .map((badge: Badge) => (
+                <div
+                  key={badge.id}
+                  className="bg-[#F0F2F5] overflow-hidden shadow-[0px_4px_10px_-4px_#00000040] w-48 h-44 rounded-2xl flex flex-col"
+                >
+                  <div className="h-2/3 w-full p-2 relative flex flex-col justify-end text-white">
+                    <Image
+                      src={badge.cover}
+                      alt={badge.name}
+                      quality={100}
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <h1 className="capitalize text-xl font-bold z-10">
+                      {badge.name}
+                    </h1>
+                    <h3 className="capitalize text-lg font-bold z-10">
+                      total purchase
+                    </h3>
+                    <p className="text-lg z-10">{badge.minAmount} SR</p>
+                  </div>
+                  <div className="h-1/3 px-2 flex justify-between items-center">
+                    <span className="capitalize text-lg font-bold">points</span>
+                    <span className="text-lg font-bold">{badge.points}%</span>
+                  </div>
+                </div>
+              ))}
+            {/* {badges.length > 0 && (
+              <BadgesSwiper
+                badges={badgesRedux?.length ? badgesRedux : badges}
+              />
+            )} */}
+          </div>
+          <div className="bg-[#F0F2F5] grid place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-1/5 h-44 rounded-2xl">
+            <button
+              onClick={() => setOpenForm(true)}
+              className="p-1 bg-primary rounded-md text-white font-medium"
+            >
+              <Plus className="size-6" />
+            </button>
+          </div>
         </div>
 
         <Table
@@ -102,7 +146,7 @@ const Badges = ({
           headers={headers}
           count={count}
           loading={loading}
-          bgColor="#02161e"
+          bgColor="#dfe2e8"
           currentPage={currentPage}
           pageSize={pageSize}
           onPageChange={handlePageChange}
