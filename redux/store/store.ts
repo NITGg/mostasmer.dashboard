@@ -1,20 +1,23 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { dashboardReducer } from '../reducers/dashboard';
-import { usersReducer } from '../reducers/usersReducer';
-import { suppliersReducer } from '../reducers/suppliersReducer';
-import { productsSlice } from '../reducers/productsReducer';
-import { categoriesSlice } from '../reducers/categoriesReducer';
-import { imagesSlice } from '../reducers/ImageGallary';
-import { articlesSlice } from '../reducers/articlesReducer';
-import { faqsSlice } from '../reducers/faqsReducer';
-import { contactsReducer } from '../reducers/contactReducer';
-import { aboutDataSlice } from '../reducers/aboutAppReducer';
-import { translateReducer } from '../reducers/translateReducer';
-import { couponsSlice } from '../reducers/couponReducer';
-import { petsSlice } from '../reducers/petsReducer';
-import { speciesSlice } from '../reducers/speciesReducer';
-import { onboardingSlice } from '../reducers/onBoardsReducer';
-import { adsSlice } from '../reducers/ads';
+import { configureStore } from "@reduxjs/toolkit";
+import { dashboardReducer } from "../reducers/dashboard";
+import { usersReducer } from "../reducers/usersReducer";
+import { suppliersReducer } from "../reducers/suppliersReducer";
+import { productsSlice } from "../reducers/productsReducer";
+import { categoriesSlice } from "../reducers/categoriesReducer";
+import { imagesSlice } from "../reducers/ImageGallary";
+import { articlesSlice } from "../reducers/articlesReducer";
+import { faqsSlice } from "../reducers/faqsReducer";
+import { contactsReducer } from "../reducers/contactReducer";
+import { aboutDataSlice } from "../reducers/aboutAppReducer";
+import { translateReducer } from "../reducers/translateReducer";
+import { couponsSlice } from "../reducers/couponReducer";
+import { petsSlice } from "../reducers/petsReducer";
+import { speciesSlice } from "../reducers/speciesReducer";
+import { onboardingSlice } from "../reducers/onBoardsReducer";
+import { adsSlice } from "../reducers/ads";
+// import { userTypesSlice } from "../";
+// import { digitalCardsSlice } from "../reducers/digitalCardsReducers";
+import { badgesSlice } from "../reducers/badgesReducer";
 
 export const store = configureStore({
     reducer: {
@@ -33,17 +36,20 @@ export const store = configureStore({
         pets: petsSlice.reducer,
         species: speciesSlice.reducer,
         onboarding: onboardingSlice.reducer,
-        ads: adsSlice.reducer
+        ads: adsSlice.reducer,
+        // userTypes: userTypesSlice.reducer,
+        // digitalCards: digitalCardsSlice.reducer,
+        badges: badgesSlice.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
                 // Ignore these action types
-                ignoredActions: ['categories/setLastDoc', 'products/setLastDoc'],
+                ignoredActions: ["categories/setLastDoc", "products/setLastDoc"],
                 // Ignore these field paths in all actions
-                ignoredActionPaths: ['meta.arg', 'payload.timestamp'],
+                ignoredActionPaths: ["meta.arg", "payload.timestamp"],
                 // Ignore these paths in the state
-                ignoredPaths: ['category.lastDoc', 'products.lastDoc'],
+                ignoredPaths: ["category.lastDoc", "products.lastDoc"],
             },
         }),
 });
