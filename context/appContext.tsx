@@ -23,7 +23,7 @@ const ProvdierApp = ({ children, user, token }: { children: React.ReactNode, use
                     open={open}
                     setOpen={setOpen}
                 />
-                <div className='flex-1 w-full bg-[#f0f2f5]'>
+                <div className='flex-1 w-full lg:w-[calc(100% - 18rem)] bg-[#f0f2f5]'>
                     <Navbar setOpen={setOpen} />
                     {children}
                 </div>
