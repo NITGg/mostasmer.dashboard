@@ -12,6 +12,7 @@ import {
 } from '@heroicons/react/24/outline'
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton'
 import { DashboardProps, DashboardCardStats } from '@/types/dashboard'
+import { Line, Bar } from 'react-chartjs-2'
 
 const Dashboard: React.FC<DashboardProps> = ({ data }) => {
     const [stats, setStats] = useState<DashboardCardStats>({
