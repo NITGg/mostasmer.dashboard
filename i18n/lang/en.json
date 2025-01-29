@@ -231,7 +231,13 @@
         "pointsBack": "Points Back",
         "users": "Users",
         "validFrom": "Valid From",
-        "validTo": "Valid To"
+        "validTo": "Valid To",
+        "type": "Type",
+        "noData": "No Data yet",
+        "color": "Color",
+        "buyAmount": "Buy Amount",
+        "ratio": "Ratio",
+        "createdAt": "Created at"
     },
     "pagination": {
         "showing": "Showing",
@@ -786,5 +792,31 @@
         "invalidDate": "Invalid date format.",
         "edit": "Edit",
         "add": "Add"
+    },
+    "userTypes": {
+        "title": "User Types",
+        "userType": "User Type",
+        "color": "Color",
+        "buyAmount": "Buy Amount",
+        "ratio": "Ratio",
+        "addTitle": "Add new user type",
+        "updateTitle": "Update user type",
+        "add": "Add",
+        "cancel": "Cancel",
+        "edit": "Edit",
+        "success": "Successfully add new user type!!",
+        "successUpdate": "Successfully update user type!!",
+        "successDelete": "Successfully delete user type!!",
+        "deleteType": "Delete user type",
+        "deleteMessage": "Do you want to delete this user type?",
+        "delete": "Delete",
+        "badge": "Badge",
+        "badgeIsUsed": "badge is used in another user type",
+        "UserTypeIsRequired": "User type is required.",
+        "buyAmountIsRequired": "Buy amount is required.",
+        "ratioIsRequired": "Ratio is required.",
+        "GreaterThanZero": "Value must be greater than 0.",
+        "badgeIsRequired": "Badge is required.",
+        "sr": "SR"
     }
 }

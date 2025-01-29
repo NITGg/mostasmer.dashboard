@@ -462,7 +462,13 @@
         "pointsBack": "النقاط المستردة",
         "users": "المستخدمون",
         "validFrom": "صالح من",
-        "validTo": "صالح إلى"
+        "validTo": "صالح إلى",
+        "type": "النوع",
+        "noData": "لا توجد بيانات بعد",
+        "color": "اللون",
+        "buyAmount": "مبلغ الشراء",
+        "ratio": "النسبة",
+        "createdAt": "تاريخ الإنشاء"
     },
     "pagination": {
         "showing": "عرض",
@@ -580,5 +586,30 @@
         "invalidDate": "تنسيق التاريخ غير صالح.",
         "edit": "تعديل",
         "add": "إضافة"
+    },
+    "userTypes": {
+        "title": "أنواع المستخدمين",
+        "userType": "نوع المستخدم",
+        "color": "اللون",
+        "buyAmount": "مبلغ الشراء",
+        "ratio": "النسبة",
+        "addTitle": "إضافة نوع مستخدم جديد",
+        "updateTitle": "تحديث نوع المستخدم",
+        "add": "إضافة",
+        "cancel": "إلغاء",
+        "edit": "تعديل",
+        "success": "تم إضافة نوع المستخدم الجديد بنجاح!!",
+        "successUpdate": "تم تحديث نوع المستخدم بنجاح!!",
+        "successDelete": "تم حذف نوع المستخدم بنجاح!!",
+        "deleteType": "حذف نوع المستخدم",
+        "deleteMessage": "هل ترغب في حذف هذا النوع من المستخدم؟",
+        "delete": "حذف",
+        "badge": "شارة",
+        "UserTypeIsRequired": "نوع المستخدم مطلوب.",
+        "buyAmountIsRequired": "مبلغ الشراء مطلوب.",
+        "ratioIsRequired": "النسبة مطلوبة.",
+        "selectBadges": "اختر شارة",
+        "badgeIsRequired": "الشارة مطلوبة.",
+        "sr": "ريال"
     }
 }

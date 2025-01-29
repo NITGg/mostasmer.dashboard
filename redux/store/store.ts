@@ -15,7 +15,7 @@ import { petsSlice } from "../reducers/petsReducer";
 import { speciesSlice } from "../reducers/speciesReducer";
 import { onboardingSlice } from "../reducers/onBoardsReducer";
 import { adsSlice } from "../reducers/ads";
-// import { userTypesSlice } from "../";
+import { userTypesSlice } from "../reducers/userTypesReducer";
 // import { digitalCardsSlice } from "../reducers/digitalCardsReducers";
 import { badgesSlice } from "../reducers/badgesReducer";
 
@@ -37,7 +37,7 @@ export const store = configureStore({
         species: speciesSlice.reducer,
         onboarding: onboardingSlice.reducer,
         ads: adsSlice.reducer,
-        // userTypes: userTypesSlice.reducer,
+        userTypes: userTypesSlice.reducer,
         // digitalCards: digitalCardsSlice.reducer,
         badges: badgesSlice.reducer
     },
