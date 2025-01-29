@@ -278,7 +278,7 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                 onPageChange={handlePageChange}
                 onPageSizeChange={handlePageSizeChange}
                 showExport={true}
-                bgColor="#02161e"
+                bgColor="#dfe2e8"
                 // currentItems={currentItems}
                 initialData={offers}
             >
