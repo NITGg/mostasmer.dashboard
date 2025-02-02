@@ -1,6 +1,5 @@
 import { LoadingIcon } from "@/components/icons";
 import DeleteUser from "@/components/users/id/DeleteUser";
-import Orders from "@/components/users/id/Orders";
 import UserDetails from "@/components/users/id/UserDetails";
 import { fetchData } from "@/lib/fetchData";
 import { cookies } from "next/headers";
@@ -47,7 +46,6 @@ const Users = async ({
           walletHistory={walletHistory?.data}
         />
       )}
-      <Orders searchParams={searchParams} />
       {user.data && (
         <div className="flex justify-end">
           <DeleteUser userId={user.data} />
