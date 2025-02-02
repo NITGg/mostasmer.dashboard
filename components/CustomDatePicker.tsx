@@ -45,7 +45,7 @@ const CustomDatePicker = ({
   };
 
   return (
-    <div className="grid items-center grid-cols-[1fr_2.5fr] w-full h-min">
+    <div className="grid items-center grid-cols-[1fr_2.5fr] max-md:grid-cols-1 w-full h-min">
       <label className="text-nowrap" htmlFor={`${fieldForm}Id`}>
         {label}:
       </label>

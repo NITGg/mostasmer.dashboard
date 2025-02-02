@@ -1,117 +1,202 @@
-'use client'
-import { EyeIcon, LoadingIcon, } from '../icons';
-import { useTranslations } from 'next-intl';
-import { useState } from 'react';
-import Pagination from '@/components/ui/Pagination';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import ImageApi from '../ImageApi';
+"use client";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import ImageApi from "../ImageApi";
+import { EyeIcon } from "lucide-react";
+import { DeleteIcon, LoadingIcon, PluseCircelIcon } from "../icons";
+import {
+  deleteUser,
+  Role,
+  setUsers,
+  User,
+} from "@/redux/reducers/usersReducer";
+import toast from "react-hot-toast";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { useAppContext } from "@/context/appContext";
+import AddUserForm from "./AddUserForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import axios from "axios";
+import Table from "../ui/Table";
 
-const UsersRows = ({ loading, users, count }: { loading: boolean, users: any, count: any }) => {
-    const [limit, setLimit] = useState(10)
-    const t = useTranslations('user')
-    const startIndex = 0;
-    const endIndex = startIndex + limit;
-    const pathname = usePathname();
+const UsersRows = ({
+  loading,
+  users,
+  count,
+}: {
+  loading: boolean;
+  users: User[];
+  count: any;
+}) => {
+  const t = useTranslations("user");
+  const pathname = usePathname();
 
-    return (
-        <div>
-            <div className=' overflow-auto w-[calc(100vw-42px)] md:w-full h-[calc(100vh-250px)]'>
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 sticky ">
-                    <thead className="text-xs text-gray-700 uppercase bg-white-50 table-header-group ">
-                        <tr>
-                            <th scope="col" className="px-6 py-5 uppercase sticky top-0 z-50 bg-gray-100">
-                                {t('table.image')}
-                            </th>
-                            <th scope="col" className="px-6 py-5 uppercase sticky top-0 z-50 bg-gray-100">
-                                {t('table.name')}
-                            </th>
-                            <th scope="col" className="px-6 py-5 uppercase sticky top-0 z-50 bg-gray-100">
-                                {t('table.email')}
-                            </th>
-                            <th scope="col" className="px-6 py-5 uppercase sticky top-0 z-50 bg-gray-100">
-                                {t('table.phone')}
-                            </th>
-                            <th scope="col" className="px-6 py-5 uppercase sticky top-0 z-50 bg-gray-100 text-center">
-                                {t('table.action')}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            loading ?
-                                <tr className="odd:bg-white even:bg-primary/5">
-                                    <td colSpan={4} scope="row" className="px-6 py-4">
-                                        <div className='w-full flex justify-center'>
-                                            <LoadingIcon className='animate-spin size-6' />
-                                        </div>
-                                    </td>
-                                </tr>
-                                :
-                                <>
-                                    {
-                                        !(users?.length) ?
-                                            <tr className="odd:bg-white even:bg-primary/5 border-b">
-                                                <td colSpan={5} scope="row" className="px-6 py-4 text-center font-bold">
-                                                    {t('notfoundUser')}
-                                                </td>
-                                            </tr>
-                                            :
-                                            users
-                                                .slice(startIndex, endIndex)
-                                                .map((item: any, i: any) => (
-                                                    <tr key={i} className="odd:bg-white even:bg-primary/5 border-b">
-                                                        <td scope="row" className="px-6 py-4">
-                                                            <div className='size-16'>
-                                                                <ImageApi
-                                                                    src={item.imageUrl ?? '/imgs/notfound.png'}
-                                                                    alt="Avatar"
-                                                                    className='size-full rounded-full object-cover border-2'
-                                                                    width={200}
-                                                                    height={200}
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
-                                                            {item.fullname}
-                                                        </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
-                                                            {item.email}
-                                                        </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
-                                                            {item.phone}
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <div className='flex justify-center'>
-                                                                <div className='flex gap-2 items-center'>
-                                                                    <Link href={`${pathname}/${item.id}`}>
-                                                                        <div className='odd:hover:bg-purple-50 odd:focus:bg-purple-100 even:hover:bg-white evne:focus:bg-white py-2 px-5 rounded-md w-fit duration-200'>
-                                                                            <EyeIcon className='fill-purple-500 size-8' />
-                                                                        </div>
-                                                                    </Link>
-                                                                    <div>
-                                                                        {/* <BlockUser userId={item.id} block={item?.isBlock} /> */}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                ))
-                                    }
-                                </>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <Pagination
-                limit={limit}
-                setLimit={setLimit}
-                length={users?.length}
-                count={count} currentPage={0} onPageChange={function (page: number): void {
-                    throw new Error('Function not implemented.');
-                } } data={[]}            />
-        </div>
-    )
-}
+  const headers = [
+    { name: "image" },
+    { name: "fullName" },
+    { name: "email" },
+    { name: "mobile" },
+    { name: "type" },
+    { name: "action", className: "text-center" },
+  ];
+
+  const { token } = useAppContext();
+  const [addUser, setAddUser] = useState<boolean>(false);
+  const [deleteUserId, setDeleteUserId] = useState<User | null>(null);
+  const [pending, setPending] = useState<boolean>(false);
+  const [openDeleteUser, setOpenDeleteUser] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const usersRedux = useAppSelector((state) => state.users.users);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setUsers(users));
+  }, []);
+
+  const handleDelete = async () => {
+    if (!deleteUserId) return;
+    try {
+      setPending(true);
+      await axios.delete(`/api/user/${deleteUserId.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      dispatch(deleteUser(deleteUserId.id));
+      setOpenDeleteUser(false);
+      toast.success(t("successDelete"));
+      setPending(false);
+    } catch (error: any) {
+      setPending(false);
+      setOpenDeleteUser(false);
+      console.error(error);
+      toast.error(error?.response?.data?.message || "There is an Error");
+    }
+  };
+  
+  const currentUsers = usersRedux.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+
+  return (
+    <div className="flex flex-col gap-6 ">
+      <div className="flex justify-between items-center">
+        <h1>{t("users")}</h1>
+        <button
+          onClick={() => {
+            setAddUser(!addUser);
+          }}
+          className="px-5 py-2 bg-primary rounded-md text-white font-medium"
+        >
+          <div className="flex gap-3">
+            <PluseCircelIcon className="size-6" />
+            <div className="flex-1">{t("add")}</div>
+          </div>
+        </button>
+      </div>
+      <Dialog open={openDeleteUser} onOpenChange={setOpenDeleteUser}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("delete")}</DialogTitle>
+            <DialogDescription>{t("deleteMessage")}</DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setOpenDeleteUser(false);
+                setDeleteUserId(null);
+              }}
+              className="px-3 py-2 rounded-md border"
+            >
+              {t("cancel")}
+            </button>
+            <button
+              onClick={handleDelete}
+              className="px-3 py-2 rounded-md bg-red-500 text-white"
+              disabled={pending}
+            >
+              {pending ? (
+                <LoadingIcon className="size-5 animate-spin" />
+              ) : (
+                t("delete")
+              )}
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      {!addUser && (
+        <Table
+          loading={loading}
+          data={users}
+          count={usersRedux.length}
+          headers={headers}
+          showDateFilter={false}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={(page) => setCurrentPage(page)}
+          onPageSizeChange={(size) => setPageSize(size)}
+        >
+          {currentUsers.map((user: User) => (
+            <tr
+              key={user.id}
+              className="odd:bg-white even:bg-[#F0F2F5] border-b"
+            >
+              <td scope="row" className="px-6 py-4">
+                <div className="size-16">
+                  <ImageApi
+                    src={user.imageUrl ?? "/imgs/notfound.png"}
+                    alt="Avatar"
+                    className="size-full rounded-full object-cover border-2"
+                    width={200}
+                    height={200}
+                  />
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">{user.fullname}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{user.phone}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {user.roles.map((role: Role) => (
+                  <span key={role.id}>{role.name}</span>
+                ))}
+              </td>
+              <td className="px-6 py-4">
+                <div className="flex justify-center">
+                  <div className="flex gap-2 items-center">
+                    <Link href={`${pathname}/${user.id}`}>
+                      <EyeIcon className="size-6 text-primary" />
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDeleteUserId(user);
+                        setOpenDeleteUser(true);
+                      }}
+                    >
+                      <DeleteIcon className="size-6 text-primary" />
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </Table>
+      )}
+      {addUser && <AddUserForm handelClose={() => setAddUser(false)} />}
+    </div>
+  );
+};
 
 export default UsersRows;

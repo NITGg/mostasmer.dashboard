@@ -1,30 +1,60 @@
-import DeleteUser from '@/components/users/id/DeleteUser'
-import Orders from '@/components/users/id/Orders'
-import UserDetails from '@/components/users/id/UserDetails'
-import { fetchData } from '@/lib/fetchData'
-import { cookies } from 'next/headers'
-import React from 'react'
+import { LoadingIcon } from "@/components/icons";
+import DeleteUser from "@/components/users/id/DeleteUser";
+import Orders from "@/components/users/id/Orders";
+import UserDetails from "@/components/users/id/UserDetails";
+import { fetchData } from "@/lib/fetchData";
+import { cookies } from "next/headers";
+import React from "react";
 
-const Users = async ({ params, searchParams }: { params: { id: string }, searchParams: { skip: string; limit: string, items: string } }) => {
-    const token = cookies().get('token')?.value;
+const Users = async ({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { skip: string; limit: string; items: string };
+}) => {
+  const token = cookies().get("token")?.value;
 
-    const user = await fetchData(`/api/user/${params.id}?fields=id,email,fullname,phone,imageUrl,lastLoginAt,status,lang,isConfirmed,passwordLastUpdated,createdAt,updatedAt,Address=id-address-lat-long,userRoles=role=name-id`);
-    const roles = await fetchData('/api/role', {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
+  const user = await fetchData(`/api/user/${params.id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const type = await fetchData(`/api/user/user-type/${params.id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-    return (
-        <div className='space-y-10'>
-            <title>{user.data.user?.fullname ?? 'User'}</title>
-            {(user?.loading) ? "" : < UserDetails user={user.data.user} roles={roles.data.roles} />}
-            <Orders searchParams={searchParams} />
-            <div className='flex justify-end'>
-                <DeleteUser userId={user?.data?.user?.id} />
-            </div>
+  const walletHistory = await fetchData(
+    `/api/user/wallet/wallet-history/${params.id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return (
+    <div className="space-y-10">
+      <title>{user.data?.fullname ?? "User"}</title>
+      {user.loading && <LoadingIcon />}
+      {user.error && <p className="text-red-500">{user.error}</p>}
+      {!user.loading && !user.error && user.data && (
+        <UserDetails
+          user={user.data}
+          type={type?.data}
+          walletHistory={walletHistory?.data}
+        />
+      )}
+      <Orders searchParams={searchParams} />
+      {user.data && (
+        <div className="flex justify-end">
+          <DeleteUser userId={user.data} />
         </div>
-    )
-}
+      )}
+    </div>
+  );
+};
 
-export default Users
+export default Users;

@@ -33,17 +33,17 @@ const UserInput: React.FC<UserInputProps> = ({
 }) => {
   const local = useLocale();
   return (
-    <>
-      <div className="grid items-center grid-cols-[1fr_2.5fr] w-full h-min relative">
-        <label className="text-nowrap" htmlFor={`${fieldForm}Id`}>
-          {label}:
-        </label>
+    <div className="grid items-center grid-cols-[1fr_2.5fr] max-md:grid-cols-1 w-full h-min ">
+      <label className="text-nowrap" htmlFor={`${fieldForm}Id`}>
+        {label}:
+      </label>
+      <div className="relative">
         <input
           id={`${fieldForm}Id`}
           defaultValue={defaultValue}
           {...register(fieldForm, roles)}
           className={clsx(
-            "border-2 border-[#DADADA] p-2 rounded-xl bg-transparent shadow-[0px_0px_5px_-1px_#00000040] outline-none",
+            "border-2 border-[#DADADA] p-2 rounded-xl bg-transparent shadow-[0px_0px_5px_-1px_#00000040] outline-none w-full",
             "hover:border-primary focus:border-primary",
             "transition-colors duration-200 ease-in-out",
             className
@@ -60,11 +60,11 @@ const UserInput: React.FC<UserInputProps> = ({
             {icon}
           </span>
         )}
-        <div className="col-span-full">
-          <ErrorMsg message={errors?.[fieldForm]?.message as string} />
-        </div>
       </div>
-    </>
+      <div className="col-span-full">
+        <ErrorMsg message={errors?.[fieldForm]?.message as string} />
+      </div>
+    </div>
   );
 };
 
