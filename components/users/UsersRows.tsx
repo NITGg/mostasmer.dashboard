@@ -83,12 +83,6 @@ const UsersRows = ({
       toast.error(error?.response?.data?.message || "There is an Error");
     }
   };
-  
-  const currentUsers = usersRedux.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
 
   return (
     <div className="flex flex-col gap-6 ">
@@ -140,7 +134,7 @@ const UsersRows = ({
         <Table
           loading={loading}
           data={users}
-          count={usersRedux.length}
+          count={users.length}
           headers={headers}
           showDateFilter={false}
           pageSize={pageSize}
@@ -148,7 +142,7 @@ const UsersRows = ({
           onPageChange={(page) => setCurrentPage(page)}
           onPageSizeChange={(size) => setPageSize(size)}
         >
-          {currentUsers.map((user: User) => (
+          {(usersRedux?.length ? usersRedux : users)?.map((user: User) => (
             <tr
               key={user.id}
               className="odd:bg-white even:bg-[#F0F2F5] border-b"
