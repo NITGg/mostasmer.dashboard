@@ -5,7 +5,7 @@ import { fetchData } from "@/lib/fetchData";
 import { cookies } from "next/headers";
 import React from "react";
 
-const Users = async ({
+const Page = async ({
   params,
   searchParams,
 }: {
@@ -55,4 +55,4 @@ const Users = async ({
   );
 };
 
-export default Users;
+export default Page;
