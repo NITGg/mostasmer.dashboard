@@ -10,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-
 import { useTranslations } from "next-intl";
 import UserTypePopupForm from "./UserTypePopupForm";
 import {
@@ -32,9 +31,8 @@ const UserTypes = ({
 }: {
   loading: boolean;
   userTypes: UserType[];
-  count: Number;
+  count: number;
 }) => {
-  // console.log(userTypes);
 
   const t = useTranslations("userTypes");
   const headers = [

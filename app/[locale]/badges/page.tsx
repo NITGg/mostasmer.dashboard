@@ -1,4 +1,5 @@
 import Badges from "@/components/badges/Badges";
+import { LoadingIcon } from "@/components/icons";
 import { cookies } from "next/headers";
 import React from "react";
 
@@ -38,8 +39,9 @@ const Page = async ({ searchParams }: { searchParams: any }) => {
 
   return (
     <div className="p-container space-y-10 py-3">
-      {error && <p>{error}</p>}
-      {!error && (
+      {loading && <LoadingIcon />}
+      {error && <p className="text-red-500">{error}</p>}
+      {!loading && !error && data && (
         <Badges
           loading={loading}
           badges={data?.badges}

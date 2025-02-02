@@ -10,7 +10,6 @@ import { useAppDispatch } from "@/hooks/redux";
 import {
   addBadge,
   Badge,
-  updateBadge,
 } from "@/redux/reducers/badgesReducer";
 import UserInput from "../users/UserInput";
 import CustomDatePicker from "../CustomDatePicker";
@@ -22,7 +21,6 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { Edit, MoveUp } from "lucide-react";
-import ImageApi from "../ImageApi";
 import clsx from "clsx";
 import ErrorMsg from "../ErrorMsg";
 import Image from "next/image";
@@ -33,7 +31,7 @@ const BadgePopupForm = ({
   badge,
   setBadge,
 }: {
-  badge?: Badge | undefined;
+  badge?: Badge;
   setBadge?: (badge: Badge | undefined) => void;
   openForm: boolean;
   setOpenForm: (open: boolean) => void;
@@ -52,8 +50,11 @@ const BadgePopupForm = ({
     control,
     setValue,
     setError,
+    watch,
   } = useForm();
   const dispatch = useAppDispatch();
+  const minAmount = watch("minAmount");
+  const validFrom = watch("validFrom");
 
   useEffect(() => {
     reset(
@@ -62,8 +63,8 @@ const BadgePopupForm = ({
         cover: "",
         logo: "",
         color: "",
-        minAmount: 0,
-        maxAmount: 0,
+        minAmount: "",
+        maxAmount: "",
         validFrom: "",
         validTo: "",
       }
@@ -264,6 +265,7 @@ const BadgePopupForm = ({
               </label>
               <input
                 type="file"
+                accept="image/*"
                 {...register("logoFile", {
                   onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                     const file = e.target.files?.[0];
@@ -352,6 +354,7 @@ const BadgePopupForm = ({
                   validate: (value) => value > 0 || t("GreaterThanZero"),
                 }}
                 type="number"
+                min={0}
               />
               <UserInput
                 defaultValue={badge?.minAmount}
@@ -366,6 +369,7 @@ const BadgePopupForm = ({
                   validate: (value) => value >= 0 || t("GreaterThanZero"),
                 }}
                 type="number"
+                min={0}
               />
               <UserInput
                 defaultValue={badge?.maxAmount}
@@ -377,9 +381,11 @@ const BadgePopupForm = ({
                 roles={{
                   value: badge?.maxAmount,
                   required: t("maxAmountIsRequired"),
-                  validate: (value) => value >= 0 || t("GreaterThanZero"),
+                  validate: (value) =>
+                    value > minAmount || t("MaxAmountGreaterThanMin"),
                 }}
                 type="number"
+                min={1}
               />
 
               <CustomDatePicker
@@ -407,6 +413,10 @@ const BadgePopupForm = ({
                 rules={{
                   required: false,
                   valueAsDate: true,
+                  validate: (value) =>
+                    !validFrom ||
+                    new Date(value) > new Date(validFrom) ||
+                    t("ValidToAfterValidFrom"),
                 }}
                 className="w-32 justify-self-end"
               />
@@ -417,13 +427,10 @@ const BadgePopupForm = ({
                 disabled={loading}
                 className="py-1 px-12 rounded-3xl border-1 border-primary bg-primary text-white duration-200 flex justify-center"
               >
-                {loading ? (
+                {loading && (
                   <LoadingIcon className="w-6 h-6 animate-spin hover:stroke-white" />
-                ) : badge ? (
-                  t("edit")
-                ) : (
-                  t("add")
                 )}
+                {!loading && badge ? t("edit") : t("add")}
               </button>
               <button
                 className="py-1 px-12 rounded-3xl border-1"

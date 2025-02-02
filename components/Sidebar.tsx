@@ -4,7 +4,7 @@ import React from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import clsx from 'clsx'
 import Image from 'next/image'
-import { AdsIcon, AnimateIcon, AppIcon, CategoryIcon, CouponIcon, FaqIcon,ContactIcon,DashboardIcon, GroupUsersIcon, HomeIcon, OnBoardingIcon, PetsIcon, ProductIcon, TruckIcon } from './icons'
+import { AdsIcon, AnimateIcon, AppIcon, CategoryIcon, CouponIcon, FaqIcon, ContactIcon, DashboardIcon, GroupUsersIcon, HomeIcon, OnBoardingIcon, PetsIcon, ProductIcon, TruckIcon, BadgesIcon, GiftCardsIcon } from './icons'
 import { Link } from '@/i18n/routing'
 import useClickOutside from '@/hooks/useClickOutSide'
 import { useAppContext } from '@/context/appContext'
@@ -59,7 +59,7 @@ const Sidebar = ({
         },
         {
             label: t('badges'),
-            icon: <AnimateIcon className='size-6' />,
+            icon: <BadgesIcon className='size-6' />,
             href: '/badges',
             role: 'admin'
         },
@@ -70,9 +70,9 @@ const Sidebar = ({
             role: 'admin'
         },
         {
-            label: t('Digitalcards'),
-            icon: <ProductIcon className='size-6' />,
-            href: '/digitalcards',
+            label: t('giftCards'),
+            icon: <GiftCardsIcon className='size-6' />,
+            href: '/gift-cards',
             role: 'normal'
         },
         {
@@ -106,7 +106,7 @@ const Sidebar = ({
             role: 'admin'
         },
         {
-           label: t('contact'),
+            label: t('contact'),
 
             icon: <ContactIcon className='size-6' />,
             href: '/contact',
@@ -118,9 +118,8 @@ const Sidebar = ({
 
     return (
         <div className='lg:w-72 flex-shrink-0'>
-            <div ref={eleRef} className={`w-64 lg:w-72 bg-[#001529] h-lvh max-h-lvh fixed top-0 z-[9999] flex flex-col ${
-                open ? locale == 'en' ? 'rtl' : "ar-ltr" : locale == 'en' ? "ltr" : "ar-rtl"
-            }`}>
+            <div ref={eleRef} className={`w-64 lg:w-72 bg-[#001529] h-lvh max-h-lvh fixed top-0 z-[9999] flex flex-col ${open ? locale == 'en' ? 'rtl' : "ar-ltr" : locale == 'en' ? "ltr" : "ar-rtl"
+                }`}>
                 {/* Logo Section */}
                 <div className='p-4'>
                     <Link href={`/`}>
@@ -141,7 +140,7 @@ const Sidebar = ({
                 </div>
 
                 {/* Navigation Items */}
-                <div 
+                <div
                     className={`
                         flex-1 overflow-y-auto px-2
                         custom-scrollbar sidebar-scrolling

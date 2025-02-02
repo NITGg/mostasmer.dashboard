@@ -92,14 +92,18 @@ const Badges = ({
 
   return (
     <>
-      <div className="flex gap-10 items-center w-full p-4">
-        <div className="w-[80%] h-44 flex gap-4">
+      <div className="flex gap-10 items-center max-md:flex-wrap w-full p-4">
+        <div className="w-[80%] h-44 max-md:h-auto max-md:w-full max-md:flex-wrap max-md:order-2 flex gap-4">
           {(badgesRedux?.length ? badgesRedux : badges)
             ?.slice(0, 3)
             .map((badge: Badge) => (
               <div
                 key={badge.id}
-                className="bg-[#F0F2F5] overflow-hidden shadow-[0px_4px_10px_-4px_#00000040] w-48 h-44 rounded-2xl flex flex-col"
+                className="bg-[#F0F2F5] relative overflow-hidden shadow-[0px_4px_10px_-4px_#00000040] w-48 max-md:w-full max-md:h-52 h-44 rounded-2xl flex flex-col"
+                onClick={() => {
+                  setUpdateBadge(badge);
+                  setOpenForm(true);
+                }}
               >
                 <div className="h-2/3 w-full p-2 relative flex flex-col justify-end text-white">
                   <Image
@@ -122,10 +126,18 @@ const Badges = ({
                   <span className="capitalize text-lg font-bold">points</span>
                   <span className="text-lg font-bold">{badge.points}%</span>
                 </div>
+                <button
+                  className="absolute inset-0 z-10"
+                  type="button"
+                  onClick={() => {
+                    setUpdateBadge(badge);
+                    setOpenForm(true);
+                  }}
+                />
               </div>
             ))}
         </div>
-        <div className="bg-[#F0F2F5] grid place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-1/5 h-44 rounded-2xl">
+        <div className="bg-[#F0F2F5] grid place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-44 max-md:w-full max-md:order-1 h-44 rounded-2xl">
           <button
             onClick={() => setOpenForm(true)}
             className="p-1 bg-primary rounded-md text-white font-medium"

@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// Badge type definition
 export type Badge = {
   id: number;
   name: string;
@@ -17,15 +16,13 @@ export type Badge = {
   updatedAt: string;
 };
 
-// State type for badges
 type BadgesState = {
   badges: Badge[];
   isLastPage: boolean;
   badgeById: Badge | null;
-  lastDoc: any; // For pagination or other state tracking
+  lastDoc: any; 
 };
 
-// Initial state
 const initialState: BadgesState = {
   badges: [],
   isLastPage: false,
@@ -33,33 +30,27 @@ const initialState: BadgesState = {
   lastDoc: null,
 };
 
-// Create slice for badges
 export const badgesSlice = createSlice({
   name: "badges",
   initialState,
   reducers: {
-    // Set all badges
     setBadges(state, action: PayloadAction<Badge[]>) {
       state.badges = action.payload;
     },
 
-    // Set if it's the last page of badges
     setIsLastPage(state, action: PayloadAction<boolean>) {
       state.isLastPage = action.payload;
     },
 
-    // Find a badge by ID
     getBadgeById(state, action: PayloadAction<number>) {
       const badge = state.badges.find((badge) => badge.id === action.payload);
       state.badgeById = badge || null;
     },
 
-    // Add a new badge
     addBadge(state, action: PayloadAction<Badge>) {
       state.badges.push(action.payload);
     },
 
-    // Update an existing badge
     updateBadge(state, action: PayloadAction<Badge>) {
       const index = state.badges.findIndex(
         (badge) => badge.id === action.payload.id
@@ -69,21 +60,18 @@ export const badgesSlice = createSlice({
       }
     },
 
-    // Delete a badge by ID
     deleteBadge(state, action: PayloadAction<number>) {
       state.badges = state.badges.filter(
         (badge) => badge.id !== action.payload
       );
     },
 
-    // Set the last document (useful for pagination or querying)
     setLastDoc(state, action: PayloadAction<any>) {
       state.lastDoc = action.payload;
     },
   },
 });
 
-// Export actions for use in components or middleware
 export const {
   setBadges,
   setIsLastPage,
@@ -94,5 +82,4 @@ export const {
   setLastDoc,
 } = badgesSlice.actions;
 
-// Export reducer for store configuration
 export default badgesSlice.reducer;

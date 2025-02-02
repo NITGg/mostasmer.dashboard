@@ -578,6 +578,7 @@
         "minAmountIsRequired": "يرجى إدخال الحد الأدنى للمبلغ.",
         "badgeMaxAmount": "الحد الأقصى للمبلغ",
         "maxAmountIsRequired": "يرجى إدخال الحد الأقصى للمبلغ.",
+        "MaxAmountGreaterThanMin": "",
         "validFrom": "صالح من",
         "validTo": "صالح إلى",
         "nameMinLength": "يجب أن يتكون الاسم من 3 أحرف على الأقل.",
@@ -611,5 +612,16 @@
         "selectBadges": "اختر شارة",
         "badgeIsRequired": "الشارة مطلوبة.",
         "sr": "ريال"
+    },
+    "giftCards": {
+        "points": "النقاط",
+        "sr": "ريال",
+        "view": "عرض",
+        "active": "نشط",
+        "notActive": "غير نشط",
+        "giftCardsDetails": "تفاصيل بطاقة الهدية",
+        "resend": "إعادة إرسال",
+        "giftResendSuccessfully": "تم إعادة إرسال بطاقة الهدية بنجاح",
+        "errorResendGift": "حدث خطأ أثناء إعادة إرسال بطاقة الهدية"
     }
 }

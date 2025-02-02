@@ -9,7 +9,6 @@ import {
 } from "../ui/dialog";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
-import ErrorMsg from "../ErrorMsg";
 import { LoadingIcon } from "../icons";
 import axios from "axios";
 import { useAppContext } from "@/context/appContext";
@@ -30,7 +29,7 @@ const UserTypePopupForm = ({
   type,
   setType,
 }: {
-  type?: UserType | undefined;
+  type?: UserType;
   setType?: (type: UserType | undefined) => void;
   openForm: boolean;
   setOpenForm: (open: boolean) => void;
@@ -63,16 +62,20 @@ const UserTypePopupForm = ({
     limit: number;
   }) => {
     try {
-      const { data } = await axios.get("/api/badges", {
-        params: {
-          keyword: search,
-          page,
-          limit,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL11}/api/badges`,
+        {
+          params: {
+            keyword: search,
+            page,
+            limit,
+            userType: "null",
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       return {
         data: data.badges,
@@ -134,6 +137,7 @@ const UserTypePopupForm = ({
 
       dispatch(updateUserType(data.data));
       toast.success(t("successUpdate"));
+      setTimeout(() => window.location.reload(), 500);
       setOpenForm(false);
     } catch (error: any) {
       setLoading(false);
@@ -181,14 +185,6 @@ const UserTypePopupForm = ({
               errors={errors}
             />
             <UserInput
-              fieldForm="color"
-              label={t("color")}
-              roles={{ required: false }}
-              register={register}
-              errors={errors}
-              defaultValue={type?.color}
-            />
-            <UserInput
               fieldForm="buyAmount"
               label={t("buyAmount")}
               roles={{
@@ -199,6 +195,7 @@ const UserTypePopupForm = ({
               errors={errors}
               defaultValue={type?.buyAmount}
               type="number"
+              min={0}
             />
             <UserInput
               fieldForm="ratio"
@@ -211,6 +208,7 @@ const UserTypePopupForm = ({
               errors={errors}
               defaultValue={type?.ratio}
               type="number"
+              min={0}
             />
 
             <div className=" w-full flex justify-center items-center gap-4">
@@ -218,13 +216,10 @@ const UserTypePopupForm = ({
                 disabled={loading}
                 className="py-1 px-12 rounded-3xl border-1 border-primary bg-primary text-white duration-200 flex justify-center"
               >
-                {loading ? (
+                {loading && (
                   <LoadingIcon className="w-6 h-6 animate-spin hover:stroke-white" />
-                ) : type ? (
-                  t("edit")
-                ) : (
-                  t("add")
                 )}
+                {!loading && type ? t("edit") : t("add")}
               </button>
               <button
                 className="py-1 px-12 rounded-3xl border-1"

@@ -16,8 +16,8 @@ import { speciesSlice } from "../reducers/speciesReducer";
 import { onboardingSlice } from "../reducers/onBoardsReducer";
 import { adsSlice } from "../reducers/ads";
 import { userTypesSlice } from "../reducers/userTypesReducer";
-// import { digitalCardsSlice } from "../reducers/digitalCardsReducers";
 import { badgesSlice } from "../reducers/badgesReducer";
+import { giftCardsSlice } from "../reducers/giftCardsReducers";
 
 export const store = configureStore({
     reducer: {
@@ -38,7 +38,7 @@ export const store = configureStore({
         onboarding: onboardingSlice.reducer,
         ads: adsSlice.reducer,
         userTypes: userTypesSlice.reducer,
-        // digitalCards: digitalCardsSlice.reducer,
+        giftCards: giftCardsSlice.reducer,
         badges: badgesSlice.reducer
     },
     middleware: (getDefaultMiddleware) =>

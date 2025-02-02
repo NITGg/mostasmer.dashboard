@@ -38,7 +38,7 @@
         "faq": "FAQ",
         "orders": "Orders",
         "userTypes": "User Types",
-        "Digitalcards": "Digital Cards",
+        "giftCards": "Gift Cards",
         "badges": "Badges"
     },
     "navbar": {
@@ -784,8 +784,10 @@
         "minAmountIsRequired": "Please enter the minimum amount.",
         "badgeMaxAmount": "Max Amount",
         "maxAmountIsRequired": "Please enter the maximum amount.",
+        "MaxAmountGreaterThanMin": "Amount must be greater than min amount",
         "validFrom": "Valid From",
         "validTo": "Valid To",
+        "ValidToAfterValidFrom": "Valid to must be after the valid from",
         "nameMinLength": "Name must be at least 3 characters long.",
         "colorMinLength": "Color must be at least 3 characters long.",
         "GreaterThanZero": "Value must be greater than 0.",
@@ -818,5 +820,16 @@
         "GreaterThanZero": "Value must be greater than 0.",
         "badgeIsRequired": "Badge is required.",
         "sr": "SR"
+    },
+    "giftCards": {
+        "points": "Points",
+        "sr": "SR",
+        "view": "View",
+        "active": "Active",
+        "notActive": "Not Active",
+        "giftCardsDetails": "Gift Cards Details",
+        "resend": "Resend",
+        "giftResendSuccessfully": "Gift card sent successfully",
+        "errorResendGift": "Error in sending gift card"
     }
 }
