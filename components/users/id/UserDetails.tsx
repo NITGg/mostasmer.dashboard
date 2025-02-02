@@ -85,8 +85,6 @@ const UserDetails = ({
     formState: { errors },
     resetField,
   } = useForm();
-  console.log(type);
-  console.log(user);
   const local = useLocale();
   const [isEditable, setIsEditable] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -109,7 +107,7 @@ const UserDetails = ({
       }
 
       const { data } = await axios.put(
-        `http://localhost:3100/api/user/${user.id}`,
+        `/api/user/${user.id}`,
         { ...userData },
         {
           headers: {
@@ -186,7 +184,7 @@ const UserDetails = ({
                     CreatedAt:
                   </p>
                   <div className="text-sm text-nowrap">
-                    {DateToText(user?.createdAt)}
+                    {DateToText(user?.createdAt ? user?.createdAt : "")}
                   </div>
                 </div>
                 <div className="flex justify-between flex-wrap items-center">
@@ -194,7 +192,7 @@ const UserDetails = ({
                     UpdatedAt:
                   </p>
                   <div className="text-sm text-nowrap">
-                    {DateToText(user?.updatedAt)}
+                    {DateToText(user?.updatedAt ? user?.updatedAt : "")}
                   </div>
                 </div>
                 <div className="flex justify-between flex-wrap items-center">
