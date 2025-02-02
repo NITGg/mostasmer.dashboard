@@ -8,7 +8,7 @@ import { AdsIcon, AnimateIcon, AppIcon, CategoryIcon, CouponIcon, FaqIcon, Conta
 import { Link } from '@/i18n/routing'
 import useClickOutside from '@/hooks/useClickOutSide'
 import { useAppContext } from '@/context/appContext'
-import { ShoppingBasket } from 'lucide-react'
+import { ShoppingBasket, Users } from 'lucide-react'
 
 const Sidebar = ({
     open,
@@ -56,6 +56,12 @@ const Sidebar = ({
             icon: <ShoppingBasket className='size-6' />,
             href: '/orders',
             role: 'supplier'
+        },
+        {
+            label: t('userTypes'),
+            icon: <Users className='size-6' />,
+            href: '/user-types',
+            role: 'admin'
         },
         {
             label: t('badges'),

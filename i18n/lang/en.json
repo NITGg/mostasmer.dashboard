@@ -237,7 +237,13 @@
         "color": "Color",
         "buyAmount": "Buy Amount",
         "ratio": "Ratio",
-        "createdAt": "Created at"
+        "createdAt": "Created at",
+        "sender": "Sender",
+        "received": "Received",
+        "cardValue": "Card Value",
+        "cardValueInSr": "Card Value in SR",
+        "used": "Used",
+        "status": "Status"
     },
     "pagination": {
         "showing": "Showing",

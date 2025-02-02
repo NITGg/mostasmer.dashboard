@@ -468,7 +468,12 @@
         "color": "اللون",
         "buyAmount": "مبلغ الشراء",
         "ratio": "النسبة",
-        "createdAt": "تاريخ الإنشاء"
+        "createdAt": "تاريخ الإنشاء",
+        "sender": "المرسل",
+        "received": "المستلم",
+        "cardValue": "قيمة البطاقة",
+        "cardValueInSr": "قيمة البطاقة بالريال",
+        "used": "تم استخدامه"
     },
     "pagination": {
         "showing": "عرض",
