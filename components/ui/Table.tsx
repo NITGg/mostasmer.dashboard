@@ -92,7 +92,7 @@ const Table = ({
   onPageSizeChange,
   showExport = false,
   onExport,
-  bgColor = 'black',
+  bgColor = '#02161e',
   onDateFilter,
 }: TableProps) => {
   const t = useTranslations("Tablecomponent");
@@ -102,7 +102,7 @@ const Table = ({
   const pathname = usePathname();
   const { push } = useRouter();
   const locale = useLocale();
-  
+
   // Update URL with new page number
   const updatePage = (newPage: number) => {
     const params = new URLSearchParams(searchParams);
@@ -143,13 +143,13 @@ const Table = ({
     setFilteredData(filtered);
   } : undefined;
 
-  
+
   // Handle data export
   const handleExport = async (format: 'pdf' | 'csv') => {
     try {
       const currentData = filteredData || data;
       const tableType = getTableType();
-      
+
       if (format === 'pdf') {
         try {
           const doc = new jsPDF({
@@ -226,7 +226,7 @@ const Table = ({
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         const timestamp = new Date().toISOString().split('T')[0];
-        
+
         link.href = URL.createObjectURL(blob);
         link.download = `${tableType}-export-${timestamp}.csv`;
         link.click();
@@ -244,7 +244,7 @@ const Table = ({
     const params = new URLSearchParams(searchParams);
     params.set("page", newPage.toString());
     push(`${pathname}?${params.toString()}`);
-    
+
     // Call the parent's onPageChange handler to fetch new data
     if (onPageChange) {
       onPageChange(newPage);
@@ -257,7 +257,7 @@ const Table = ({
     params.set("limit", newSize.toString());
     params.set("page", "1"); // Reset to first page when changing page size
     push(`${pathname}?${params.toString()}`);
-    
+
     if (onPageSizeChange) {
       onPageSizeChange(newSize);
     }
@@ -268,10 +268,9 @@ const Table = ({
       {/* <div className="rounded-t-xl overflow-auto max-h-[calc(100vh-350px)] border border-gray-200 bg-white sidebar-scrolling"> */}
       <div className="rounded-t-xl overflow-auto max-h-[500px] border border-gray-200 bg-white sidebar-scrolling" >
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-          <thead className={`text-xs uppercase sticky top-0 z-50 ${
-            bgColor === '#02161e' ? 'text-white bg-[#02161e]' : 
-            'text-[#02161e] bg-[#dfe2e8]'
-          }`}>
+          <thead className={`text-xs uppercase sticky top-0 z-50 ${bgColor === '#02161e' ? 'text-white bg-[#02161e]' :
+              'text-[#02161e] bg-[#dfe2e8]'
+            }`}>
             <tr>
               {headers.map(({ name, className }) => (
                 <th
@@ -334,7 +333,7 @@ const Table = ({
         bgColor={bgColor}
         data={filteredData || data}
         length={filteredData?.length || data?.length || 0}
-        // isLoading={isLoading}
+      // isLoading={isLoading}
       />
 
     </div>
