@@ -265,7 +265,8 @@ const Table = ({
 
   return (
     <div className="w-full mx-auto">
-      <div className="rounded-t-xl overflow-auto max-h-[calc(100vh-350px)] border border-gray-200 bg-white sidebar-scrolling">
+      {/* <div className="rounded-t-xl overflow-auto max-h-[calc(100vh-350px)] border border-gray-200 bg-white sidebar-scrolling"> */}
+      <div className="rounded-t-xl overflow-auto max-h-[500px] border border-gray-200 bg-white sidebar-scrolling" >
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead className={`text-xs uppercase sticky top-0 z-50 ${
             bgColor === '#02161e' ? 'text-white bg-[#02161e]' : 
