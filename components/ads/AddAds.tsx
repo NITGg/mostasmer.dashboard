@@ -1,318 +1,513 @@
-import Image from 'next/image';
-import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form';
-import { CalendarIcon, LoadingIcon, PhotoIcon } from '../icons';
-import ErrorMsg from '../ErrorMsg';
-import { useTranslations } from 'next-intl';
-import axios from 'axios';
-import { useAppContext } from '@/context/appContext';
-import toast from 'react-hot-toast';
-import ImageApi from '../ImageApi';
-import { useAppDispatch } from '@/hooks/redux';
-import { addAds, updateAds } from '@/redux/reducers/ads';
-import SearchPetsOrProducts from './SearchPetsOrProducts';
-import DatePicker from 'react-datepicker';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { LoadingIcon } from "../icons";
+import ErrorMsg from "../ErrorMsg";
+import { useTranslations } from "next-intl";
+import axios from "axios";
+import { useAppContext } from "@/context/appContext";
+import toast from "react-hot-toast";
+import { useAppDispatch } from "@/hooks/redux";
+import { addAds, Ads, AdsType, updateAds } from "@/redux/reducers/ads";
 import "react-datepicker/dist/react-datepicker.css";
+import UserInput from "../users/UserInput";
+import clsx from "clsx";
+import { Brand } from "../users/BrandSelect";
+import CustomSelect from "../users/CustomSelect";
+import AddImageInput from "../AddImageInput";
+import { CircleAlert } from "lucide-react";
+import CustomDatePicker from "../CustomDatePicker";
+import FetchSelect from "../FetchSelect";
 
+const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ads }) => {
+  const t = useTranslations("ads");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    control,
+    setValue,
+    setError,
+    watch,
+  } = useForm();
+  console.log(ad);
 
-function getIdFromPath(path: string) {
-    const match = path?.match(/\/\w+\/(\d+)/);
-    return match ? match[1] : null;
-}
-const AddAds = ({ handleClose, ad }: { handleClose: any, ad?: any }) => {
-    const t = useTranslations('ads')
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState<string | null>(ad?.imageUrl ?? null);
+  const { token } = useAppContext();
+  const dispatch = useAppDispatch();
+  const BasicType = ad?.userTypes?.find(
+    (ut) => ut.userType?.userType === "Basic"
+  );
+  const StandardType = ad?.userTypes?.find(
+    (ut) => ut.userType?.userType === "Standard"
+  );
+  const VIPType = ad?.userTypes?.find((ut) => ut.userType?.userType === "VIP");
 
-    const [type, setType] = useState(ad?.type ? ad?.type : "")
-    const { register, handleSubmit, formState: { errors }, setValue, control, trigger } = useForm();
-    const btnRef = useRef<any>();
-    const [loading, setLoading] = useState(false);
-    const [image, setImage] = useState('');
-    const { token } = useAppContext();
-    const dispatch = useAppDispatch();
+  const onSubmit = handleSubmit(async (formData) => {
+    try {
+      setLoading(true);
+      if (!formData.imageFile[0]) {
+        setError("imageFile", {
+          type: "manual",
+          message: "Image is required",
+        });
+      }
+      let adData = { ...formData };
 
-    const [startDate, setStartDate] = React.useState(new Date(Date.now()) as any);
-    const [endDate, setEndDate] = React.useState(new Date(Date.now()) as any);
+      const userTypes = [];
+      delete adData.basic;
+      delete adData.basicStart;
+      delete adData.basicEnd;
+      delete adData.standard;
+      delete adData.standardStart;
+      delete adData.standardEnd;
+      delete adData.VIP;
+      delete adData.VIPStart;
+      delete adData.VIPEnd;
 
-    useEffect(() => {
-        const input = document.getElementById('product-id-input-file');
-        const btn = btnRef.current;
-        const handleClickInput = (e: any) => {
-            e.preventDefault();
-            input?.click();
-        };
-        btn?.addEventListener('click', handleClickInput);
-        return () => {
-            btn?.removeEventListener('click', handleClickInput);
-        };
-    }, []);
-    const onSubmit = handleSubmit(
-        async (fData) => {
-            try {
-                setLoading(true);
-                const formData = new FormData();
-                formData.append('title', fData.title);
-                formData.append('route', `${type == 'http' ? fData.link : `/${type}/${fData.link}`}`);
-                formData.append('imageUrl', fData.imageFile[0]);
-                formData.append('startDate', fData.startDate)
-                formData.append('endDate', fData.endDate)
-                formData.append('duration', fData.duration);
-                formData.append('pro', fData.keyword)
-                const { data } = await axios.post('/api/ads', formData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                const types = ad?.route?.includes('/pet/') ? 'pet' : ad?.route?.includes('/product/') ? 'product' : 'http'
-                dispatch(addAds({
-                    id: data.ads.id,
-                    title: data.ads.title,
-                    imageUrl: data.ads.imageUrl,
-                    route: !data.ads.route.includes('http') ? getIdFromPath(data.ads.route) : data.ads.route,
-                    type: types,
-                    duration: data.ads.duration,
-                    startDate: data.ads.startDate,
-                    endDate: data.ads.endDate,
-                    pro: data.ads.pro
-                }))
-                handleClose();
-            }
-            catch (err: any) {
-                setLoading(false);
-                console.error(err);
-                toast.error(err?.response?.data?.message || 'There is an Error')
-            }
+      if (formData.basic) {
+        userTypes.push({
+          name: "Basic",
+          startDate: formData.basicStart,
+          endDate: formData.basicEnd,
+        });
+      }
+      if (formData.standard) {
+        userTypes.push({
+          name: "Standard",
+          startDate: formData.standardStart,
+          endDate: formData.standardEnd,
+        });
+      }
+      if (formData.VIP) {
+        userTypes.push({
+          name: "VIP",
+          startDate: formData.VIPStart,
+          endDate: formData.VIPEnd,
+        });
+      }
+
+      adData.imageUrl = adData.imageFile[0];
+      delete adData.imageFile;
+      adData.userTypes = JSON.stringify(userTypes);
+      adData.budget = 10;
+      adData.priority = 1;
+      adData.timing = 2;
+      adData.startDate = new Date();
+      const nextYearDate = new Date();
+      nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
+      adData.endDate = nextYearDate;
+
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL11}/api/ads`,
+        adData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
-    );
-    const handleUpdate = handleSubmit(
-        async (fData) => {
-            try {
+      );
+      toast.success(t("success"));
+      dispatch(addAds(data.ad));
+      reset();
+      handleClose();
+    } catch (err: any) {
+      setLoading(false);
+      console.error(err);
+      toast.error(err?.response?.data?.message || "There is an Error");
+    } finally {
+      URL.revokeObjectURL(image ?? "");
+      setLoading(false);
+    }
+  });
+  const handleUpdate = handleSubmit(async (formData) => {
+    try {
+      setLoading(true);
+      let adData = { ...formData };
+      delete adData.imageFile;
+      const userTypes = [];
+      delete adData.basic;
+      delete adData.basicStart;
+      delete adData.basicEnd;
 
-                setLoading(true);
-                const formData = new FormData();
-                formData.append('startDate', fData.startDate)
-                formData.append('endDate', fData.endDate)
-                formData.append('duration', fData.duration);
-                if (fData.keyword) formData.append('pro', fData.keyword)
-                if (fData.title) formData.append('title', fData.title);
-                if (fData.link) formData.append('route', `${type == 'http' ? fData.link : `/${type}/${fData.link}`}`);
-                if (fData.imageFile) formData.append('imageUrl', fData.imageFile[0]);
-                const { data } = await axios.put(`/api/ads/${ad?.id}`, formData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                console.log({ data });
+      delete adData.standard;
+      delete adData.standardStart;
+      delete adData.standardEnd;
 
-                dispatch(updateAds({
-                    id: data.ads.id,
-                    title: data.ads.title,
-                    imageUrl: data.ads.imageUrl,
-                    route: !data.ads.route.includes('http') ? getIdFromPath(data.ads.route) : data.ads.route,
-                    type: type,
-                    duration: data.ads.duration,
-                    startDate: data.ads.startDate,
-                    endDate: data.ads.endDate,
-                    pro: data.ads.pro
-                }))
-                handleClose();
-            }
-            catch (err: any) {
-                setLoading(false);
-                console.error('Submit Error:', err);
-                toast.error(err.message);
-            }
+      delete adData.VIP;
+      delete adData.VIPStart;
+      delete adData.VIPEnd;
+
+      if (formData.basic) {
+        userTypes.push({
+          name: "Basic",
+          startDate: formData.basicStart,
+          endDate: formData.basicEnd,
+        });
+      }
+      if (formData.standard) {
+        userTypes.push({
+          name: "Standard",
+          startDate: formData.standardStart,
+          endDate: formData.standardEnd,
+        });
+      }
+      if (formData.VIP) {
+        userTypes.push({
+          name: "VIP",
+          startDate: formData.VIPStart,
+          endDate: formData.VIPEnd,
+        });
+      }
+      adData.userTypes = JSON.stringify(userTypes);
+      adData.budget = 10;
+      adData.priority = 1;
+      adData.timing = 2;
+      adData.startDate = new Date();
+      const nextYearDate = new Date();
+      nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
+      adData.endDate = nextYearDate;
+      if (formData.imageFile[0]) {
+        adData.imageUrl = formData.imageFile[0];
+      }
+      const { data } = await axios.put(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/ads/${ad?.id}`,
+        adData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
-    );
-    console.log({ ad });
+      );
+      toast.success(t("successUpdate"));
+      dispatch(updateAds(data.ad));
+      reset();
+      handleClose();
+    } catch (err: any) {
+      setLoading(false);
+      console.error("Submit Error:", err);
+      toast.error(err.message);
+    } finally {
+      URL.revokeObjectURL(image ?? "");
+      setLoading(false);
+    }
+  });
 
-    return (
-        <form className='block' onSubmit={ad ? handleUpdate : onSubmit}>
-            <div className='space-y-5'>
-                <div className=''>
-                    <input
-                        type="file"
-                        multiple
-                        {...register('imageFile', {
-                            onChange: (e) => {
-                                if (e.target.files) {
-                                    const filesArray = Array.from(e.target.files);
-                                    const imageUrls = filesArray.map(file => URL.createObjectURL(file as any));
-                                    setImage(imageUrls as any);
-                                }
-                            }
-                        })}
-                        id="product-id-input-file"
-                        className="hidden"
-                    />
-                    <>
-                        {image ?
-                            <div className='flex overflow-x-auto h-72 sm:h-52 md:h-64 lg:h-72 '>
-                                {
-                                    (image as any).map((image: any) =>
-                                        <Image
-                                            key={image}
-                                            src={image}
-                                            alt='image'
-                                            height={1000}
-                                            width={1000}
-                                            className='h-full w-full object-cover'
-                                        />)
-                                }
-                            </div>
-                            :
-                            <div>
-                                <div ref={btnRef} className='cursor-pointer w-full h-72 sm:h-52 md:h-64 lg:h-72 relative flex justify-center items-center group  bg-slate-200'>
-                                    {
-                                        ad ?
-                                            <div className='group relative w-full h-full flex justify-center items-center'>
-                                                <ImageApi
-                                                    src={ad?.imageUrl}
-                                                    alt='image'
-                                                    height={1000}
-                                                    width={1000}
-                                                    className='h-full w-full object-cover'
-                                                />
-                                                <div className='absolute w-full h-full bg-slate-100/20 hidden group-hover:flex justify-center items-center duration-100'>
-                                                    <PhotoIcon className='size-10' />
-                                                </div>
-                                            </div>
-                                            :
-                                            <div className='absolute w-full h-full bg-slate-100/20 flex justify-center items-center duration-100'>
-                                                <PhotoIcon className='size-10' />
-                                            </div>
-                                    }
-                                </div>
-                            </div>
-                        }
-                    </>
-                </div>
-                <div>
-                    <input
-                        {...register('title', {
-                            value: ad?.title
-                        })}
-                        type="text"
-                        className="border py-3 px-2 w-full outline-none"
-                        placeholder={t('name')}
-                    />
-                    <ErrorMsg message={errors?.title?.message as string} />
-                </div>
-                <div>
-                    <input
-                        {...register('duration', {
-                            value: ad?.duration,
-                            required: t('error.duration'),
-                        })}
-                        type="text"
-                        className="border py-3 px-2 w-full outline-none"
-                        placeholder={t('duration')}
-                    />
-                    <ErrorMsg message={errors?.duration?.message as string} />
-                </div>
-                <div>
-                    <div className="relative flex items-center">
-                        <Controller
-                            name="startDate"
-                            control={control}
-                            defaultValue={startDate}
-                            rules={{
-                                required: "Start date is required",
-                            }}
-                            render={() => (
-                                <DatePicker
-                                    placeholderText="Start Date"
-                                    selected={startDate}
-                                    className="border py-2 rounded-md px-2 w-full outline-none"
-                                    onChange={(dateChange: Date | null) => {
-                                        setValue("startDate", dateChange, { shouldDirty: true });
-                                        setStartDate(dateChange);
-                                        trigger("endDate"); // Re-validate endDate
-                                    }}
-                                />
-                            )}
-                        />
-                        <CalendarIcon className="absolute w-5 h-5 right-2" />
-                    </div>
-                    {errors.startDate && <p className="text-red-500">{errors?.startDate?.message as string}</p>}
-                </div>
+  const fetchBrand = async ({
+    search,
+    page,
+    limit,
+  }: {
+    search: string;
+    page: number;
+    limit: number;
+  }) => {
+    try {
+      const { data } = await axios.get("/api/brand", {
+        params: {
+          sort: "-purchaseCount",
+          limit,
+          keyword: search,
+          page,
+        },
+      });
 
-                {/* End Date */}
-                <div>
-                    <div className="relative flex items-center">
-                        <Controller
-                            name="endDate"
-                            control={control}
-                            defaultValue={endDate}
-                            rules={{
-                                required: "End date is required",
-                                validate: () => {
-                                    if (startDate && endDate && startDate > endDate) {
-                                        return "End date cannot be before start date";
-                                    }
-                                    return true;
-                                }
-                            }}
-                            render={() => (
-                                <DatePicker
-                                    placeholderText="End Date"
-                                    selected={endDate}
-                                    className="border py-2 rounded-md px-2 w-full outline-none"
-                                    onChange={(dateChange: Date | null) => {
-                                        setValue("endDate", dateChange, { shouldDirty: true });
-                                        setEndDate(dateChange);
-                                    }}
-                                />
-                            )}
-                        />
-                        <CalendarIcon className="absolute w-5 h-5 right-2" />
-                    </div>
-                    {errors.endDate && <p className="text-red-500">{errors?.endDate?.message as string}</p>}
-                </div>
-                <div>
-                    <select
-                        value={type}
-                        onChange={(e) => { setType(e.target.value); }}
-                        className="border py-3 px-2 w-full outline-none"
-                    >
-                        <option value="">{t('selectType')}</option>
-                        <option value="product">{t('product')}</option>
-                        <option value="pet">{t('pet')}</option>
-                        <option value="http">{t('http')}</option>
-                    </select>
-                    <ErrorMsg message={errors?.route?.message as string} />
-                </div>
-                <div>
-                    {
-                        type &&
-                        <>
-                            {type == 'product' || type == 'pet' ?
-                                <SearchPetsOrProducts
-                                    setValue={setValue}
-                                    tableRef={type}
-                                    placeholder={ad?.pro}
-                                />
-                                :
-                                <input
-                                    {...register('link', {
-                                        value: ad?.route
-                                    })}
-                                    type="text"
-                                    className="border py-3 px-2 w-full outline-none"
-                                    placeholder={t('link')}
-                                />
-                            }
-                        </>
-                    }
-                </div>
-                <div className=" w-full ">
-                    <button
-                        className='w-full py-2 rounded-md border-2 border-primary hover:bg-primary hover:text-white duration-200 flex justify-center'>
-                        {loading ? <LoadingIcon className='w-6 h-6 animate-spin hover:stroke-white' /> : t('btn')}
-                    </button>
-                </div>
+      return {
+        data: data.brands,
+        totalPages: data.totalPages,
+      };
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+      return { data: [], totalPages: 0 };
+    }
+  };
+  return (
+    <div className="rounded-xl w-[calc(100vw-42px)]  md:w-full border p-6 ">
+      <h3 className="text-2xl font-bold mb-6">{t("adInfo")}</h3>
+      <form
+        className="grid grid-cols-[1fr_2fr] gap-x-14"
+        onSubmit={ad ? handleUpdate : onSubmit}
+      >
+        <div className="flex flex-col gap-3">
+          <UserInput
+            errors={errors}
+            roles={{ value: ad?.title, required: t("titleRequired") }}
+            fieldForm="title"
+            register={register}
+            label={t("title")}
+            defaultValue={ad?.title}
+          />
+
+          <div className="grid items-center grid-cols-[1fr_2.5fr] w-full h-min relative">
+            <label className="text-nowrap" htmlFor="description">
+              {t("description")}:
+            </label>
+            <textarea
+              defaultValue={ad?.description}
+              {...register("description", {
+                value: ad?.description,
+              })}
+              id="description"
+              className={clsx(
+                "border-2 border-[#DADADA] p-2 rounded-xl bg-transparent shadow-[0px_0px_5px_-1px_#00000040] outline-none",
+                "hover:border-primary focus:border-primary",
+                "transition-colors duration-200 ease-in-out"
+              )}
+            ></textarea>
+            <ErrorMsg message={errors?.description?.message as string} />
+          </div>
+
+          <FetchSelect<Brand>
+            fieldForm="brandId"
+            label={t("brand")}
+            placeholder={""}
+            fetchFunction={fetchBrand}
+            getOptionLabel={(brand) => brand.name}
+            getOptionValue={(brand) => brand.id}
+            defaultValue={ad?.brand ?? null}
+            roles={{ required: t("brandIsRequired") }}
+            register={register}
+            setValue={setValue}
+            errors={errors}
+          />
+
+          <CustomSelect
+            roles={{ value: ad?.status, required: t("statusRequired") }}
+            errors={errors}
+            fieldForm="status"
+            label={t("status")}
+            register={register}
+            defaultValue={ad?.status}
+            options={[
+              { value: "Active", label: t("active") },
+              { value: "Inactive", label: t("blocked") },
+            ]}
+          />
+        </div>
+        <div className="flex flex-col gap-3">
+          <div className="">
+            <AddImageInput
+              register={register}
+              text={t("addImage")}
+              imagePreview={image}
+              setImagePreview={setImage}
+              required={!ad}
+            />
+            <ErrorMsg message={errors?.imageFile?.message as string} />
+          </div>
+          <UserInput
+            fieldForm="targetUrl"
+            register={register}
+            roles={{ value: ad?.targetUrl, required: t("targetUrlRequired") }}
+            defaultValue={ad?.targetUrl}
+            errors={errors}
+            label={t("targetUrl")}
+          />
+
+          <CustomSelect
+            errors={errors}
+            fieldForm="adType"
+            label={t("adType")}
+            register={register}
+            roles={{ value: ad?.adType, required: t("adTypeRequired") }}
+            defaultValue={ad?.adType}
+            options={Object.values(AdsType).map((type) => ({
+              value: type,
+              label: t(type),
+            }))}
+          />
+          <div className="flex pl-2 gap-3 items-center w-full">
+            <CircleAlert className="text-white bg-primary rounded-full size-5 " />
+            <CustomSelect
+              errors={errors}
+              fieldForm="priority"
+              label={t("priority")}
+              register={register}
+              roles={{ value: ad?.priority, required: t("priorityRequired") }}
+              defaultValue={ad?.priority}
+              options={Array.from({ length: 10 }, (_, index) => ({
+                value: index + 1,
+                label: index + 1,
+              }))}
+            />
+          </div>
+          <h5>{t("appearToUser")}</h5>
+          <div className="grid grid-cols-[0.5fr_1fr_1fr] gap-3">
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                className="accent-primary"
+                id="basic"
+                {...register("basic", {
+                  value: !!BasicType,
+                })}
+              />
+              <label htmlFor="basic"> {t("basic")} </label>
             </div>
-        </form>
-    )
-}
+            {(watch("basic") || BasicType) && (
+              <>
+                <CustomDatePicker
+                  errors={errors}
+                  rules={{
+                    value: BasicType?.startDate,
+                    required: watch("basic") ? t("startDateRequired") : false,
+                  }}
+                  setValue={setValue}
+                  control={control}
+                  defaultValue={
+                    BasicType?.startDate ? new Date(BasicType.startDate) : null
+                  }
+                  label={t("startDate")}
+                  fieldForm="basicStart"
+                  className="w-full p-1 text-xs ml-auto border-1"
+                />
+                <CustomDatePicker
+                  errors={errors}
+                  rules={{
+                    value: BasicType?.endDate,
+                    required: watch("basic") ? t("endDateRequired") : false,
+                  }}
+                  setValue={setValue}
+                  control={control}
+                  defaultValue={
+                    BasicType?.endDate ? new Date(BasicType.endDate) : null
+                  }
+                  label={t("endDate")}
+                  fieldForm="basicEnd"
+                  className="w-full p-1 text-xs ml-auto border-1"
+                />
+              </>
+            )}
+          </div>
+          <div className="grid grid-cols-[0.5fr_1fr_1fr] gap-3">
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                className="accent-primary"
+                id="standard"
+                {...register("standard", {
+                  value: !!StandardType,
+                })}
+              />
+              <label htmlFor="standard">{t("standard")}</label>
+            </div>
 
-export default AddAds
+            {(watch("standard") || StandardType) && (
+              <>
+                <CustomDatePicker
+                  errors={errors}
+                  control={control}
+                  setValue={setValue}
+                  rules={{
+                    value: StandardType?.startDate,
+                    required: watch("standard")
+                      ? t("startDateRequired")
+                      : false,
+                  }}
+                  defaultValue={
+                    StandardType?.startDate
+                      ? new Date(StandardType.startDate)
+                      : null
+                  }
+                  label={t("startDate")}
+                  fieldForm="standardStart"
+                  className="w-full p-1 text-xs ml-auto border-1"
+                />
+                <CustomDatePicker
+                  errors={errors}
+                  rules={{
+                    value: StandardType?.endDate,
+                    required: watch("standard") ? t("endDateRequired") : false,
+                  }}
+                  defaultValue={
+                    StandardType?.endDate
+                      ? new Date(StandardType.endDate)
+                      : null
+                  }
+                  setValue={setValue}
+                  control={control}
+                  label={t("endDate")}
+                  fieldForm="standardEnd"
+                  className="w-full p-1 text-xs ml-auto border-1"
+                />
+              </>
+            )}
+          </div>
+          <div className="grid grid-cols-[0.5fr_1fr_1fr] gap-3">
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                className="accent-primary"
+                id="vip"
+                {...register("VIP", {
+                  value: !!VIPType,
+                })}
+              />
+              <label htmlFor="vip"> {t("vip")} </label>
+            </div>
+            {(watch("VIP") || VIPType) && (
+              <>
+                <CustomDatePicker
+                  errors={errors}
+                  control={control}
+                  setValue={setValue}
+                  rules={{
+                    value: VIPType?.startDate,
+                    required: watch("VIP") ? t("startDateRequired") : false,
+                  }}
+                  defaultValue={
+                    VIPType?.startDate ? new Date(VIPType.startDate) : null
+                  }
+                  label={t("startDate")}
+                  fieldForm="VIPStart"
+                  className="w-full p-1 text-xs ml-auto border-1"
+                />
+                <CustomDatePicker
+                  errors={errors}
+                  control={control}
+                  setValue={setValue}
+                  rules={{
+                    value: VIPType?.endDate,
+                    required: watch("VIP") ? t("endDateRequired") : false,
+                  }}
+                  defaultValue={
+                    VIPType?.endDate ? new Date(VIPType.endDate) : null
+                  }
+                  label={t("endDate")}
+                  fieldForm="VIPEnd"
+                  className="w-full p-1 text-xs ml-auto border-1"
+                />
+              </>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-10">
+            <button
+              disabled={loading}
+              className="py-2 px-12 rounded-3xl bg-primary text-white flex justify-center"
+            >
+              {loading && (
+                <LoadingIcon className="w-6 h-6 animate-spin hover:stroke-white" />
+              )}
+              {!loading && (ad ? t("edit") : t("add"))}
+            </button>
+            <button
+              className="py-2 px-12 rounded-3xl border border-[#E9E9E9]"
+              type="reset"
+              onClick={() => {
+                reset();
+                handleClose();
+              }}
+            >
+              {t("cancel")}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default AddAds;

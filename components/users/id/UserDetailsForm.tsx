@@ -66,7 +66,7 @@ const UserDetailsForm = ({
           label={t("birthday")}
           fieldForm="birthDate"
           control={control}
-          defaultValue={new Date(user.birthDate ?? "")}
+          defaultValue={user.birthDate ? new Date(user.birthDate) : null}
         />
       </div>
 
