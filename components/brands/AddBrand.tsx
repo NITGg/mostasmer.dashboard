@@ -133,7 +133,7 @@ const AddBrand = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-                <div className="bg-white rounded-3xl p-6">
+                <div className="bg-white rounded-3xl p-6 sidebar-scrolling custom-scrollbar">
                     <h2 className="text-xl font-semibold mb-6">Add Info</h2>
                     
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -179,7 +179,7 @@ const AddBrand = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
                                     className="flex-1 px-3 py-2 border rounded-lg text-sm"
                                 />
                             </div>
-
+{/* 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex items-center">
                                     <label className="w-24 text-sm">Latitude :</label>
@@ -199,7 +199,7 @@ const AddBrand = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
                                         className="flex-1 px-3 py-2 border rounded-lg text-sm"
                                     />
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className="flex flex-col">
                                 <label className="text-sm mb-2">About :</label>

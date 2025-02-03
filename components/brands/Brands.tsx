@@ -69,14 +69,20 @@ const Brands: React.FC<BrandsProps> = ({ initialBrands, initialCount }) => {
     const handleDeleteBrand = async (id: number) => {
         try {
             setLoading(true);
-            const headers = new Headers();
-            headers.append('Authorization', `Bearer ${token}`);
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", `Bearer ${token}`);
 
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/${id}`,
-                { method: 'DELETE', headers }
-            );
-            
+            const formdata = new FormData(); // Create an empty FormData object
+
+            const requestOptions = {
+                method: "DELETE",
+                headers: myHeaders,
+                body: formdata, // Include the FormData object in the request
+                redirect: "follow"
+            };
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/${id}`, requestOptions);
+
             if (!response.ok) throw new Error('Failed to delete brand');
 
             await fetchBrands(); // Refresh the list
@@ -138,6 +144,7 @@ const Brands: React.FC<BrandsProps> = ({ initialBrands, initialCount }) => {
     aria-label={t('viewBrand')}
 >
     <EyeIcon className='w-5 h-5 text-[#00a18f] hover:text-gray-700' />
+    {/* <PluseCircelIcon className='w-5 h-5 text-[#00a18f] hover:text-gray-700' /> */}
 </button>
                         <button
                             onClick={() => setOpenDelete(brand.id)}

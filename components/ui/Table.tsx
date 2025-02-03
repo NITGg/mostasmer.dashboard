@@ -1,6 +1,6 @@
 "use client";
 import { useTranslations, useLocale } from "next-intl";
-import React, { ReactNode, useState, useEffect, ReactElement } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import Pagination from "./Pagination";
 import { LoadingIcon } from "../icons";
 import toast from 'react-hot-toast';
@@ -9,25 +9,15 @@ import 'jspdf-autotable';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
-// Add this type declaration for jsPDF with autoTable
-declare module 'jspdf' {
-  interface jsPDF {
-    autoTable: (options: any) => jsPDF;
-  }
-}
+import customFont from '../../public/fonts/NotoNaskhArabic-Regular.ttf';
 
 import 'jspdf-autotable';
 import '../NotoNaskhArabic-Regular-normal.js';
 
-// Add interface for child components
-interface TableRowProps {
-  data: any[];
-}
-
 interface TableProps {
   data: any[];
   headers: { name: string; className?: string }[];
-  children: ReactElement<TableRowProps> | ReactElement<TableRowProps>[];
+  children: React.ReactNode;
   count?: number;
   loading?: boolean;
   showDateFilter?: boolean;
@@ -39,9 +29,6 @@ interface TableProps {
   onExport?: (format: 'pdf' | 'csv') => void;
   onDateFilter?: (startDate: string, endDate: string) => void;
   currentPage: number;
-  showCount?: boolean;
-  currentItems?: number;
-  initialData?: any[];
 }
 
 const Table = ({
@@ -59,8 +46,6 @@ const Table = ({
   onExport,
   bgColor = 'white',
   onDateFilter,
-  currentItems,
-  initialData,
 }: TableProps) => {
   const t = useTranslations("Tablecomponent");
   const [filteredData, setFilteredData] = useState(data);
@@ -205,7 +190,6 @@ const Table = ({
     }
   };
 
-
   // Update URL and trigger data fetch when page changes
   const handlePageChange = (newPage: number) => {
     // Update URL
@@ -231,13 +215,9 @@ const Table = ({
     }
   };
 
-  // Use initial data while loading
-  const displayData = loading ? (initialData || []) : (filteredData || data);
-  const displayCount = loading ? (initialData?.length || 0) : count;
-
   return (
     <div className="w-full mx-auto">
-      <div className="rounded-t-xl overflow-auto max-h-[calc(100vh-200px)] border border-gray-200 bg-white">
+      <div className="rounded-t-xl overflow-auto max-h-[calc(100vh-350px)] border border-gray-200 bg-white sidebar-scrolling">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead className={`text-xs uppercase sticky top-0 z-50 ${
             bgColor === '#02161e' ? 'text-white bg-[#02161e]' : 
@@ -277,11 +257,9 @@ const Table = ({
                     </td>
                   </tr>
                 ) : (
-                  React.Children.map(children, (child) => {
-                    if (React.isValidElement<TableRowProps>(child)) {
-                      return React.cloneElement(child, {
-                        data: filteredData,
-                      });
+                  React.Children.map(children, child => {
+                    if (React.isValidElement(child)) {
+                      return React.cloneElement(child, { data: filteredData });
                     }
                     return child;
                   })
@@ -292,23 +270,21 @@ const Table = ({
         </table>
       </div>
 
-      <div className="sticky bottom-0 w-full">
-        <Pagination
-          count={displayCount}
-          limit={pageSize}
-          setLimit={onPageSizeChange || (() => {})}
-          currentPage={currentPage}
-          onPageChange={onPageChange || (() => {})}
-          onExport={showExport ? handleExport : undefined}
-          onDateFilter={showDateFilter ? handleDateFilter : undefined}
-          showExport={showExport}
-          showDateFilter={showDateFilter}
-          bgColor={bgColor}
-          data={displayData}
-          length={displayData?.length || 0}
-          isLoading={loading}
-        />
-      </div>
+      <Pagination
+        count={count}
+        limit={pageSize}
+        setLimit={handlePageSizeChange}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+        onExport={showExport ? handleExport : undefined}
+        onDateFilter={showDateFilter ? handleDateFilter : undefined}
+        showExport={showExport}
+        showDateFilter={showDateFilter}
+        bgColor={bgColor}
+        data={data}
+        length={data?.length || 0}
+      />
+
     </div>
   );
 };
