@@ -12,16 +12,16 @@ export type User = {
   imageUrl: string | null;
   phone: string;
   roles: Role[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
   passwordLastUpdated?: string;
   lastLoginAt?: string;
   Address?: any[];
   isActive?: boolean;
   lang?: string;
   isConfirmed?: boolean;
-  birthDate: string;
-  gender: string;
+  birthDate?: string;
+  gender?: string;
 };
 
 type InitialStateType = {
