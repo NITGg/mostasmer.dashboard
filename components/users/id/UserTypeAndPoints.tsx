@@ -115,7 +115,11 @@ const UserTypeAndPoints = ({
         </button>
       </h2>
       <div className="flex flex-col gap-1">
-        <h3 className="text-xl font-semibold">{t("userPoints")}</h3>
+        <h3 className="text-xl font-semibold">
+          {t("userPurchases", {
+            purchases: wallet.buyerAmount,
+          })}
+        </h3>
         <p>
           {t("pointsDetails", {
             pointsLeft,

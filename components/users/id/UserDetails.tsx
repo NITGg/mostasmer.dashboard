@@ -106,6 +106,10 @@ const UserDetails = ({
         userData.imageUrl = formData.imageFile[0];
       }
 
+      if (formData.password) {
+        userData.password = formData.password;
+      }
+
       const { data } = await axios.put(
         `/api/user/${user.id}`,
         { ...userData },

@@ -106,6 +106,7 @@ const UserDetailsForm = ({
             setShowPassword={setShowPassword}
           />
         }
+        autoComplete="new-password"
       />
 
       <CustomSelect

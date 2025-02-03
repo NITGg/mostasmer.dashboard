@@ -97,7 +97,7 @@ const UserTypePopupForm = ({
       };
 
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user-types`,
+        `/api/user-types`,
         formattedData,
         {
           headers: {
@@ -126,7 +126,7 @@ const UserTypePopupForm = ({
       };
 
       const { data } = await axios.put(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user-types/${type?.id}`,
+        `/api/user-types/${type?.id}`,
         formattedData,
         {
           headers: {

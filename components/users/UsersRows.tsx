@@ -96,7 +96,7 @@ const UsersRows = ({
         >
           <div className="flex gap-3">
             <PluseCircelIcon className="size-6" />
-            <div className="flex-1">{t("add")}</div>
+            <div className="flex-1">{t("addUser")}</div>
           </div>
         </button>
       </div>
@@ -136,7 +136,7 @@ const UsersRows = ({
           data={users}
           count={users.length}
           headers={headers}
-          showDateFilter={false}
+          showDateFilter={false}          
           pageSize={pageSize}
           currentPage={currentPage}
           onPageChange={(page) => setCurrentPage(page)}

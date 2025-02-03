@@ -186,7 +186,7 @@ const AddUserForm = ({ handelClose }: { handelClose: () => void }) => {
             ]}
           />
           <CustomSelect
-            roles={{ required: false }}
+            roles={{ required: false, value: "ar" }}
             errors={errors}
             label={t("language")}
             fieldForm="lang"
@@ -197,7 +197,7 @@ const AddUserForm = ({ handelClose }: { handelClose: () => void }) => {
             ]}
           />
           <CustomSelect
-            roles={{ required: false }}
+            roles={{ required: false, value: "customer" }}
             errors={errors}
             label={t("role")}
             fieldForm="role"

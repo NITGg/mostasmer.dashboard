@@ -63,6 +63,7 @@ const CustomDatePicker = ({
               }
               dateFormat="dd-MM-yyyy"
               ref={datePickerRef}
+              autoComplete="off"
               className={clsx(
                 "border-2 border-[#DADADA] p-2 rounded-xl bg-transparent shadow-[0px_0px_5px_-1px_#00000040] outline-none",
                 "hover:border-primary focus:border-primary w-full",
