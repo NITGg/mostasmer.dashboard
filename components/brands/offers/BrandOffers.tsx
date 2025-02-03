@@ -303,12 +303,12 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                     </h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                            <label className="block text-sm mb-1">Category</label>
+                            <label className="block text-sm mb-1">{(t('category'))}</label>
                             <select
-                                {...register('categoryId', { required: 'Category is required' })}
+                                {...register('categoryId', { required: t('category_required') })}
                                 className="w-full px-3 py-2 border rounded-lg"
                             >
-                                <option value="">Select a category</option>
+                                <option value="">{(t('category_select'))}</option>
                                 {categories.map(category => (
                                     <option key={category.id} value={category.id}>
                                         {category.name}
@@ -323,7 +323,7 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                         </div>
 
                         <div>
-                            <label className="block text-sm mb-1">URL</label>
+                            <label className="block text-sm mb-1">{(t('brandUrl'))}</label>
                             <input
                                 type="url"
                                 {...register('url')}
@@ -334,26 +334,26 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
 
                         {/* Form fields */}
                         <div>
-                            <label className="block text-sm mb-1">Point Back Ratio (%)</label>
+                            <label className="block text-sm mb-1">{(t('pointbackratio'))} (%)</label>
                             <input
                                 type="number"
-                                {...register('ratio', { required: 'Ratio is required' })}
+                                {...register('ratio', { required: (t('pointbackratio_required')) })}
                                 className="w-full px-3 py-2 border rounded-lg"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm mb-1">Valid From</label>
+                            <label className="block text-sm mb-1">{(t('validFrom'))}</label>
                             <input
                                 type="date"
-                                {...register('validFrom', { required: 'Start date is required' })}
+                                {...register('validFrom', { required: (t('validFrom_required')) })}
                                 className="w-full px-3 py-2 border rounded-lg"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm mb-1">Valid To</label>
+                            <label className="block text-sm mb-1">{(t('validFrom'))}</label>
                             <input
                                 type="date"
-                                {...register('validTo', { required: 'End date is required' })}
+                                {...register('validTo', { required: (t('validFrom_required')) })}
                                 className="w-full px-3 py-2 border rounded-lg"
                             />
                         </div>
@@ -363,14 +363,14 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                                 onClick={() => setIsAddDialogOpen(false)}
                                 className="px-4 py-2 border rounded-lg"
                             >
-                                Cancel
+                                {(t('cancel_delete_brand'))}
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading}
                                 className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
                             >
-                                {loading ? 'Saving...' : editingOffer ? 'Update' : 'Add'}
+                                {loading ? 'Saving...' : editingOffer ? (t('brandeditButton')) : (t('brandaddButton'))}
                             </button>
                         </div>
                     </form>

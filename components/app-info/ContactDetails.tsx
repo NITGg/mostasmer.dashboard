@@ -227,15 +227,9 @@ const ContactDetails = ({ contactData, onUpdate }: Props) => {
         if (!phone.startsWith('+')) {
             return t('phoneError.startPlus')
         }
-<<<<<<< HEAD
         // if (phone.length !== 13) {
         //     return t('phoneError.length')
         // }
-=======
-        if (phone.length !== 13) {
-            return t('phoneError.length')
-        }
->>>>>>> fmainn
         return ''
     }
 

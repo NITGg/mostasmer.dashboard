@@ -9,15 +9,44 @@ import 'jspdf-autotable';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
-import customFont from '../../public/fonts/NotoNaskhArabic-Regular.ttf';
 
 import 'jspdf-autotable';
 import '../NotoNaskhArabic-Regular-normal.js';
 
+// Add proper type declaration for jsPDF with autoTable
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: {
+      head: string[][];
+      body: any[][];
+      startY?: number;
+      theme?: string;
+      styles?: {
+        font?: string;
+        fontSize?: number;
+        cellPadding?: number;
+      };
+      columnStyles?: {
+        [key: number]: { cellWidth: number | 'auto' };
+      };
+      margin?: {
+        top: number;
+        left: number;
+        right: number;
+      };
+    }) => jsPDF;
+  }
+}
+
+// Add interface for child components
+interface TableRowProps {
+  data: any[];
+}
+
 interface TableProps {
   data: any[];
   headers: { name: string; className?: string }[];
-  children: React.ReactNode;
+  children: React.ReactElement<TableRowProps> | React.ReactElement<TableRowProps>[];
   count?: number;
   loading?: boolean;
   showDateFilter?: boolean;
@@ -29,6 +58,25 @@ interface TableProps {
   onExport?: (format: 'pdf' | 'csv') => void;
   onDateFilter?: (startDate: string, endDate: string) => void;
   currentPage: number;
+  currentItems?: number;
+  showCount?: boolean;
+  initialData?: any[];
+}
+
+interface PaginationProps {
+  count: number;
+  limit: number;
+  setLimit: (limit: number) => void;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  onExport?: (format: 'pdf' | 'csv') => void;
+  onDateFilter?: (startDate: string, endDate: string) => void;
+  showExport?: boolean;
+  showDateFilter?: boolean;
+  bgColor?: 'white' | 'black' | '#02161e' | '#dfe2e8';
+  data: any[];
+  length: number;
+  isLoading?: boolean;
 }
 
 const Table = ({
@@ -44,7 +92,7 @@ const Table = ({
   onPageSizeChange,
   showExport = false,
   onExport,
-  bgColor = 'white',
+  bgColor = 'black',
   onDateFilter,
 }: TableProps) => {
   const t = useTranslations("Tablecomponent");
@@ -134,7 +182,7 @@ const Table = ({
             locale === 'ar' ? item.nameAr || item.name : item.name || item.nameEn
           ]);
 
-          // Add table
+          // Add table with proper typing
           doc.autoTable({
             head: [visibleHeaders],
             body: tableData,
@@ -185,8 +233,8 @@ const Table = ({
         URL.revokeObjectURL(link.href);
       }
     } catch (error) {
-      console.error(`${format.toUpperCase()} generation error:`, error);
-      toast.error(`Failed to generate ${format.toUpperCase()}`);
+      console.error('Export error:', error);
+      toast.error('Failed to export data');
     }
   };
 
@@ -257,9 +305,11 @@ const Table = ({
                     </td>
                   </tr>
                 ) : (
-                  React.Children.map(children, child => {
-                    if (React.isValidElement(child)) {
-                      return React.cloneElement(child, { data: filteredData });
+                  React.Children.map(children, (child) => {
+                    if (React.isValidElement<TableRowProps>(child)) {
+                      return React.cloneElement(child, {
+                        data: filteredData
+                      } as TableRowProps);
                     }
                     return child;
                   })
@@ -281,8 +331,9 @@ const Table = ({
         showExport={showExport}
         showDateFilter={showDateFilter}
         bgColor={bgColor}
-        data={data}
-        length={data?.length || 0}
+        data={filteredData || data}
+        length={filteredData?.length || data?.length || 0}
+        // isLoading={isLoading}
       />
 
     </div>

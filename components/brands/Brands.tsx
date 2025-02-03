@@ -72,20 +72,20 @@ const Brands: React.FC<BrandsProps> = ({ initialBrands, initialCount }) => {
             const myHeaders = new Headers();
             myHeaders.append("Authorization", `Bearer ${token}`);
 
-            const formdata = new FormData(); // Create an empty FormData object
+            const formdata = new FormData();
 
-            const requestOptions = {
+            const requestOptions: RequestInit = {
                 method: "DELETE",
                 headers: myHeaders,
-                body: formdata, // Include the FormData object in the request
-                redirect: "follow"
+                body: formdata,
+                redirect: 'follow' as RequestRedirect
             };
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/${id}`, requestOptions);
 
             if (!response.ok) throw new Error('Failed to delete brand');
 
-            await fetchBrands(); // Refresh the list
+            await fetchBrands();
             setOpenDelete(null);
             toast.success(t('successDelete'));
         } catch (error: any) {

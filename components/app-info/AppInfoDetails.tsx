@@ -22,9 +22,6 @@ interface AppData {
     digitalcardar: string
 }
 
-<<<<<<< HEAD
-const AppInfoDetails = () => {
-=======
 interface AppInfoDetailsProps {
     data: {
         about: string;
@@ -43,7 +40,6 @@ interface AppInfoDetailsProps {
 }
 
 const AppInfoDetails: React.FC<AppInfoDetailsProps> = ({ data }) => {
->>>>>>> fmainn
     const t = useTranslations('appInfo')
     const { token } = useAppContext()
     const [isAppInfoExpanded, setIsAppInfoExpanded] = useState(true)
