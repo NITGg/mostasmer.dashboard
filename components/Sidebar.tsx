@@ -71,7 +71,7 @@ const Sidebar = ({
         },
         {
             label: t('ads'),
-            icon: <AdsIcon className={clsx('size-6 fill-white', { 'fill-white': pathname.includes('ads') })} />,
+            icon: <AdsIcon className="size-6" />,
             href: '/ads',
             role: 'admin'
         },
