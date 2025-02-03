@@ -100,7 +100,7 @@ const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ads }) => {
       adData.endDate = nextYearDate;
 
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL11}/api/ads`,
+        `/api/ads`,
         adData,
         {
           headers: {
@@ -173,7 +173,7 @@ const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ads }) => {
         adData.imageUrl = formData.imageFile[0];
       }
       const { data } = await axios.put(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/ads/${ad?.id}`,
+        `/api/ads/${ad?.id}`,
         adData,
         {
           headers: {

@@ -49,7 +49,7 @@ const AdsHeader = ({ data, count }: { data: Ads[]; count: number }) => {
     try {
       setLoading(true);
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/ads/${deleteBoard}`,
+        `/api/ads/${deleteBoard}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
