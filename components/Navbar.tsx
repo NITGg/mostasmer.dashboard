@@ -10,6 +10,7 @@ import { deleteCookie } from '@/lib/deleteCookie';
 import { useAppContext } from '@/context/appContext';
 
 import { BellIcon, GlobeAltIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 const Navbar = ({ setOpen }: {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -18,7 +19,7 @@ const Navbar = ({ setOpen }: {
     const [openAvatar, setOpenAvater] = useState(false)
     const pathname = usePathname();
     const locale = useLocale();
-    const { push } = useRouter()
+    const router = useRouter()
 
     const getNewPathname = (newLocale: string) => {
         let newPathname = pathname.replace(/^\/(en|ar)/, '');
@@ -27,11 +28,21 @@ const Navbar = ({ setOpen }: {
     const eleRef = useClickOutside(() => setOpenAvater(false), openAvatar)
     const logout = async () => {
         deleteCookie('token')
-        push('/')
+        router.push('/')
         setTimeout(() => window.location.reload(), 500)
     }
 
     const t = useTranslations('navbar')
+
+    const handleLanguageChange = () => {
+        const newLocale = locale === 'ar' ? 'en' : 'ar';
+        
+        const pathWithoutLocale = pathname.replace(`/${locale}`, '');
+        
+        const newPath = `/${newLocale}${pathWithoutLocale}`;
+        
+        router.push(newPath);
+    };
 
     return (
         <nav className='p-container flex justify-between lg:justify-end py-5 items-center'>
@@ -49,8 +60,14 @@ const Navbar = ({ setOpen }: {
                         className='size-11 rounded-full'
                     />
                 </button>
-                <BellIcon className="h-6 w-6 text-gray-500" />
-                <GlobeAltIcon className="h-6 w-6 text-gray-500" />
+                <button 
+                    onClick={handleLanguageChange}
+                    className="flex items-center  py-2 rounded-lg hover:text-teal-500 text-teal-500 "
+                >
+                    <GlobeAltIcon className="h-6 w-6 text-teal-500" />
+                    <span className='text-teal-600 uppercase'>{locale}</span> 
+
+                </button>
                 </div>
 
                 {
