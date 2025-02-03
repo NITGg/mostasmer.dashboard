@@ -163,7 +163,7 @@ const Brands: React.FC<BrandsProps> = ({ initialBrands, initialCount }) => {
         <div className='p-container space-y-6'>
             <div className='flex justify-between items-center'>
                 <h4 className='font-bold text-lg md:text-xl lg:text-2xl'>{t('title')}</h4>
-                <button
+                {/* <button
                     onClick={() => setIsAddBrandOpen(true)}
                     className='px-5 py-2  rounded-md text-white font-medium'
                 >
@@ -171,8 +171,22 @@ const Brands: React.FC<BrandsProps> = ({ initialBrands, initialCount }) => {
                         <PluseCircelIcon className='size-6 text-teal-500' />
                         <div className='flex-1'>{t('brandaddButton')}</div>
                     </div>
-                </button>
+                </button> */}
+
+                <button
+          onClick={() => {
+            setIsAddBrandOpen(true)
+          }}
+          className="px-5 py-2 bg-primary rounded-md text-white font-medium"
+        >
+          <div className="flex gap-3">
+            <PluseCircelIcon className="size-6" />
+            <div className="flex-1">{t("addUser")}</div>
+          </div>
+        </button>
             </div>
+
+
 
             <Table
                 data={brands}

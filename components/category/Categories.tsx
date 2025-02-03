@@ -243,7 +243,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, 
     return (
         <div className='p-container space-y-6'>
             <div className='flex justify-between items-center'>
-                <h4 className='font-bold text-lg md:text-xl lg:text-2xl'>{t('category')}</h4>
+                <h4 className='font-bold text-lg md:text-xl lg:text-2xl'>{t('categories')}</h4>
                 {/* <button
                     onClick={() => setOpen(true)}
                     className='px-5 py-2  rounded-md text-white font-medium'
