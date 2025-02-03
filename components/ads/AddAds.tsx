@@ -111,6 +111,7 @@ const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ads }) => {
       );
       toast.success(t("success"));
       dispatch(addAds(data.ad));
+      setTimeout(() => window.location.reload(), 500);
       reset();
       handleClose();
     } catch (err: any) {
