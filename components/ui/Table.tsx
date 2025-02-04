@@ -77,6 +77,8 @@ interface PaginationProps {
   data: any[];
   length: number;
   isLoading?: boolean;
+  start: number;
+  end: number;
 }
 
 const Table = ({
@@ -263,6 +265,30 @@ const Table = ({
     }
   };
 
+  // Calculate the range of items being displayed
+  const calculateRange = () => {
+    if (!count || count === 0) return { start: 0, end: 0, total: 0 };
+    
+    if (pageSize === 0) { // When showing all records
+      return {
+        start: 1,
+        end: count,
+        total: count
+      };
+    }
+
+    const start = ((currentPage - 1) * pageSize) + 1;
+    const end = Math.min(currentPage * pageSize, count);
+    
+    return {
+      start: count > 0 ? start : 0,
+      end,
+      total: count
+    };
+  };
+
+  const { start, end, total } = calculateRange();
+
   return (
     <div className="w-full mx-auto">
       {/* <div className="rounded-t-xl overflow-auto max-h-[calc(100vh-350px)] border border-gray-200 bg-white sidebar-scrolling"> */}
@@ -321,7 +347,7 @@ const Table = ({
       </div>
 
       <Pagination
-        count={count}
+        count={total}
         limit={pageSize}
         setLimit={handlePageSizeChange}
         currentPage={currentPage}
@@ -331,9 +357,10 @@ const Table = ({
         showExport={showExport}
         showDateFilter={showDateFilter}
         bgColor={bgColor}
-        data={filteredData || data}
-        length={filteredData?.length || data?.length || 0}
-      // isLoading={isLoading}
+        data={data}
+        length={data?.length || 0}
+        start={start}
+        end={end}
       />
 
     </div>

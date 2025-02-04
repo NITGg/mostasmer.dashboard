@@ -21,6 +21,8 @@ interface PaginationProps {
   data: any[];
   length: number;
   isLoading?: boolean;
+  start: number;
+  end: number;
 }
 
 const Pagination = ({
@@ -37,6 +39,8 @@ const Pagination = ({
   data,
   length,
   isLoading = false,
+  start,
+  end,
 }: PaginationProps) => {
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<'pdf' | 'csv'>('pdf');
@@ -105,38 +109,12 @@ const Pagination = ({
     }
   };
 
-  const calculateRecords = () => {
-    if (limit === 0) { // When showing all records
-      return {
-        start: 1,
-        end: count,
-        total: count
-      };
-    }
+  // Calculate total pages
+  const totalPages = limit === 0 ? 1 : Math.ceil(count / limit);
 
-    const start = ((currentPage - 1) * limit) + 1;
-    const end = Math.min(currentPage * limit, count);
-    
-    return {
-      start: count > 0 ? start : 0,
-      end,
-      total: count
-    };
-  };
-
-  const { start, end, total } = calculateRecords();
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < Math.ceil(total / (limit || total))) {
-      onPageChange(currentPage + 1);
-    }
-  };
+  // Check if can go to previous/next page
+  const canGoPrevious = currentPage > 1;
+  const canGoNext = currentPage < totalPages;
 
   return (
     <div className={`w-full px-4 py-3 flex flex-wrap items-center justify-between rounded-b-xl text-xs ${
@@ -232,9 +210,9 @@ const Pagination = ({
         <div className="min-w-[100px] text-center">
           {isLoading ? (
             <span className="text-sm">Loading...</span>
-          ) : total > 0 ? (
+          ) : count > 0 ? (
             <span className="text-sm">
-              {start}-{end} {t('of')} {total}
+              {start}-{end} {t('of')} {count}
             </span>
           ) : (
             <span className="text-sm">0 {t('of')} 0</span>
@@ -244,20 +222,20 @@ const Pagination = ({
         {/* Navigation buttons */}
         <div className="flex gap-2">
           <button 
-            disabled={currentPage <= 1}
-            onClick={handlePrevPage}
+            disabled={!canGoPrevious}
+            onClick={() => onPageChange(currentPage - 1)}
             className={`p-1 rounded transition-colors duration-200 ${
-              currentPage <= 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/10'
+              !canGoPrevious ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/10'
             }`}
             aria-label="Previous page"
           >
             <ChevronLeftIcon className={clsx("w-5 h-5", { "rotate-180": locale === "ar" })} />
           </button>
           <button 
-            disabled={currentPage >= Math.ceil(total / (limit || total))}
-            onClick={handleNextPage}
+            disabled={!canGoNext}
+            onClick={() => onPageChange(currentPage + 1)}
             className={`p-1 rounded transition-colors duration-200 ${
-              currentPage >= Math.ceil(total / (limit || total)) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/10'
+              !canGoNext ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/10'
             }`}
             aria-label="Next page"
           >
@@ -268,7 +246,7 @@ const Pagination = ({
         {/* Current page display */}
         <div className="ml-2">
           <span className="text-sm">
-            {currentPage} / {Math.ceil(total / (limit || total))}
+            {currentPage} / {totalPages || 1}
           </span>
         </div>
       </div>

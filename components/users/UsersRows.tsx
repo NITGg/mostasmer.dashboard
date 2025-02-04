@@ -1,7 +1,7 @@
 "use client";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import ImageApi from "../ImageApi";
 import { EyeIcon } from "lucide-react";
@@ -11,6 +11,7 @@ import {
   Role,
   setUsers,
   User,
+  setUsersCount,
 } from "@/redux/reducers/usersReducer";
 import toast from "react-hot-toast";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
@@ -27,16 +28,34 @@ import axios from "axios";
 import Table from "../ui/Table";
 
 const UsersRows = ({
-  loading,
-  users,
-  count,
+  loading: initialLoading,
+  users: initialUsers,
+  count: initialCount,
 }: {
   loading: boolean;
   users: User[];
-  count: any;
+  count: number;
 }) => {
   const t = useTranslations("user");
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { token } = useAppContext();
+  const dispatch = useAppDispatch();
+
+  // State
+  const [addUser, setAddUser] = useState<boolean>(false);
+  const [deleteUserId, setDeleteUserId] = useState<User | null>(null);
+  const [pending, setPending] = useState<boolean>(false);
+  const [openDeleteUser, setOpenDeleteUser] = useState<boolean>(false);
+  const [loading, setLoading] = useState(initialLoading);
+  const [totalRecords, setTotalRecords] = useState(initialCount);
+  const [currentItems, setCurrentItems] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
+
+  // Get current pagination state from URL or defaults
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const pageSize = Number(searchParams.get('limit')) || 10;
 
   const headers = [
     { name: "image" },
@@ -47,20 +66,106 @@ const UsersRows = ({
     { name: "action", className: "text-center" },
   ];
 
-  const { token } = useAppContext();
-  const [addUser, setAddUser] = useState<boolean>(false);
-  const [deleteUserId, setDeleteUserId] = useState<User | null>(null);
-  const [pending, setPending] = useState<boolean>(false);
-  const [openDeleteUser, setOpenDeleteUser] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  // Fetch users with pagination
+  const fetchUsers = async (page: number, limit: number) => {
+    try {
+      setLoading(true);
+      const skip = (page - 1) * limit;
+      
+      let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/user?`;
+      
+      // Handle "All" case
+      if (limit === 0) {
+        url += 'limit=0&skip=0';
+      } else {
+        url += `limit=${limit}&skip=${skip}`;
+      }
 
-  const usersRedux = useAppSelector((state) => state.users.users);
-  const dispatch = useAppDispatch();
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
+      const data = response.data;
+      
+      // Update the users in Redux store
+      dispatch(setUsers(data.users));
+      
+      // Update local state
+      setCurrentItems(data.users.length);
+      
+      // Make sure we're getting the total count from the API response
+      const total = data.total || data.count || initialCount;
+      setTotalRecords(total);
+      
+      // Calculate total pages
+      const totalPages = limit === 0 ? 1 : Math.ceil(total / limit);
+      setTotalPages(totalPages);
+      
+      // Also update the count in Redux
+      dispatch(setUsersCount(total));
+
+      return {
+        users: data.users,
+        total
+      };
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      toast.error('Failed to fetch users');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize data
   useEffect(() => {
-    dispatch(setUsers(users));
+    const initializeData = async () => {
+      try {
+        // Set initial data
+        dispatch(setUsers(initialUsers));
+        setCurrentItems(initialUsers?.length || 0);
+        setTotalRecords(initialCount);
+        dispatch(setUsersCount(initialCount));
+
+        // Get page and limit from URL or use defaults
+        const page = Number(searchParams.get('page')) || 1;
+        const limit = Number(searchParams.get('limit')) || 10;
+
+        // Calculate initial total pages
+        const initialTotalPages = limit === 0 ? 1 : Math.ceil(initialCount / limit);
+        setTotalPages(initialTotalPages);
+
+        // Fetch data with current pagination
+        await fetchUsers(page, limit);
+      } catch (error) {
+        console.error('Error initializing data:', error);
+      }
+    };
+
+    initializeData();
   }, []);
+
+  // Function to update URL and fetch data
+  const updatePaginationAndFetch = async (page: number, limit: number) => {
+    try {
+      const params = new URLSearchParams(searchParams);
+      params.set('page', page.toString());
+      params.set('limit', limit.toString());
+      router.push(`${pathname}?${params.toString()}`);
+      
+      const result = await fetchUsers(page, limit);
+      if (result) {
+        const { total } = result;
+        const newTotalPages = limit === 0 ? 1 : Math.ceil(total / limit);
+        setTotalPages(newTotalPages);
+      }
+    } catch (error) {
+      console.error('Error updating pagination:', error);
+      toast.error('Failed to update page');
+    }
+  };
 
   const handleDelete = async () => {
     if (!deleteUserId) return;
@@ -75,23 +180,27 @@ const UsersRows = ({
       dispatch(deleteUser(deleteUserId.id));
       setOpenDeleteUser(false);
       toast.success(t("successDelete"));
-      setPending(false);
+      
+      // Refresh the current page after deletion
+      fetchUsers(currentPage, pageSize);
     } catch (error: any) {
-      setPending(false);
-      setOpenDeleteUser(false);
       console.error(error);
       toast.error(error?.response?.data?.message || "There is an Error");
+    } finally {
+      setPending(false);
     }
   };
 
+  // Get the total count from Redux
+  const totalCount = useAppSelector((state) => state.users.count);
+  const users = useAppSelector((state) => state.users.users);
+
   return (
-    <div className="flex flex-col gap-6 ">
+    <div className="flex flex-col gap-6">
       <div className="flex justify-between items-center">
         <h1>{t("users")}</h1>
         <button
-          onClick={() => {
-            setAddUser(!addUser);
-          }}
+          onClick={() => setAddUser(!addUser)}
           className="px-5 py-2 bg-primary rounded-md text-white font-medium"
         >
           <div className="flex gap-3">
@@ -134,15 +243,19 @@ const UsersRows = ({
         <Table
           loading={loading}
           data={users}
-          count={users.length}
+          count={totalRecords}
           headers={headers}
-          showDateFilter={false}          
+          showDateFilter={false}
           pageSize={pageSize}
           currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-          onPageSizeChange={(size) => setPageSize(size)}
+          onPageChange={(page) => updatePaginationAndFetch(page, pageSize)}
+          onPageSizeChange={(size) => updatePaginationAndFetch(1, size)}
+          showExport={true}
+          bgColor="#02161e"
+          currentItems={currentItems}
+          initialData={initialUsers}
         >
-          {(usersRedux?.length ? usersRedux : users)?.map((user: User) => (
+          {users?.map((user: User) => (
             <tr
               key={user.id}
               className="odd:bg-white even:bg-[#F0F2F5] border-b"

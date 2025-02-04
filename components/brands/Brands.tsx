@@ -181,7 +181,7 @@ const Brands: React.FC<BrandsProps> = ({ initialBrands, initialCount }) => {
         >
           <div className="flex gap-3">
             <PluseCircelIcon className="size-6" />
-            <div className="flex-1">{t("addUser")}</div>
+            <div className="flex-1">{t("add")}</div>
           </div>
         </button>
             </div>
