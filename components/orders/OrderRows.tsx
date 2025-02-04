@@ -118,7 +118,7 @@ const OrderRows = ({ loading, orders, count }: { loading: boolean, orders: any, 
                 length={orders.length}
                 count={count} currentPage={0} onPageChange={function (page: number): void {
                     throw new Error('Function not implemented.');
-                } } data={[]}            />
+                } } data={[]} start={0} end={0}            />
         </div>
     )
 }
