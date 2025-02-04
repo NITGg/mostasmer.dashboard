@@ -97,13 +97,7 @@ const UsersRows = ({
       
       // Make sure we're getting the total count from the API response
       const total = data.total || data.count || initialCount;
-      setTotalRecords(total);
-      
-      // Calculate total pages
-      const totalPages = limit === 0 ? 1 : Math.ceil(total / limit);
-      setTotalPages(totalPages);
-      
-      // Also update the count in Redux
+      setTotalRecords(total); // Also update the count in Redux
       dispatch(setUsersCount(total));
 
       return {
