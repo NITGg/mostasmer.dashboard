@@ -57,6 +57,8 @@
         "articles": "المقالات",
         "faqs": "الأسئلة الشائعة",
         "category": "الفئة",
+        "categories": "الفئات",
+
         "contactrequest": "طلب الاتصال",
         "aboutapp": "حول التطبيق",
         "translationapp": "تطبيق الترجمة",
@@ -228,6 +230,7 @@
     },
     "category": {
         "category": "الفئة",
+        "categories": "الفئات",
         "addCategory": "إضافة فئة",
         "successUpdate": "تم تحديث الفئة بنجاح!!",
         "deleteCategory": "حذف الفئة",

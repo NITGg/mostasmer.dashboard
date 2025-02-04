@@ -23,6 +23,7 @@
         "articles": "Articles",
         "faqs": "FAQs",
         "category": "Category",
+        "categories": "Categories",
         "contactrequest": "Contact Request",
         "aboutapp": "About App",
         "translationapp": "Translation App",
@@ -379,6 +380,7 @@
     },
     "category": {
         "category": "Category",
+        "categories": "Categories",
         "addCategory": "Add Category",
         "successUpdate": "Successfully update new category!!",
         "deleteCategory": "Delete category",

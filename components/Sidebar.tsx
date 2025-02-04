@@ -46,7 +46,7 @@ const Sidebar = ({
         },
 
         {
-            label: t('category'),
+            label: t('categories'),
             icon: <CategoryIcon className='size-6' />,
             href: '/category',
             role: 'admin'
