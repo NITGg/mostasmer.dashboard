@@ -10,6 +10,7 @@ import BrandNotFound from './BrandNotFound'
 import { Switch } from '../ui/switch'
 import { Input } from '../ui/input'
 import BrandDetailsSkeleton from './BrandDetailsSkeleton'
+import axios from 'axios'
 
 import {
     FaFacebook,
@@ -47,6 +48,7 @@ interface Brand {
     validTo: string
     ratio: number
     pointBackRatio: number
+    status: string
 }
 type SocialMediaPlatform = 'facebook' | 'twitter' | 'instagram' | 'linkedin' | 'tiktok' | 
     'youtube' | 'pinterest' | 'snapchat' | 'whatsapp' | 'telegram' | 'reddit';
@@ -68,6 +70,26 @@ interface SocialMedia {
     reddit: string | null;
 }
 
+// Add type definition for admin statuses
+type BrandStatus = 'ACTIVE' | 'INACTIVE' | 'DELETED' | 'ADMINACTIVE' | 'ADMININACTIVE';
+
+interface Brand {
+    id: number
+    name: string
+    phone: string
+    email: string
+    url: string
+    logo: string
+    cover: string
+    about: string
+    pointBackTerms: string
+    address: string
+    validFrom: string
+    validTo: string
+    ratio: number
+    pointBackRatio: number
+    status: BrandStatus | string
+}
 
 const BrandDetails = ({ brandId }: { brandId: string }) => {
     const [brand, setBrand] = useState<Brand | null>(null)
@@ -94,6 +116,13 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
         email: '',
         address: ''
     });
+    const [isActive, setIsActive] = useState<boolean>(true);
+    const [editedRatio, setEditedRatio] = useState<number | null>(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const [statusChanged, setStatusChanged] = useState(false);
+    const [selectedStatus, setSelectedStatus] = useState(brand?.status);
+    const [editedValidFrom, setEditedValidFrom] = useState<string | null>(null)
+    const [editedValidTo, setEditedValidTo] = useState<string | null>(null)
 
     const tabs = [
         { id: 'brand', label: 'Brand Offers' },
@@ -127,6 +156,8 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
         if (brand) {
             setAbout(brand.about)
             setPointBackTerms(brand.pointBackTerms)
+            setSelectedStatus(brand.status)
+            setIsActive(brand.status === 'ADMINACTIVE')
         }
     }, [brand])
 
@@ -160,6 +191,7 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
 
             const data = await response.json()
             setBrand(data.brand)
+            setIsActive(data.brand.status === 'ADMINACTIVE')
         } catch (error) {
             console.error('Error:', error)
             toast.error('Failed to load brand details')
@@ -198,6 +230,7 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
             setSaving(false)
         }
     }
+    
 
     const handleAboutUpdate = async () => {
         try {
@@ -353,7 +386,7 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
     const updateBrandField = async () => {
         try {
             const formData = new FormData();
-
+    
             // Only append fields that have been edited
             if (editedBrandFields.has('address')) {
                 formData.append('address', brandForm.address);
@@ -374,28 +407,170 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
             if (brand?.pointBackRatio) {
                 formData.append('pointBackRatio', brand.pointBackRatio.toString());
             }
-
+    
             const headers = new Headers();
             headers.append('Authorization', `Bearer ${token}`);
             // Note: Don't set Content-Type header when using FormData
-
+    
             const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/${brandId}`, {
                 method: 'PUT',
                 headers,
                 body: formData,
                 redirect: 'follow'
             });
-
-            if (!response.ok) throw new Error('Failed to update brand information');
-
+    
+            if (!response.ok) {
+                const errorData = await response.json(); // Capture the error response
+                throw new Error(errorData.error || 'Failed to update brand information'); // Use the error message from the response
+            }
+    
             const data = await response.json();
             setBrand(prev => prev ? { ...prev, ...data.brand } : null);
             setEditedBrandFields(new Set());
             toast.success('Brand information updated successfully');
+        } catch (error: unknown) {
+            console.error('Error:', error)
+            if (error instanceof Error) {
+                toast.error(`Failed to update brand information: ${error.message}`)
+            } else {
+                toast.error('Failed to update brand information')
+            }
+        }
+    }
+    const handleSaveChanges = async () => {
+        try {
+            setIsSaving(true);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/${brandId}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    status: isActive ? 'ACTIVE' : 'INACTIVE',
+                    ...(editedRatio !== null && { ratio: editedRatio })
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to update brand');
+            
+            const data = await response.json();
+            
+            // Update local state with the returned status from the API
+            setBrand(prev => prev ? { 
+                ...prev, 
+                status: data.brand.status,
+                ...(editedRatio !== null && { ratio: editedRatio })
+            } : null);
+            
+            setEditedRatio(null);
+            toast.success('Brand updated successfully');
         } catch (error) {
             console.error('Error:', error);
-            toast.error('Failed to update brand information');
+            toast.error('Failed to update brand');
+        } finally {
+            setIsSaving(false);
         }
+    };
+
+    const handleStatusToggle = () => {
+        setIsActive(prev => !prev);
+        setStatusChanged(true);
+    };
+
+    const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedStatus(event.target.value);
+        setStatusChanged(true);
+    };
+
+    const handleSaveStatus = async () => {
+        try {
+            // Prepare the data object with only the changed values
+            const data: any = {};
+            
+            // Check if dates are being changed
+            const newValidTo = editedValidTo ? new Date(editedValidTo) : (brand?.validTo ? new Date(brand?.validTo) : null);
+            const currentDate = new Date();
+            
+            // Determine status based on dates and admin action
+            if (statusChanged) {
+                // If admin explicitly sets status, use ADMIN prefix
+                data.status = selectedStatus;
+            } else if (editedValidTo && newValidTo) {
+                // If only date is changed, determine status automatically
+                if (newValidTo < currentDate) {
+                    data.status = 'INACTIVE'
+                } else {
+                    data.status = 'ACTIVE'
+                }
+            }
+            
+            // Add other changed fields
+            if (editedRatio !== null) {
+                data.ratio = editedRatio;
+            }
+            
+            if (editedValidFrom !== null) {
+                data.validFrom = editedValidFrom;
+            }
+            
+            if (editedValidTo !== null) {
+                data.validTo = editedValidTo;
+            }
+
+            // Only make the request if there are changes
+            if (Object.keys(data).length > 0) {
+                const response = await axios.patch(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/${brandId}/status`,
+                    data,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                // Update local state with the response data
+                setBrand(prev => prev ? {
+                    ...prev,
+                    ...response.data.brand
+                } : null);
+                
+                // Update selected status to match the new status
+                setSelectedStatus(response.data.brand.status);
+                
+                // Reset all edit states
+                setStatusChanged(false);
+                setEditedRatio(null);
+                setEditedValidFrom(null);
+                setEditedValidTo(null);
+                
+                toast.success('Brand settings updated successfully');
+            }
+        } catch (error) {
+            console.error('Error updating brand settings:', error);
+            toast.error('Failed to update brand settings');
+        }
+    };
+
+    // Add this helper function at the top of your component
+    const getCurrentStatus = (status: string | undefined, validTo: string | undefined) => {
+        if (!status) return 'INACTIVE';
+        
+        // If it's admin controlled, return that status
+        if (status === 'ADMINACTIVE' || status === 'ADMININACTIVE') {
+            return status;
+        }
+        
+        // Check date-based status
+        if (validTo) {
+            const validToDate = new Date(validTo);
+            const currentDate = new Date();
+            return validToDate > currentDate ? 'ACTIVE' : 'INACTIVE';
+        }
+        
+        return status;
     };
 
     if (loading) {
@@ -405,6 +580,10 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
 
     return (
         <div className="p-4 md:p-6">
+            <div className="mb-6">
+                <h1 className="text-2xl font-bold text-slate-950">{brand?.name}</h1>
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                 <div className="space-y-4 md:space-y-6">
                     <div className="bg-white rounded-xl p-4 shadow-xl">
@@ -481,7 +660,7 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
                                             setAbout(brand?.about || '');
                                             setIsAboutEdited(false);
                                         }}
-                                        className="px-4 py-1 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700"
+                                        className="px-4 py-1 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-black-700"
                                     >
                                         {(t('cancel_delete_brand'))}
                                     </button>
@@ -491,7 +670,7 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
                                     disabled={!isAboutEdited || savingAbout}
                                     className={`px-4 py-1 rounded-md text-sm transition-colors ${isAboutEdited
                                             ? 'bg-teal-500 text-white hover:bg-teal-600'
-                                            : 'bg-gray-200 text-gray-500'
+                                            : 'bg-gray-200 text-black-500'
                                         }`}
                                 >
                                     {savingAbout ? (
@@ -500,6 +679,7 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
                                 </button>
                             </div>
                         </div>
+                        
                         <Textarea
                             value={about}
                             onChange={(e) => {
@@ -509,6 +689,7 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
                             className="min-h-[100px] resize-none border rounded-md"
                         />
                     </div>
+                    
 
                     <div className="bg-white rounded-xl p-4 shadow-xl">
                         <div className="flex justify-between items-center mb-2">
@@ -520,7 +701,7 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
                                             setPointBackTerms(brand?.pointBackTerms || '');
                                             setIsTermsEdited(false);
                                         }}
-                                        className="px-4 py-1 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700"
+                                        className="px-4 py-1 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-black-700"
                                     >
                                         {(t('cancel_delete_brand'))}
                                     </button>
@@ -530,7 +711,7 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
                                     disabled={!isTermsEdited || savingTerms}
                                     className={`px-4 py-1 rounded-md text-sm transition-colors ${isTermsEdited
                                             ? 'bg-teal-500 text-white hover:bg-teal-600'
-                                            : 'bg-gray-200 text-gray-500'
+                                            : 'bg-gray-200 text-black-500'
                                         }`}
                                 >
                                     {savingTerms ? (
@@ -549,161 +730,284 @@ const BrandDetails = ({ brandId }: { brandId: string }) => {
                         />
                     </div>
                 </div>
-
-                <div className="bg-white rounded-[32px] shadow-2xl p-4 md:p-7">
-                    <div className="flex gap-5 justify-between items-start">
-                        <div className="flex flex-col">
-                            <div className="flex gap-1 text-lg">
-                                <div className="font-bold text-slate-950">Valid from</div>
-                                <div className="text-neutral-400">
-                                    {new Date(brand?.validFrom || '').toLocaleDateString()}
+                
+                <div className="space-y-4 md:space-y-6">
+                    <div className="bg-white rounded-xl p-6 shadow-xl">
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label className="font-bold text-slate-950 text-sm">Valid From</label>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="date"
+                                            value={editedValidFrom || brand?.validFrom?.split('T')[0] || ''}
+                                            onChange={(e) => setEditedValidFrom(e.target.value)}
+                                            className="px-3 py-2 border rounded-lg text-sm w-full"
+                                        />
+                                        {editedValidFrom && (
+                                            <button
+                                                onClick={() => setEditedValidFrom(null)}
+                                                className="text-xs text-gray-500 hover:text-gray-700"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="text-xs text-gray-500">
+                                        Current: {new Date(brand?.validFrom || '').toLocaleDateString()}
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="font-bold text-slate-950 text-sm">Valid To</label>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="date"
+                                            value={editedValidTo || brand?.validTo?.split('T')[0] || ''}
+                                            onChange={(e) => setEditedValidTo(e.target.value)}
+                                            className="px-3 py-2 border rounded-lg text-sm w-full"
+                                        />
+                                        {editedValidTo && (
+                                            <button
+                                                onClick={() => setEditedValidTo(null)}
+                                                className="text-xs text-gray-500 hover:text-gray-700"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="text-xs text-gray-500">
+                                        Current: {new Date(brand?.validTo || '').toLocaleDateString()}
+                                    </div>
                                 </div>
                             </div>
-                            <div className="mt-5 text-sm font-bold text-slate-950">
-                                {(t('appPercentage'))}
 
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label className="font-bold text-slate-950 text-sm flex items-center gap-2">
+                                        Status
+                                        <div className="flex items-center gap-2 ml-2">
+                                            <div className={`w-2 h-2 rounded-full ${
+                                                getCurrentStatus(selectedStatus, brand?.validTo) === 'ADMINACTIVE' || 
+                                                getCurrentStatus(selectedStatus, brand?.validTo) === 'ACTIVE'
+                                                    ? 'bg-green-500' 
+                                                    : 'bg-red-500'
+                                            }`} />
+                                            <span className={`text-sm ${
+                                                getCurrentStatus(selectedStatus, brand?.validTo) === 'ADMINACTIVE' || 
+                                                getCurrentStatus(selectedStatus, brand?.validTo) === 'ACTIVE'
+                                                    ? 'text-green-500' 
+                                                    : 'text-red-500'
+                                            }`}>
+                                                Currently {
+                                                    getCurrentStatus(selectedStatus, brand?.validTo) === 'ADMINACTIVE' 
+                                                        ? 'Admin Active'
+                                                        : getCurrentStatus(selectedStatus, brand?.validTo) === 'ADMININACTIVE'
+                                                            ? 'Admin Inactive'
+                                                            : getCurrentStatus(selectedStatus, brand?.validTo) === 'ACTIVE'
+                                                                ? 'Active'
+                                                                : 'Inactive'
+                                                }
+                                            </span>
+                                        </div>
+                                    </label>
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedStatus('ADMINACTIVE')
+                                                    setStatusChanged(true)
+                                                }}
+                                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                                    selectedStatus === 'ADMINACTIVE'
+                                                        ? 'bg-green-500 text-white'
+                                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                Admin Active
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedStatus('ADMININACTIVE')
+                                                    setStatusChanged(true)
+                                                }}
+                                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                                    selectedStatus === 'ADMININACTIVE'
+                                                        ? 'bg-red-500 text-white'
+                                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                Admin Inactive
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="font-bold text-slate-950 ">
+                                        {t('appPercentage')}
+                                    </label>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            value={editedRatio !== null ? editedRatio : brand?.ratio || ''}
+                                            onChange={(e) => setEditedRatio(Number(e.target.value))}
+                                            className="w-24 px-3 py-2 border rounded-lg text-sm"
+                                        />
+                                        <span className="text-sm text-gray-500">%</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className="flex flex-col mt-2.5">
-                            <Switch className="w-[34px] h-[18px]" />
-                            <div className="px-6 py-1.5 mt-4 text-base font-bold rounded-3xl shadow-3xl bg-slate-200 text-slate-950">
-                                {brand?.ratio}%
-                            </div>
-                        </div>
-                    </div>
 
-                    <form className="mt-5 space-y-2">
-                        <div className="flex gap-4 items-center">
-                            <label className="w-24 text-xs text-slate-950">{(t('brandUrl'))} :</label>
-                            <input
-                                type="url"
-                                value={brandForm.url}
-                                onChange={(e) => handleBrandFieldChange('url', e.target.value)}
-                                className="flex-1 px-3.5 py-1 text-xs bg-white rounded-xl border border-zinc-300 text-neutral-400"
-                            />
-                        </div>
-
-                        <div className="flex gap-4 items-center">
-                            <label className="w-24 text-xs text-slate-950">{(t('phone'))} :</label>
-                            <input
-                                type="tel"
-                                value={brandForm.phone}
-                                onChange={(e) => handleBrandFieldChange('phone', e.target.value)}
-                                className="flex-1 px-3.5 py-1 text-xs bg-white rounded-xl border border-zinc-300 text-neutral-400"
-                            />
-                        </div>
-
-                        <div className="flex gap-4 items-center">
-                            <label className="w-24 text-xs text-slate-950">{(t('email'))} :</label>
-                            <input
-                                type="email"
-                                value={brandForm.email}
-                                onChange={(e) => handleBrandFieldChange('email', e.target.value)}
-                                className="flex-1 px-3.5 py-1 text-xs bg-white rounded-xl border border-zinc-300 text-neutral-400"
-                            />
-                        </div>
-
-                        <div className="flex gap-4 items-center">
-                            <label className="w-24 text-xs text-slate-950">{(t('location'))} :</label>
-                            <input
-                                type="text"
-                                value={brandForm.address}
-                                onChange={(e) => handleBrandFieldChange('address', e.target.value)}
-                                className="flex-1 px-3.5 py-1 text-xs bg-white rounded-xl border border-zinc-300 text-neutral-400"
-                            />
-                        </div>
-
-                        {editedBrandFields.size > 0 && (
-                            <div className="flex justify-end gap-2 mt-2">
+                        {(statusChanged || editedRatio !== null || editedValidFrom !== null || editedValidTo !== null) && (
+                            <div className="mt-6 flex justify-end">
                                 <button
-                                    type="button"
-                                    onClick={() => {
-                                        setBrandForm({
-                                            url: brand?.url || '',
-                                            phone: brand?.phone || '',
-                                            email: brand?.email || '',
-                                            address: brand?.address || ''
-                                        });
-                                        setEditedBrandFields(new Set());
-                                    }}
-                                    className="px-4 py-1 text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg"
+                                    onClick={handleSaveStatus}
+                                    className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
                                 >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={updateBrandField}
-                                    className="px-4 py-1 text-xs bg-teal-500 text-white rounded-lg hover:bg-teal-600"
-                                >
-                                    {(t('saveAllChanges'))}
+                                    Save Changes
                                 </button>
                             </div>
                         )}
-                    </form>
+                    </div>
 
-                    <div className="mt-4">
-                        <div className="flex justify-between items-center mb-2">
-                            <h3 className="text-sm font-bold text-slate-950">
-                                {(t('socialMediaAccount'))}
-                            </h3>
-                            {editedFields.size > 0 && (
-                                <div className="flex gap-2">
+                    <div className="bg-white rounded-[32px] shadow-2xl p-4 md:p-7">
+                        <form className="mt-5 space-y-2">
+                            <div className="text-lg font-bold text-slate-950 translate-y-[-50%]">Brand Info</div>
+                            <div className="flex gap-4 items-center">
+                                <label className="w-24 text-xs text-slate-950">{(t('brandUrl'))} :</label>
+                                <input
+                                    type="url"
+                                    value={brandForm.url}
+                                    onChange={(e) => handleBrandFieldChange('url', e.target.value)}
+                                    className="flex-1 px-3.5 py-1 text-xs bg-white rounded-xl border border-zinc-300 text-black-400"
+                                />
+                            </div>
+
+                            <div className="flex gap-4 items-center">
+                                <label className="w-24 text-xs text-slate-950">{(t('phone'))} :</label>
+                                <input
+                                    type="tel"
+                                    value={brandForm.phone}
+                                    onChange={(e) => handleBrandFieldChange('phone', e.target.value)}
+                                    className="flex-1 px-3.5 py-1 text-xs bg-white rounded-xl border border-zinc-300 text-black-400"
+                                />
+                            </div>
+
+                            <div className="flex gap-4 items-center">
+                                <label className="w-24 text-xs text-slate-950">{(t('email'))} :</label>
+                                <input
+                                    type="email"
+                                    value={brandForm.email}
+                                    onChange={(e) => handleBrandFieldChange('email', e.target.value)}
+                                    className="flex-1 px-3.5 py-1 text-xs bg-white rounded-xl border border-zinc-300 text-black-400"
+                                />
+                            </div>
+
+                            <div className="flex gap-4 items-center">
+                                <label className="w-24 text-xs text-black-200">{(t('location'))} :</label>
+                                <input
+                                    type="text"
+                                    value={brandForm.address}
+                                    onChange={(e) => handleBrandFieldChange('address', e.target.value)}
+                                    className="flex-1 px-3.5 py-1 text-xs bg-white rounded-xl border border-zinc-300 text-black-400"
+                                />
+                            </div>
+
+                            {editedBrandFields.size > 0 && (
+                                <div className="flex justify-end gap-2 mt-2">
                                     <button
+                                        type="button"
                                         onClick={() => {
-                                            fetchSocialMedia();
-                                            setEditedFields(new Set());
+                                            setBrandForm({
+                                                url: brand?.url || '',
+                                                phone: brand?.phone || '',
+                                                email: brand?.email || '',
+                                                address: brand?.address || ''
+                                            });
+                                            setEditedBrandFields(new Set());
                                         }}
-                                        className="px-4 py-1 text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg"
+                                        className="px-4 py-1 text-xs bg-gray-200 hover:bg-gray-300 text-black-700 rounded-lg"
                                     >
-                                        {(t('cancel_delete_brand'))}
+                                        Cancel
                                     </button>
                                     <button
-                                        onClick={updateAllSocialMedia}
+                                        type="button"
+                                        onClick={updateBrandField}
                                         className="px-4 py-1 text-xs bg-teal-500 text-white rounded-lg hover:bg-teal-600"
                                     >
                                         {(t('saveAllChanges'))}
                                     </button>
                                 </div>
                             )}
-                        </div>
-                        <div className="space-y-2">
-                            {socialMedia && (Object.entries(socialIcons) as [SocialMediaPlatform, React.ComponentType<{ className?: string }>][]).map(([platform, Icon]) => (
-                                <div key={platform} className="flex items-center gap-2">
-                                    <Icon className="w-5 h-5 min-w-[20px] text-gray-500" />
-                                    <div className="flex-1 min-w-0">
-                                        <input
-                                            type="url"
-                                            placeholder={`${t('enter')} ${platform} ${t('url')}`}
-                                            value={socialMedia[platform] || ''}
-                                            onChange={(e) => handleSocialMediaChange(platform, e.target.value)}
-                                            className="w-full px-3 py-1 text-xs bg-white rounded-xl border border-zinc-300 text-neutral-400"
-                                        />
+                        </form>
+
+                        <div className="mt-4">
+                            <div className="flex justify-between items-center mb-2">
+                                <h3 className="text-lg font-bold text-slate-950">
+                                    {(t('socialMediaAccount'))}
+                                </h3>
+                                {editedFields.size > 0 && (
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => {
+                                                fetchSocialMedia();
+                                                setEditedFields(new Set());
+                                            }}
+                                            className="px-4 py-1 text-xs bg-gray-200 hover:bg-gray-300 text-black-700 rounded-lg"
+                                        >
+                                            {(t('cancel_delete_brand'))}
+                                        </button>
+                                        <button
+                                            onClick={updateAllSocialMedia}
+                                            className="px-4 py-1 text-xs bg-teal-500 text-white rounded-lg hover:bg-teal-600"
+                                        >
+                                            {(t('saveAllChanges'))}
+                                        </button>
                                     </div>
-                                    {editedFields.has(platform) && (
-                                        <div className="flex gap-1 ml-1">
-                                            <button
-                                                onClick={() => {
-                                                    handleSocialMediaChange(platform, socialMedia[platform] || '');
-                                                    setEditedFields(prev => {
-                                                        const newSet = new Set(prev);
-                                                        newSet.delete(platform);
-                                                        return newSet;
-                                                    });
-                                                }}
-                                                className="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg"
-                                            >
-                                                {t('cancel')}
-                                            </button>
-                                            <button
-                                                onClick={() => updateSocialMedia(platform)}
-                                                className="px-2 py-1 text-xs bg-teal-500 text-white rounded-lg hover:bg-teal-600"
-                                            >
-                                                {t('save')}
-                                            </button>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                {socialMedia && (Object.entries(socialIcons) as [SocialMediaPlatform, React.ComponentType<{ className?: string }>][]).map(([platform, Icon]) => (
+                                    <div key={platform} className="flex items-center gap-2">
+                                        <Icon className="w-5 h-5 min-w-[20px] text-black-500" />
+                                        <div className="flex-1 min-w-0">
+                                            <input
+                                                type="url"
+                                                placeholder={`${t('enter')} ${platform} ${t('url')}`}
+                                                value={socialMedia[platform] || ''}
+                                                onChange={(e) => handleSocialMediaChange(platform, e.target.value)}
+                                                className="w-full px-3 py-1 text-xs bg-white rounded-xl border border-zinc-300 text-black-400"
+                                            />
                                         </div>
-                                    )}
-                                </div>
-                            ))}
+                                        {editedFields.has(platform) && (
+                                            <div className="flex gap-1 ml-1">
+                                                <button
+                                                    onClick={() => {
+                                                        handleSocialMediaChange(platform, socialMedia[platform] || '');
+                                                        setEditedFields(prev => {
+                                                            const newSet = new Set(prev);
+                                                            newSet.delete(platform);
+                                                            return newSet;
+                                                        });
+                                                    }}
+                                                    className="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 text-black-700 rounded-lg"
+                                                >
+                                                    {t('cancel')}
+                                                </button>
+                                                <button
+                                                    onClick={() => updateSocialMedia(platform)}
+                                                    className="px-2 py-1 text-xs bg-teal-500 text-white rounded-lg hover:bg-teal-600"
+                                                >
+                                                    {t('save')}
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

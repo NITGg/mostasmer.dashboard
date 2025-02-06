@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
 import { useAppContext } from '@/context/appContext'
@@ -7,6 +7,24 @@ import toast from 'react-hot-toast'
 import { LoadingIcon, PhotoIcon } from '../icons'
 import ImageApi from '../ImageApi'
 import { Dialog, DialogContent } from '../ui/dialog'
+
+interface Brand {
+    id: number
+    name: string
+    url?: string
+    phone?: string
+    email?: string
+    about?: string
+    pointBackTerms?: string
+    address?: string
+    lat?: string
+    lang?: string
+    validFrom?: string
+    validTo?: string
+    logo?: string
+    cover?: string
+    pointBackRatio?: number
+}
 
 interface BrandFormData {
     name: string
@@ -25,7 +43,18 @@ interface BrandFormData {
     pointBackRatio: number
 }
 
-const AddBrand = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+// Add a new interface for form errors
+interface BrandFormErrors {
+    [key: string]: string
+}
+
+interface AddBrandProps {
+    isOpen: boolean
+    onClose: () => void
+    brandToEdit?: Brand | null
+}
+
+const AddBrand = ({ isOpen, onClose, brandToEdit }: AddBrandProps) => {
     const [loading, setLoading] = useState(false)
     const [logoPreview, setLogoPreview] = useState('')
     const [coverPreview, setCoverPreview] = useState('')
@@ -34,49 +63,79 @@ const AddBrand = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
     const { token } = useAppContext()
     const t = useTranslations('brand')
 
-    const { register, handleSubmit, formState: { errors } } = useForm<BrandFormData>()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<BrandFormData>()
+
+    // Pre-fill form when editing
+    useEffect(() => {
+        if (brandToEdit) {
+            reset({
+                name: brandToEdit.name,
+                url: brandToEdit.url || '',
+                phone: brandToEdit.phone || '',
+                email: brandToEdit.email || '',
+                about: brandToEdit.about || '',
+                pointBackTerms: brandToEdit.pointBackTerms || '',
+                address: brandToEdit.address || '',
+                lat: brandToEdit.lat || '',
+                lang: brandToEdit.lang || '',
+                validFrom: brandToEdit.validFrom ? new Date(brandToEdit.validFrom).toISOString().split('T')[0] : '',
+                validTo: brandToEdit.validTo ? new Date(brandToEdit.validTo).toISOString().split('T')[0] : '',
+                pointBackRatio: brandToEdit.pointBackRatio || 0
+            })
+            
+            // Set image previews if available
+            if (brandToEdit.logo) setLogoPreview(brandToEdit.logo)
+            if (brandToEdit.cover) setCoverPreview(brandToEdit.cover)
+        }
+    }, [brandToEdit, reset])
 
     const onSubmit = async (data: BrandFormData) => {
         try {
             setLoading(true)
             const formData = new FormData()
 
-            // Append all text fields
-            formData.append('name', data.name)
-            formData.append('url', data.url)
-            formData.append('phone', data.phone)
-            formData.append('email', data.email)
-            formData.append('about', data.about)
-            formData.append('pointBackTerms', data.pointBackTerms)
-            formData.append('address', data.address)
-            formData.append('lat', data.lat)
-            formData.append('lang', data.lang)
-            formData.append('validFrom', data.validFrom)
-            formData.append('validTo', data.validTo)
+            // Format dates properly
+            const validFrom = new Date(data.validFrom).toISOString()
+            const validTo = new Date(data.validTo).toISOString()
+
+            // Append all form fields
+            formData.append('name', data.name.trim())
+            formData.append('url', data.url.trim())
+            formData.append('phone', data.phone.trim())
+            formData.append('email', data.email.trim().toLowerCase())
+            formData.append('about', data.about.trim())
+            formData.append('pointBackTerms', data.pointBackTerms.trim())
+            formData.append('address', data.address.trim())
+            formData.append('validFrom', validFrom)
+            formData.append('validTo', validTo)
+
+            // Optional fields
+            if (data.lat) formData.append('lat', data.lat)
+            if (data.lang) formData.append('lang', data.lang)
+            if (data.pointBackRatio) formData.append('pointBackRatio', data.pointBackRatio.toString())
 
             // Handle image files
             const logoFile = logoInputRef.current?.files?.[0]
             const coverFile = coverInputRef.current?.files?.[0]
 
+            // Only require logo for new brands
+            if (!brandToEdit && !logoFile) {
+                throw new Error('Logo image is required')
+            }
+
             if (logoFile) {
-                // Create a new File with [PROXY] name
-                const logoFileWithProxy = new File([logoFile], '[PROXY]', {
-                    type: logoFile.type
-                })
-                formData.append('logo', logoFileWithProxy)
+                formData.append('logo', logoFile)
             }
-
             if (coverFile) {
-                // Create a new File with [PROXY] name
-                const coverFileWithProxy = new File([coverFile], '[PROXY]', {
-                    type: coverFile.type
-                })
-                formData.append('cover', coverFileWithProxy)
+                formData.append('cover', coverFile)
             }
 
-            // First create the brand
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand`, {
-                method: 'POST',
+            const url = brandToEdit 
+                ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/${brandToEdit.id}`
+                : `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand`
+
+            const response = await fetch(url, {
+                method: brandToEdit ? 'PUT' : 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 },
@@ -84,57 +143,58 @@ const AddBrand = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
             })
 
             if (!response.ok) {
-                const error = await response.json()
-                throw new Error(error.message || 'Failed to create brand')
+                const errorData = await response.json()
+                throw new Error(errorData.message || 'Failed to save brand')
             }
 
-            // Get the created brand data
-            const brandData = await response.json()
-            const brandId = brandData.brand.id
+            const responseData = await response.json()
 
-            // Initialize social media record for the new brand
-            const socialMediaResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/social-media/${brandId}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    facebook: null,
-                    twitter: null,
-                    instagram: null,
-                    linkedin: null,
-                    tiktok: null,
-                    youtube: null,
-                    pinterest: null,
-                    snapchat: null,
-                    whatsapp: null,
-                    telegram: null,
-                    reddit: null
-                })
-            })
-
-            if (!socialMediaResponse.ok) {
-                console.error('Failed to initialize social media record')
-            }
-
-            toast.success(t('successAdd'))
-            // Cleanup preview URLs
+            toast.success(brandToEdit ? t('successEdit') : t('successAdd'))
+            
+            // Cleanup
             if (logoPreview) URL.revokeObjectURL(logoPreview)
             if (coverPreview) URL.revokeObjectURL(coverPreview)
+            
+            reset()
+            setLogoPreview('')
+            setCoverPreview('')
+            
             onClose()
         } catch (error: any) {
-            toast.error(error.message)
+            toast.error(error.message || 'Failed to save brand')
+            console.error('Error saving brand:', error)
         } finally {
             setLoading(false)
         }
     }
 
+    // Add form validation
+    const validateForm = (data: BrandFormData) => {
+        const errors: BrandFormErrors = {}
+
+        if (!data.name) errors.name = 'Name is required'
+        if (!data.url) errors.url = 'URL is required'
+        if (!data.phone) errors.phone = 'Phone is required'
+        if (!data.email) errors.email = 'Email is required'
+        if (!data.about) errors.about = 'About is required'
+        if (!data.pointBackTerms) errors.pointBackTerms = 'Point back terms are required'
+        if (!data.address) errors.address = 'Address is required'
+        if (!data.validFrom) errors.validFrom = 'Valid from date is required'
+        if (!data.validTo) errors.validTo = 'Valid to date is required'
+        if (!logoInputRef.current?.files?.length) errors.imageFile = 'Logo is required'
+
+        return errors
+    }
+
+    // Update dialog title based on mode
+    const dialogTitle = brandToEdit ? t('editBrand') : t('addBrand')
+    const submitButtonText = brandToEdit ? t('updateBrand') : t('addBrand')
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
                 <div className="bg-white rounded-3xl p-6 sidebar-scrolling custom-scrollbar">
-                    <h2 className="text-xl font-semibold mb-6">Add Info</h2>
+                    <h2 className="text-xl font-semibold mb-6">{dialogTitle}</h2>
                     
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         {/* Basic Info */}
@@ -179,7 +239,7 @@ const AddBrand = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
                                     className="flex-1 px-3 py-2 border rounded-lg text-sm"
                                 />
                             </div>
-{/* 
+ 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex items-center">
                                     <label className="w-24 text-sm">Latitude :</label>
@@ -199,7 +259,7 @@ const AddBrand = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
                                         className="flex-1 px-3 py-2 border rounded-lg text-sm"
                                     />
                                 </div>
-                            </div> */}
+                            </div> 
 
                             <div className="flex flex-col">
                                 <label className="text-sm mb-2">About :</label>
@@ -336,7 +396,7 @@ const AddBrand = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
                                 className="px-6 py-2 bg-teal-500 text-white rounded-xl hover:bg-teal-600 flex items-center gap-2"
                             >
                                 {loading && <LoadingIcon className="w-5 h-5 animate-spin" />}
-                                Add Brand
+                                {submitButtonText}
                             </button>
                         </div>
                     </form>

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { useAppContext } from '@/context/appContext'
 import { PencilSquareIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline'
@@ -10,12 +10,14 @@ import Table from '@/components/ui/Table'
 import ImageApi from '../../ImageApi'
 import mlang from '@/lib/mLang'
 import { Category } from '@/lib/types'
+import { url } from 'node:inspector'
 
 interface BrandOffer {
     id: number
     ratio: number
     validFrom: string
     validTo: string
+    url: string
     category: {
         id: number
         name: string
@@ -28,7 +30,7 @@ interface OfferFormData {
     validFrom: string
     validTo: string
     categoryId: number
-    url?: string
+    url: string
 }
 
 const BrandOffers = ({ brandId }: { brandId: string }) => {
@@ -47,6 +49,7 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
     const headers = [
         { name: 'Brand_offers_table_id' },
         { name: 'Brand_offers_table_category' },
+        { name: 'Brand_offers_table_url' },
         { name: 'Brand_offers_table_point_back' },
         { name: 'Brand_offers_table_valid_from' },
         { name: 'Brand_offers_table_valid_to' },
@@ -56,6 +59,8 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [currentItems, setCurrentItems] = useState<any[]>([]);
+
+    const [deleteConfirmationId, setDeleteConfirmationId] = useState<number | null>(null)
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -78,7 +83,7 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
             headers.append('Authorization', `Bearer ${token}`)
             
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/api/offers?brandId=${brandId}&fields=id,ratio,validFrom,validTo,brandId,category=id-name-imageUrl&sort=-ratio`,
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/offers?brandId=${brandId}&fields=id,ratio,validFrom,validTo,brandId,category=id-name-imageUrl,url&sort=-ratio`,
                 {
                     method: 'GET',
                     headers,
@@ -138,8 +143,6 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
     }
 
     const handleDelete = async (offerId: number) => {
-        if (!window.confirm('Are you sure you want to delete this offer?')) return
-
         try {
             setLoading(true)
             const headers = new Headers()
@@ -159,12 +162,18 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
             }
 
             toast.success('Offer deleted successfully')
-            fetchBrandOffers()
+            await fetchBrandOffers()
+            
+            // Emit an event to notify parent components about the change
+            const event = new CustomEvent('brandOffersChanged')
+            window.dispatchEvent(event)
+            
         } catch (error: any) {
             console.error('Delete error:', error)
             toast.error(error.message || 'Failed to delete offer')
         } finally {
             setLoading(false)
+            setDeleteConfirmationId(null)
         }
     }
 
@@ -203,12 +212,22 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                 throw new Error(errorData || 'Failed to save offer')
             }
 
-            toast.success(editingOffer ? 'Offer updated successfully' : 'Offer added successfully')
-            fetchBrandOffers()
+            toast.success(editingOffer ? t('offer_updated_successfully') : t('offer_added_successfully'))
+            
+            // Refresh both the offers list and trigger a brands refresh if needed
+            await fetchBrandOffers()
+            
+            // Emit an event to notify parent components about the change
+            const event = new CustomEvent('brandOffersChanged', {
+                detail: { brandId, categoryId: data.categoryId }
+            })
+            window.dispatchEvent(event)
+            
             handleCloseDialog()
+
         } catch (error: any) {
             console.error('Error details:', error)
-            toast.error(error.message || 'Failed to save offer')
+            toast.error(t('validTo_error'))
         } finally {
             setLoading(false)
         }
@@ -221,12 +240,14 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
     }
 
     const renderTableRows = () => {
-        return offers.map((offer) => (
-            <tr key={offer.id} className="odd:bg-white even:bg-primary/5 border-b">
-                <td className="px-6 py-4">
-                    {offer.id.toString().padStart(3, '0')}
-                </td>
-                <td className="px-6 py-4">
+        return offers.map((offer, index) => (
+<tr key={offer.id} className={`border-b  font-bold odd:bg-gray-50 even:bg-white ${new Date(offer.validTo) < new Date() ? 'font-extrabold line-through text-red-500 ' : (index % 2 === 0 ? '' : '')}`}>
+<td className="px-6 py-4 ">
+        {offer.id.toString().padStart(3, '0')}
+
+
+    </td>
+                <td className="px-6 py-4 font-bold">
                     <div className="flex items-center gap-2">
                         <ImageApi
                             src={offer.category.imageUrl}
@@ -235,15 +256,21 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                             height={30}
                             className="rounded-full"
                         />
-                        <span className="font-medium">
+                        <span className="font-bold">
                             {mlang(offer.category.name, locale)}
                         </span>
                     </div>
+                </td>
+                <td className="px-6 py-4">
+                    <a href={offer.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                        {offer.url}
+                    </a>
                 </td>
                 <td className="px-6 py-4">{offer.ratio}%</td>
                 <td className="px-6 py-4">{new Date(offer.validFrom).toLocaleDateString()}</td>
                 <td className="px-6 py-4">{new Date(offer.validTo).toLocaleDateString()}</td>
                 <td className="px-6 py-4">
+
                     <div className="flex gap-2">
                         <button 
                             onClick={() => handleEdit(offer)}
@@ -253,7 +280,7 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                             <PencilSquareIcon className="w-4 h-4 text-teal-500" />
                         </button>
                         <button 
-                            onClick={() => handleDelete(offer.id)}
+                            onClick={() => setDeleteConfirmationId(offer.id)}
                             className="p-1 hover:bg-slate-100 rounded"
                             disabled={loading}
                         >
@@ -265,9 +292,18 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
         ))
     }
 
+    const availableCategories = useMemo(() => {
+        const usedCategoryIds = new Set(offers.map(offer => offer.category.id))
+        
+        return categories.filter(category => {
+            return !usedCategoryIds.has(Number(category.id)) || 
+                   (editingOffer && editingOffer.category.id === Number(category.id))
+        })
+    }, [categories, offers, editingOffer])
+
     return (
-        <div className="mt-8">
-            <Table
+        <div className="mt-8 ">
+            <Table 
                 data={offers}
                 headers={headers}
                 count={offers.length}
@@ -303,21 +339,27 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                     </h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                            <label className="block text-sm mb-1">{(t('category'))}</label>
+                            <label className="block text-sm mb-1">{t('category')}</label>
                             <select
                                 {...register('categoryId', { required: t('category_required') })}
                                 className="w-full px-3 py-2 border rounded-lg"
+                                disabled={loading}
                             >
-                                <option value="">{(t('category_select'))}</option>
-                                {categories.map(category => (
+                                <option value="">{t('category_select')}</option>
+                                {availableCategories.map(category => (
                                     <option key={category.id} value={category.id}>
-                                        {category.name}
+                                        {mlang(category.name, locale)}
                                     </option>
                                 ))}
                             </select>
                             {errors.categoryId && (
                                 <span className="text-red-500 text-sm">
                                     {errors.categoryId.message}
+                                </span>
+                            )}
+                            {availableCategories.length === 0 && !editingOffer && (
+                                <span className="text-amber-500 text-sm block mt-1">
+                                    {t('no_available_categories')}
                                 </span>
                             )}
                         </div>
@@ -328,9 +370,10 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                                 type="url"
                                 {...register('url')}
                                 placeholder="http://www.brand.com"
-                                className="w-full px-3 py-2 border rounded-lg"
+                                className="w-full px-3 py-2 border-3 bg-slate-400/23 drop-shadow-2xl rounded-lg border-green-400/23"
                             />
                         </div>
+
 
                         {/* Form fields */}
                         <div>
@@ -350,10 +393,10 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm mb-1">{(t('validFrom'))}</label>
+                            <label className="block text-sm mb-1">{(t('validTo'))}</label>
                             <input
                                 type="date"
-                                {...register('validTo', { required: (t('validFrom_required')) })}
+                                {...register('validTo', { required: (t('validTo_required')) })}
                                 className="w-full px-3 py-2 border rounded-lg"
                             />
                         </div>
@@ -374,6 +417,28 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
                             </button>
                         </div>
                     </form>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={!!deleteConfirmationId} onOpenChange={() => setDeleteConfirmationId(null)}>
+                <DialogContent>
+                    <h2 className="text-lg font-semibold mb-4">{t('branddeleteButton')}</h2>
+                    <p className="mb-4">{t('deleteMessage')}</p>
+                    <div className="flex justify-end gap-4">
+                        <button
+                            onClick={() => setDeleteConfirmationId(null)}
+                            className="px-4 py-2 border rounded-lg"
+                        >
+                            {t('cancel_delete_brand')}
+                        </button>
+                        <button
+                            onClick={() => deleteConfirmationId && handleDelete(deleteConfirmationId)}
+                            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                            disabled={loading}
+                        >
+                            {loading ? 'Deleting...' : t('deleteBrand')}
+                        </button>
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

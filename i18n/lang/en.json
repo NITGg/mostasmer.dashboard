@@ -49,6 +49,7 @@
         "logout": "Logout",
         "supplier": "Supplier"
     },
+
     "brand": {
         "title": "Brands",
         "add": "Add Brand",
@@ -85,7 +86,52 @@
         "socialMediaAccount": "Social Media Account",
         "confirm": "Confirm",
         "editRepresentative": "Edit Representative",
-        "addRepresentative": "Add Representative"
+        "addRepresentative": "Add Representative",
+        "active":"Active",
+        "notActive":"Inactive",
+        "filteredBy":"Filtered By",
+        "selectCategories": "Select categories...",
+        "nothingFound": "No categories found",
+        "brandCategoriesDescription": "Here you can manage the categories of the brands",
+        "brandCategories": "Brand Categories",
+        "viewBrandDetails": "View Brand Details",
+        "viewCategories": "View common categories",
+        "viewOffers": "View Offers",
+        "viewCoupons": "View Coupons",
+        "viewRepresentatives": "View Representatives",
+        "viewBankingInfo": "View Banking Info",
+
+        "noCategoriesFound": "No categories found for this brand",
+        "no_available_categories": "All categories are already in use for this brand",
+        "category_in_use": "This category is already in use for this brand",
+        "validFrom_required": "Valid from is required",
+        "validTo_required": "Valid to is required",
+        "category_select": "Select category",
+        "category_required": "Category is required",
+        "pointbackratio_required": "Point back ratio is required",
+        "failed_to_save_offer": "Failed to save offer",
+        "validTo_error": "Valid to must be greater than valid from",
+        "offer_added_successfully": "Offer added successfully",
+        "offer_updated_successfully": "Offer updated successfully",
+        "offer_deleted_successfully": "Offer deleted successfully",
+
+        "offer_not_found": "Offer not found",
+        "editBrand": "Edit Brand",
+        "restoreBrand": "Restore Brand",
+        "statusBrand": "Status",
+        "brand_not_found": "Brand not found",
+        "brand_deleted_successfully": "Brand deleted successfully",
+        "brand_restored_successfully": "Brand restored successfully",
+        "brand_status_updated_successfully": "Brand status updated successfully",
+        "brand_status_updated_failed": "Brand status update failed",
+        "brand_deleted_failed": "Brand deletion failed",
+        "brand_restored_failed": "Brand restoration failed"
+
+
+
+
+
+
     },
     "dashboard": {
         "users": "Total users",

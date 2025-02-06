@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { 
     UsersIcon, 
@@ -12,18 +12,69 @@ import {
 } from '@heroicons/react/24/outline'
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton'
 import { DashboardProps, DashboardCardStats } from '@/types/dashboard'
-import { Line, Bar } from 'react-chartjs-2'
+import axios from 'axios'
+import { useAppContext } from '@/context/appContext'
 
 const Dashboard: React.FC<DashboardProps> = ({ data }) => {
+    const { token } = useAppContext()
     const [stats, setStats] = useState<DashboardCardStats>({
-        totalUsers: data.user?.length || 0,
-        totalBrands: data.supplier?.length || 0,
-        totalOffers: data.pro?.length || 0,
-        totalCoupons: data.coupon?.length || 0,
-        totalCategories: data.cate?.length || 0
+        totalUsers: 0,
+        totalBrands: 0,
+        totalOffers: 0,
+        totalCoupons: 0,
+        totalCategories: 0
     })
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const t = useTranslations('dashboard')
+
+    useEffect(() => {
+        const fetchAllData = async () => {
+            try {
+                setLoading(true)
+                const baseURL = process.env.NEXT_PUBLIC_BASE_URL
+
+                // Fetch all data in parallel
+                const [
+                    usersResponse,
+                    brandsResponse,
+                    offersResponse,
+                    couponsResponse,
+                    categoriesResponse
+                ] = await Promise.all([
+                    axios.get(`${baseURL}/api/user/`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }),
+                    axios.get(`${baseURL}/api/brand/`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }),
+                    axios.get(`${baseURL}/api/offers`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }),
+                    axios.get(`${baseURL}/api/brand/coupons`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }),
+                    axios.get(`${baseURL}/api/category`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                ])
+
+                // Update all stats at once
+                setStats({
+                    totalUsers: usersResponse.data.users?.length || 0,
+                    totalBrands: brandsResponse.data.brands?.length || 0,
+                    totalOffers: offersResponse.data.offers?.length || 0,
+                    totalCoupons: couponsResponse.data.coupons?.length || 0,
+                    totalCategories: categoriesResponse.data.categories?.length || 0
+                })
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchAllData()
+    }, [token])
 
     if (loading) {
         return <LoadingSkeleton />
@@ -71,7 +122,6 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
         <div className="p-6 space-y-6">
             <h2 className="text-2xl font-bold mb-6">{t('dashboardTitle')}</h2>
             
-            {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                 {statCards.map((card, index) => (
                     <StatCard key={index} {...card} />

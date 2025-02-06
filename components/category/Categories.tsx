@@ -2,6 +2,7 @@
 import { Link } from '@/i18n/routing'
 import React, { useEffect, useState } from 'react'
 import { DeleteIcon, EditIcon, LoadingIcon, PluseCircelIcon, EyeIcon,AddPlusIcon } from '../icons'
+import { PencilSquareIcon } from '@heroicons/react/24/outline'
 import { useLocale, useTranslations } from 'next-intl'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog'
 import PopupCategory from './AddCategroy'
@@ -185,6 +186,42 @@ const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, 
         }
     };
 
+    // Update the handleViewBrands function
+    const handleViewBrands = async (categoryId: number, categoryName: string) => {
+        try {
+            // First fetch offers for this category
+            const offersResponse = await fetch(
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/offers?categoryId=${categoryId}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            )
+            
+            if (!offersResponse.ok) throw new Error('Failed to fetch offers')
+            
+            const offersData = await offersResponse.json()
+            
+            // Extract unique brandIds from offers
+            const brandIds = Array.from(new Set(offersData.offers.map((offer: any) => offer.brandId)))
+            
+            if (brandIds.length === 0) {
+                toast.error(t('no_brands_in_category'))
+                return
+            }
+            
+            // Navigate to brands page with both brandIds and categoryName
+            router.push(
+                `/${locale}/brands?ids=${brandIds.join(',')}&categoryName=${encodeURIComponent(categoryName)}`
+            )
+            
+        } catch (error) {
+            console.error('Error:', error)
+            toast.error(t('error_fetching_brands'))
+        }
+    }
+
     // Table headers configuration
     const tableHeaders = [
         { name: 'categoryImages', className: 'w-[200px]' },
@@ -213,27 +250,31 @@ const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, 
                 </td>
                 <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-3">
+                    <button
+                            onClick={() => handleViewBrands(category.id, category.name)}
+                            className='text-green-500 hover:text-green-700'
+                            aria-label={t('viewBrands')}
+                        >
+                            <EyeIcon className='w-5 h-5 text-[#00a18f] hover:text-gray-700' />
+                        </button>
                         <button
                             onClick={() => {
                                 setOpen(true);
                                 setCateUpdate(category);
                             }}
                             className='text-blue-500 hover:text-blue-700'
+                            aria-label={t('editCategory')}
                         >
                             <EditIcon className='w-5 h-5 text-[#00a18f] hover:text-gray-700' />
                         </button>
                         <button
                             onClick={() => setOpenDelete(category.id)}
                             className='text-red-500 hover:text-red-700'
+                            aria-label={t('deleteCategory')}
                         >
                             <DeleteIcon className='w-5 h-5 text-[#00a18f] hover:text-gray-700' />
                         </button>
-                        <Link
-                            href={`/brands`}
-                            className='text-green-500 hover:text-green-700'
-                        >
-                            <EyeIcon className='w-5 h-5 text-[#00a18f] hover:text-gray-700' />
-                        </Link>
+
                     </div>
                 </td>
             </tr>
@@ -243,7 +284,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories: initialCategories, 
     return (
         <div className='p-container space-y-6'>
             <div className='flex justify-between items-center'>
-                <h4 className='font-bold text-lg md:text-xl lg:text-2xl'>{t('categories')}</h4>
+                <h4 className='font-bold text-lg md:text-xl lg:text-2xl'>{t('category')}</h4>
                 {/* <button
                     onClick={() => setOpen(true)}
                     className='px-5 py-2  rounded-md text-white font-medium'
