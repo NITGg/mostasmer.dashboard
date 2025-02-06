@@ -10,6 +10,7 @@ import {
   deleteUser,
   Role,
   setUsers,
+  updateUser,
   User,
   setUsersCount,
 } from "@/redux/reducers/usersReducer";
@@ -26,6 +27,7 @@ import {
 } from "../ui/dialog";
 import axios from "axios";
 import Table from "../ui/Table";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 const UsersRows = ({
   loading: initialLoading,
@@ -54,8 +56,8 @@ const UsersRows = ({
   const [totalPages, setTotalPages] = useState<number>(1);
 
   // Get current pagination state from URL or defaults
-  const currentPage = Number(searchParams.get('page')) || 1;
-  const pageSize = Number(searchParams.get('limit')) || 10;
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("limit")) || 10;
 
   const headers = [
     { name: "image" },
@@ -71,12 +73,12 @@ const UsersRows = ({
     try {
       setLoading(true);
       const skip = (page - 1) * limit;
-      
+
       let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/user?`;
-      
+
       // Handle "All" case
       if (limit === 0) {
-        url += 'limit=0&skip=0';
+        url += "limit=0&skip=0";
       } else {
         url += `limit=${limit}&skip=${skip}`;
       }
@@ -88,13 +90,13 @@ const UsersRows = ({
       });
 
       const data = response.data;
-      
+
       // Update the users in Redux store
       dispatch(setUsers(data.users));
-      
+
       // Update local state
       setCurrentItems(data.users.length);
-      
+
       // Make sure we're getting the total count from the API response
       const total = data.total || data.count || initialCount;
       setTotalRecords(total); // Also update the count in Redux
@@ -102,11 +104,11 @@ const UsersRows = ({
 
       return {
         users: data.users,
-        total
+        total,
       };
     } catch (error) {
-      console.error('Error fetching users:', error);
-      toast.error('Failed to fetch users');
+      console.error("Error fetching users:", error);
+      toast.error("Failed to fetch users");
       return null;
     } finally {
       setLoading(false);
@@ -124,17 +126,18 @@ const UsersRows = ({
         dispatch(setUsersCount(initialCount));
 
         // Get page and limit from URL or use defaults
-        const page = Number(searchParams.get('page')) || 1;
-        const limit = Number(searchParams.get('limit')) || 10;
+        const page = Number(searchParams.get("page")) || 1;
+        const limit = Number(searchParams.get("limit")) || 10;
 
         // Calculate initial total pages
-        const initialTotalPages = limit === 0 ? 1 : Math.ceil(initialCount / limit);
+        const initialTotalPages =
+          limit === 0 ? 1 : Math.ceil(initialCount / limit);
         setTotalPages(initialTotalPages);
 
         // Fetch data with current pagination
         await fetchUsers(page, limit);
       } catch (error) {
-        console.error('Error initializing data:', error);
+        console.error("Error initializing data:", error);
       }
     };
 
@@ -145,10 +148,10 @@ const UsersRows = ({
   const updatePaginationAndFetch = async (page: number, limit: number) => {
     try {
       const params = new URLSearchParams(searchParams);
-      params.set('page', page.toString());
-      params.set('limit', limit.toString());
+      params.set("page", page.toString());
+      params.set("limit", limit.toString());
       router.push(`${pathname}?${params.toString()}`);
-      
+
       const result = await fetchUsers(page, limit);
       if (result) {
         const { total } = result;
@@ -156,8 +159,8 @@ const UsersRows = ({
         setTotalPages(newTotalPages);
       }
     } catch (error) {
-      console.error('Error updating pagination:', error);
-      toast.error('Failed to update page');
+      console.error("Error updating pagination:", error);
+      toast.error("Failed to update page");
     }
   };
 
@@ -174,9 +177,31 @@ const UsersRows = ({
       dispatch(deleteUser(deleteUserId.id));
       setOpenDeleteUser(false);
       toast.success(t("successDelete"));
-      
+
       // Refresh the current page after deletion
       fetchUsers(currentPage, pageSize);
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.response?.data?.message || "There is an Error");
+    } finally {
+      setPending(false);
+    }
+  };
+
+  const handelRestore = async (id: string) => {
+    try {
+      setPending(true);
+      const { data } = await axios.put(
+        `/api/user/${id}`,
+        { isDeleted: false },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch(updateUser(data.user));
+      toast.success(t("successRestore"));
     } catch (error: any) {
       console.error(error);
       toast.error(error?.response?.data?.message || "There is an Error");
@@ -192,7 +217,7 @@ const UsersRows = ({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-between items-center">
-        <h1>{t("users")}</h1>
+        <h1 className="text-2xl font-bold capitalize">{t("users")}</h1>
         <button
           onClick={() => setAddUser(!addUser)}
           className="px-5 py-2 bg-primary rounded-md text-white font-medium"
@@ -276,18 +301,37 @@ const UsersRows = ({
               <td className="px-6 py-4">
                 <div className="flex justify-center">
                   <div className="flex gap-2 items-center">
-                    <Link href={`${pathname}/${user.id}`}>
-                      <EyeIcon className="size-6 text-primary" />
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setDeleteUserId(user);
-                        setOpenDeleteUser(true);
-                      }}
-                    >
-                      <DeleteIcon className="size-6 text-primary" />
-                    </button>
+                    {user.isDeleted ? (
+                      <button
+                        onClick={() => handelRestore(user.id)}
+                        className="flex gap-2 justify-center text-primary hover:opacity-85 active:scale-95 transition-all"
+                      >
+                        {pending ? (
+                          <LoadingIcon className="size-5 animate-spin" />
+                        ) : (
+                          <>
+                            <ArrowPathIcon className="size-5" />
+                            {t("restoreUser")}
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <>
+                        {" "}
+                        <Link href={`${pathname}/${user.id}`}>
+                          <EyeIcon className="size-6 text-primary" />
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDeleteUserId(user);
+                            setOpenDeleteUser(true);
+                          }}
+                        >
+                          <DeleteIcon className="size-6 text-primary" />
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </td>

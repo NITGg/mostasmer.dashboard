@@ -5,14 +5,84 @@ import { useTranslations } from "next-intl";
 import CustomSelect from "./CustomSelect";
 import { Eye, EyeOff, MapPin } from "lucide-react";
 import CustomDatePicker from "../CustomDatePicker";
-import BrandSelect, { Brand } from "./BrandSelect";
+import { Brand } from "./BrandSelect";
 import { LoadingIcon } from "../icons";
 import axios from "axios";
 import { useAppContext } from "@/context/appContext";
 import toast from "react-hot-toast";
 import AddImageInput from "../AddImageInput";
 import { useAppDispatch } from "@/hooks/redux";
-import { addUser } from "@/redux/reducers/usersReducer";
+import { addUser, Role } from "@/redux/reducers/usersReducer";
+import MultipleSelect from "../MultipleSelect";
+
+export const fetchRoles = async ({
+  search,
+  skip,
+  limit,
+  token,
+}: {
+  search: string;
+  skip: number;
+  limit: number;
+  token: string;
+}) => {
+  try {
+    const queryParams = new URLSearchParams({
+      keyword: search,
+      limit: String(limit),
+      skip: String(skip),
+      sort: "name",
+    }).toString();
+
+    const { data } = await axios.get(`/api/roles?${queryParams}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return {
+      data: data.roles,
+      totalPages: data.totalPages,
+    };
+  } catch (error) {
+    console.error("Error fetching badges:", error);
+    return { data: [], totalPages: 0 };
+  }
+};
+export const fetchBrands = async ({
+  search,
+  skip,
+  limit,
+  token,
+}: {
+  search: string;
+  skip: number;
+  limit: number;
+  token: string;
+}) => {
+  try {
+    const queryParams = new URLSearchParams({
+      keyword: search,
+      limit: String(limit),
+      skip: String(skip),
+      sort: "name",
+    }).toString();
+
+    const { data } = await axios.get(`/api/brand?${queryParams}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return {
+      data: data.brands,
+      totalPages: data.totalPages,
+    };
+  } catch (error) {
+    console.error("Error fetching badges:", error);
+    return { data: [], totalPages: 0 };
+  }
+};
 
 export const ShowPassword: React.FC<{
   showPassword: boolean;
@@ -36,8 +106,7 @@ const AddUserForm = ({ handelClose }: { handelClose: () => void }) => {
   const t = useTranslations("user");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [selectedRole, setSelectedRole] = useState<string>("customer");
-  const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { token } = useAppContext();
   const dispatch = useAppDispatch();
@@ -46,33 +115,24 @@ const AddUserForm = ({ handelClose }: { handelClose: () => void }) => {
     try {
       setLoading(true);
       const filteredData = new FormData();
-
       Object.entries(fData).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== "" && value[0]) {
           filteredData.append(key, value);
         }
       });
+
       if (fData.birthDate)
         filteredData.append("birthDate", fData.birthDate.toISOString());
 
-      if (fData.imageFile[0]) {
+      if (fData.imageFile[0])
         filteredData.append("imageUrl", fData.imageFile[0]);
-      }
 
-      if (selectedRole === "representative" && selectedBrand) {
-        filteredData.append("brand", selectedBrand.id.toString());
-      }
-
-      const { data } = await axios.post(
-        "/api/user",
-        filteredData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const { data } = await axios.post("/api/user", filteredData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       dispatch(addUser(data.user));
       toast.success("User added successfully");
@@ -95,7 +155,6 @@ const AddUserForm = ({ handelClose }: { handelClose: () => void }) => {
           message: t("emailAlreadyInUse"),
         });
       }
-
       console.error(error);
       toast.error(error?.response?.data?.message || "An error occurred");
     } finally {
@@ -196,20 +255,24 @@ const AddUserForm = ({ handelClose }: { handelClose: () => void }) => {
               { value: "en", label: "English" },
             ]}
           />
-          <CustomSelect
-            roles={{ required: false, value: "customer" }}
-            errors={errors}
+          <MultipleSelect<Role>
+            fieldForm="roles"
             label={t("role")}
-            fieldForm="role"
+            placeholder={""}
+            fetchFunction={(params) => fetchRoles({ ...params, token })}
+            getOptionLabel={(role) => role.name}
+            getOptionValue={(role) => role.name}
+            roles={{ required: t("roleRequired") }}
+            defaultValues={[{ id: 1, name: "customer" }]}
             register={register}
-            options={[
-              { value: "customer", label: t("customer") },
-              { value: "representative", label: t("representative") },
-              { value: "admin", label: t("admin") },
-            ]}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              setSelectedRole(e.target.value)
-            }
+            setValue={setValue}
+            errors={errors}
+            onChange={(selectedOptions) => {
+              const selectedRoleNames = selectedOptions.map(
+                (role) => role.name
+              );
+              setSelectedRoles(selectedRoleNames);
+            }}
           />
         </div>
         <div className="flex flex-col gap-5">
@@ -247,26 +310,23 @@ const AddUserForm = ({ handelClose }: { handelClose: () => void }) => {
             }
           />
 
-          {selectedRole === "representative" && (
-            <>
-              <BrandSelect onSelect={(brand) => setSelectedBrand(brand)} />
-              <div className="grid grid-cols-2 items-center gap-3">
-                <CustomDatePicker
-                  errors={errors}
-                  control={control}
-                  setValue={setValue}
-                  label={t("validFrom")}
-                  fieldForm="validFrom"
-                />
-                <CustomDatePicker
-                  errors={errors}
-                  control={control}
-                  setValue={setValue}
-                  label={t("validTo")}
-                  fieldForm="validTo"
-                />
-              </div>
-            </>
+          {selectedRoles.includes("brand representative") && (
+            <MultipleSelect<Brand>
+              fieldForm="brands"
+              label={t("brands")}
+              placeholder={""}
+              fetchFunction={(params) => fetchBrands({ ...params, token })}
+              getOptionLabel={(brand) => brand.name}
+              getOptionValue={(brand) => brand.id}
+              roles={{
+                required: selectedRoles.includes("brand representative")
+                  ? t("brandRequired")
+                  : false,
+              }}
+              register={register}
+              setValue={setValue}
+              errors={errors}
+            />
           )}
           <div className="grid grid-cols-2 gap-10">
             <button

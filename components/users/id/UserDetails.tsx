@@ -14,9 +14,12 @@ import UserTypeAndPoints from "./UserTypeAndPoints";
 import UserDetailsForm from "./UserDetailsForm";
 import { LoadingIcon } from "@/components/icons";
 import { useRouter } from "next/navigation";
-import { updateUser, User } from "@/redux/reducers/usersReducer";
+import { Role, updateUser, User } from "@/redux/reducers/usersReducer";
 import { UserType } from "@/redux/reducers/userTypesReducer";
 import { useAppDispatch } from "@/hooks/redux";
+import MultipleSelect from "../../MultipleSelect";
+import { Brand } from "../BrandSelect";
+import { fetchBrands, fetchRoles } from "../AddUserForm";
 
 type Wallet = {
   id: number;
@@ -91,16 +94,19 @@ const UserDetails = ({
   const { token } = useAppContext();
   const dispatch = useAppDispatch();
   const [image, setImage] = useState("");
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const router = useRouter();
   const onSubmit = handleSubmit(async (formData) => {
     try {
       setLoading(true);
       let userData = { ...formData };
-      delete userData.role;
       delete userData.password;
       delete userData.phone;
       delete userData.email;
       delete userData.imageFile;
+
+      if (!selectedRoles.includes("brand representative"))
+        delete userData.brands;
 
       if (formData.imageFile[0]) {
         userData.imageUrl = formData.imageFile[0];
@@ -127,7 +133,6 @@ const UserDetails = ({
       URL.revokeObjectURL(image);
       setImage("");
       resetField("imageFile");
-
       router.push(`/${local}/users`);
       setTimeout(() => window.location.reload(), 500);
     } catch (error: any) {
@@ -158,17 +163,61 @@ const UserDetails = ({
               setImage={setImage}
               register={register}
             />
-            {
-              type && walletHistory ? (
-                <UserTypeAndPoints
-                  uid={user?.id}
-                  type={type}
-                  walletHistory={walletHistory}
+            {type && walletHistory ? (
+              <UserTypeAndPoints
+                uid={user?.id}
+                type={type}
+                walletHistory={walletHistory}
+              />
+            ) : (
+              <h2 className="text-lg font-bold">{user?.roles[0].name}</h2>
+            )}
+            <div onClick={handleFieldClick}>
+              <MultipleSelect<Role>
+                fieldForm="roles"
+                label={t("role")}
+                placeholder={""}
+                fetchFunction={(params) => fetchRoles({ ...params, token })}
+                getOptionLabel={(role) => role.name}
+                getOptionValue={(role) => role.name}
+                roles={{ required: t("roleRequired") }}
+                defaultValues={user.roles}
+                register={register}
+                setValue={setValue}
+                errors={errors}
+                onChange={(selectedOptions) => {
+                  const selectedRoleNames = selectedOptions.map(
+                    (role) => role.name
+                  );
+                  setSelectedRoles(selectedRoleNames);
+                }}
+              />
+            </div>
+            {selectedRoles.includes("brand representative") && (
+              <div onClick={handleFieldClick}>
+                <MultipleSelect<Brand>
+                  fieldForm="brands"
+                  label={t("brands")}
+                  placeholder={""}
+                  fetchFunction={(params) => fetchBrands({ ...params, token })}
+                  getOptionLabel={(brand) => brand.name}
+                  getOptionValue={(brand) => brand.id}
+                  defaultValues={
+                    user.BrandRepresentative?.map(
+                      (brandRep) => brandRep.brand
+                    ) ?? undefined
+                  }
+                  roles={{
+                    required: selectedRoles.includes("brand representative")
+                      ? t("brandRequired")
+                      : false,
+                  }}
+                  register={register}
+                  setValue={setValue}
+                  errors={errors}
                 />
-              ) : (
-                <h2 className="text-lg font-bold">{user?.roles[0].name}</h2>
-              )
-            }
+              </div>
+            )}
           </div>
           <div className="w-full contents">
             <div>

@@ -18,40 +18,42 @@ import { adsSlice } from "../reducers/ads";
 import { userTypesSlice } from "../reducers/userTypesReducer";
 import { badgesSlice } from "../reducers/badgesReducer";
 import { giftCardsSlice } from "../reducers/giftCardsReducers";
+import { userRolesSlice } from "../reducers/userRolesReducer";
 
 export const store = configureStore({
-    reducer: {
-        dashboard: dashboardReducer.reducer,
-        users: usersReducer.reducer,
-        suppliers: suppliersReducer.reducer,
-        products: productsSlice.reducer,
-        category: categoriesSlice.reducer,
-        images: imagesSlice.reducer,
-        articles: articlesSlice.reducer,
-        faqs: faqsSlice.reducer,
-        contacts: contactsReducer.reducer,
-        about: aboutDataSlice.reducer,
-        translate: translateReducer.reducer,
-        coupons: couponsSlice.reducer,
-        pets: petsSlice.reducer,
-        species: speciesSlice.reducer,
-        onboarding: onboardingSlice.reducer,
-        ads: adsSlice.reducer,
-        userTypes: userTypesSlice.reducer,
-        giftCards: giftCardsSlice.reducer,
-        badges: badgesSlice.reducer
-    },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-            serializableCheck: {
-                // Ignore these action types
-                ignoredActions: ["categories/setLastDoc", "products/setLastDoc"],
-                // Ignore these field paths in all actions
-                ignoredActionPaths: ["meta.arg", "payload.timestamp"],
-                // Ignore these paths in the state
-                ignoredPaths: ["category.lastDoc", "products.lastDoc"],
-            },
-        }),
+  reducer: {
+    dashboard: dashboardReducer.reducer,
+    users: usersReducer.reducer,
+    suppliers: suppliersReducer.reducer,
+    products: productsSlice.reducer,
+    category: categoriesSlice.reducer,
+    images: imagesSlice.reducer,
+    articles: articlesSlice.reducer,
+    faqs: faqsSlice.reducer,
+    contacts: contactsReducer.reducer,
+    about: aboutDataSlice.reducer,
+    translate: translateReducer.reducer,
+    coupons: couponsSlice.reducer,
+    pets: petsSlice.reducer,
+    species: speciesSlice.reducer,
+    onboarding: onboardingSlice.reducer,
+    ads: adsSlice.reducer,
+    userTypes: userTypesSlice.reducer,
+    userRoles: userRolesSlice.reducer,
+    giftCards: giftCardsSlice.reducer,
+    badges: badgesSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action types
+        ignoredActions: ["categories/setLastDoc", "products/setLastDoc"],
+        // Ignore these field paths in all actions
+        ignoredActionPaths: ["meta.arg", "payload.timestamp"],
+        // Ignore these paths in the state
+        ignoredPaths: ["category.lastDoc", "products.lastDoc"],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

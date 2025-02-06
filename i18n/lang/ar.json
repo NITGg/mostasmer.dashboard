@@ -58,7 +58,6 @@
         "faqs": "الأسئلة الشائعة",
         "category": "الفئة",
         "categories": "الفئات",
-
         "contactrequest": "طلب الاتصال",
         "aboutapp": "حول التطبيق",
         "translationapp": "تطبيق الترجمة",
@@ -75,7 +74,10 @@
         "species": "الأنواع",
         "userTypes": " أنواع المستخدمين",
         "digitalCards": "البطاقات الرقمية",
-        "badges": "شارات"
+        "badges": "شارات",
+        "manage_users": "إدارة المستخدمين",
+        "users": "المستخدمين",
+        "userRoles": "أدوار المستخدم"
     },
     "navbar": {
         "admin": "مسؤول",
@@ -478,18 +480,16 @@
         "Brand_offers_table_id": "المعرف",
         "Brand_offers_table_category": "الفئة",
         "Brand_offers_table_url": "رابط",
-        
-        "Brand_offers_table_point_back": "استرداد النقاط",
+        "Brand_offers_table_point_back": "نقاط استرجاع",
         "Brand_offers_table_valid_from": "صالح من",
-        "Brand_offers_table_valid_to": "صالح حتى",
-        
-        "Brand_offers_table_actions": "الإجراءات",
+        "Brand_offers_table_valid_to": "صالح إلى",
+        "Brand_offers_table_actions": "إجراءات",
         "special_offers_table_id": "المعرف",
         "special_offers_table_Type": "النوع",
-        "special_offers_table_point_back": "استرداد النقاط",
+        "special_offers_table_point_back": "نقاط استرجاع",
         "special_offers_table_valid_from": "صالح من",
-        "special_offers_table_valid_to": "صالح حتى",
-        "special_offers_table_actions": "الإجراءات",
+        "special_offers_table_valid_to": "صالح إلى",
+        "special_offers_table_actions": "إجراءات",
         "digital_seal_table_id": "المعرف",
         "digital_seal_table_title": "العنوان",
         "digital_seal_table_point_back": "نقاط استرجاع",
@@ -568,38 +568,33 @@
         "viewType": "نوع العرض",
         "startDate": "تاريخ البدء",
         "endDate": "تاريخ الانتهاء",
-        "category":"الفئة",
+        "category": "الفئة",
         "actions": "الإجراءات",
-        "DELETED":"محذوف",
-        "ADMINACTIVE":"(مدير) فعال",
-        "ADMININACTIVE":"(مدير) غير فعال",
-        "ACTIVE":"فعال",
-        "INACTIVE":"غير فعال",
-
-        "Report":"العلامات التجارية",
-        "brands":"تقارير",
-        "Total Records":"إجمالي السجلات",
-        "page":"الصفحة",
-        "of":"من"
-
+        "DELETED": "محذوف",
+        "ADMINACTIVE": "(مدير) فعال",
+        "ADMININACTIVE": "(مدير) غير فعال",
+        "ACTIVE": "فعال",
+        "INACTIVE": "غير فعال",
+        "Report": "العلامات التجارية",
+        "brands": "تقارير",
+        "Total Records": "إجمالي السجلات",
+        "page": "الصفحة",
+        "of": "من"
     },
-    "icons":{
+    "icons": {
         "brand": "العلامة التجارية",
-        "edit":"تعديل",
-        "delete":"حذف",
-        "viewbrand":"عرض العلامة التجارية",
-        "ViewCategories":"عرض الفئات",
-        "openPage":"فتح صفحة العلامة التجارية",
-        "Pluse":"اضافة"
+        "edit": "تعديل",
+        "delete": "حذف",
+        "viewbrand": "عرض العلامة التجارية",
+        "ViewCategories": "عرض الفئات",
+        "openPage": "فتح صفحة العلامة التجارية",
+        "Pluse": "اضافة"
     },
-
-
     "pagination": {
         "showing": "عرض",
         "to": "إلى",
         "of": "من",
         "results": "نتائج",
-
         "previous": "السابق",
         "next": "التالي",
         "rowPerPage": "عدد الصفوف في الصفحة",
@@ -736,7 +731,8 @@
         "ratioIsRequired": "النسبة مطلوبة.",
         "selectBadges": "اختر شارة",
         "badgeIsRequired": "الشارة مطلوبة.",
-        "sr": "ريال"
+        "sr": "ريال",
+        "addType": "إضافة نوع"
     },
     "giftCards": {
         "points": "النقاط",
@@ -748,5 +744,23 @@
         "resend": "إعادة إرسال",
         "giftResendSuccessfully": "تم إعادة إرسال بطاقة الهدية بنجاح",
         "errorResendGift": "حدث خطأ أثناء إعادة إرسال بطاقة الهدية"
+    },
+    "userRoles": {
+        "title": "أدوار المستخدم",
+        "addTitle": "إضافة دور مستخدم جديد",
+        "updateTitle": "تحديث دور المستخدم",
+        "add": "إضافة",
+        "addRole": "إضافة دور",
+        "cancel": "إلغاء",
+        "edit": "تعديل",
+        "success": "تمت إضافة دور مستخدم جديد بنجاح!!",
+        "successUpdate": "تم تحديث دور المستخدم بنجاح!!",
+        "successDelete": "تم حذف دور المستخدم بنجاح!!",
+        "deleteRole": "حذف دور المستخدم",
+        "deleteMessage": "هل تريد حذف دور المستخدم هذا؟",
+        "delete": "حذف",
+        "name": "الاسم",
+        "nameIsRequired": "يرجى إدخال اسم الدور.",
+        "nameUnique": "هذا الدور موجود بالفعل"
     }
 }

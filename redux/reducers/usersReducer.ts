@@ -1,8 +1,14 @@
+import { Brand } from "@/components/users/BrandSelect";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type Role = {
   id: number;
   name: string;
+};
+
+type BrandRepresentative = {
+  id: number;
+  brand: Brand;
 };
 
 export type User = {
@@ -21,7 +27,9 @@ export type User = {
   lang?: string;
   isConfirmed?: boolean;
   birthDate?: string;
-  gender?: string;
+  gender: string;
+  BrandRepresentative?: BrandRepresentative[];
+  isDeleted?: boolean;
 };
 
 type InitialStateType = {
@@ -60,7 +68,9 @@ export const usersReducer = createSlice({
       state.users.push(action.payload);
     },
     deleteUser(state, action: PayloadAction<string>) {
-      state.users = state.users.filter((user) => user.id !== action.payload);
+      state.users = state.users.map((user) =>
+        user.id === action.payload ? { ...user, isDeleted: true } : user
+      );
     },
     updateUser(state, action: PayloadAction<User>) {
       state.users = state.users.map((user) =>
