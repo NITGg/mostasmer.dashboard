@@ -456,17 +456,15 @@
         "of":"of"
     },
     "icons":{
-        "brand": "العلامة التجارية",
-        "edit":"تعديل",
-        "delete":"حذف",
-        "viewbrand":"عرض العلامة التجارية",
-        "ViewCategories":"عرض الفئات",
-        "Pluse":"اضافة",
-
-        "openPage":"فتح صفحة العلامة التجارية"
-    
+        "brand": "Brand",
+        "edit":"edit",
+        "delete":"Delete",
+        "viewbrand":"View Brand",
+        "ViewCategories":"View Categories",
+        "openPage":"Open Brand Page"
 
     },
+
     "pagination": {
         "showing": "Showing",
         "to": "to",
