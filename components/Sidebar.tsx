@@ -4,7 +4,7 @@ import React from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import clsx from 'clsx'
 import Image from 'next/image'
-import { AdsIcon, AnimateIcon, AppIcon, CategoryIcon, CouponIcon, FaqIcon, ContactIcon, DashboardIcon, GroupUsersIcon, HomeIcon, OnBoardingIcon, PetsIcon, ProductIcon, TruckIcon, BadgesIcon, GiftCardsIcon } from './icons'
+import { AdsIcon,BrandIcon,CategoryIconn, AnimateIcon, AppIcon, CategoryIcon, CouponIcon, FaqIcon, ContactIcon, DashboardIcon, GroupUsersIcon, HomeIcon, OnBoardingIcon, PetsIcon, ProductIcon, TruckIcon, BadgesIcon, GiftCardsIcon } from './icons'
 import { Link } from '@/i18n/routing'
 import useClickOutside from '@/hooks/useClickOutSide'
 import { useAppContext } from '@/context/appContext'
@@ -35,19 +35,27 @@ const Sidebar = ({
             role: 'admin'
         },
 
+        // {
+        //     label: t('brands'),
+        //     icon: <PetsIcon className={clsx('size-6',
+        //         { 'fill-white': pathname.includes('brands') },
+        //         { 'stroke-white': !pathname.includes('brands') },
+        //     )} />,
+        //     href: '/brands',
+        //     role: 'normal'
+        // },
+        
         {
             label: t('brands'),
-            icon: <PetsIcon className={clsx('size-6',
-                { 'fill-white': pathname.includes('brands') },
-                { 'stroke-white': !pathname.includes('brands') },
-            )} />,
+            icon: <BrandIcon className='size-6' />,
             href: '/brands',
-            role: 'normal'
+            role: 'admin'
         },
 
+
         {
-            label: t('categories'),
-            icon: <CategoryIcon className='size-6' />,
+            label: t('category'),
+            icon: <CategoryIconn className='size-6' />,
             href: '/category',
             role: 'admin'
         },
@@ -170,7 +178,7 @@ const Sidebar = ({
                                     className={clsx(
                                         'flex items-center gap-3 px-4 py-3 my-1 rounded-lg transition-colors duration-200',
                                         {
-                                            'bg-white text-black border-teal-400 border-2 rounded-2xl ': item.href == '/' ? pathname == `/${locale}` : pathname.includes(item.href),
+                                            'bg-white/80 text-black border-teal-400 border-2 rounded-2xl ': item.href == '/' ? pathname == `/${locale}` : pathname.includes(item.href),
                                             'text-white/80 hover:bg-white/10': !(item.href == '/' ? pathname == `/${locale}` : pathname.includes(item.href))
                                         }
                                     )}

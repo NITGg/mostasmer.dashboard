@@ -49,10 +49,10 @@
         "logout": "Logout",
         "supplier": "Supplier"
     },
-
     "brand": {
         "title": "Brands",
         "add": "Add Brand",
+        "editBrand": "Edit Brand",
         "name": "Name",
         "image": "Image",
         "action": "Action",
@@ -75,19 +75,32 @@
         "phone": "Phone",
         "email": "Email",
         "location": "Location",
+        "latitude": "Latitude",
+        "langitude": "Langitude",
+        "logo": "Logo",
+        "cover": "Cover",
+        "pointBackRatio": "Point Back Ratio",
+        "about": "About",
+        "pointBackTerms": "Point Back Terms",
+        "yes": "Yes",
+        "no": "No",
+        "cancel": "Cancel",
         "socialMedia": "Social media account",
+
         "deleteBrand": "Delete Brand",
         "deleteMessage": "Are you sure you want to delete this brand?",
         "successDelete": "Successfully delete Brand!!",
         "cancel_delete_brand": "Cancel",
         "successAdd": "Successfully add new brand!!",
+
+
+
         "bankingInfo": "Banking Information",
         "bankName": "Bank Name",
         "socialMediaAccount": "Social Media Account",
         "confirm": "Confirm",
         "editRepresentative": "Edit Representative",
         "addRepresentative": "Add Representative",
-        "active":"Active",
         "notActive":"Inactive",
         "filteredBy":"Filtered By",
         "selectCategories": "Select categories...",
@@ -116,7 +129,6 @@
         "offer_deleted_successfully": "Offer deleted successfully",
 
         "offer_not_found": "Offer not found",
-        "editBrand": "Edit Brand",
         "restoreBrand": "Restore Brand",
         "statusBrand": "Status",
         "brand_not_found": "Brand not found",
@@ -125,7 +137,82 @@
         "brand_status_updated_successfully": "Brand status updated successfully",
         "brand_status_updated_failed": "Brand status update failed",
         "brand_deleted_failed": "Brand deletion failed",
-        "brand_restored_failed": "Brand restoration failed"
+        "brand_restored_failed": "Brand restoration failed",
+
+        "saveChanges": "Save Changes",
+        "failedToUpdate": "Failed to update",
+        "makeSureItIsAValidUrl": "make sure it is a valid url",
+        "updated": "Updated",
+        "successfully": "successfully",
+        "successfullyUpdated": "Successfully updated",
+        "failedToUpdateSocialMedia": "Failed to update social media",
+        "failedToUpdateBankingInfo": "Failed to update banking info",
+        "failedToUpdateRepresentative": "Failed to update representative",
+        "failedToUpdateAbout": "Failed to update about",
+        "failedToUpdatePointsBackTerms": "Failed to update points back terms",
+        "failedToLoadSocialMediaData": "Failed to load social media data",
+        "failedToFetchSocialMedia": "Failed to fetch social media",
+        "failedToUpdateTerms": "Failed to update terms",
+        "failedToUpdateName": "Failed to update name",
+        "failedToUpdatePhone": "Failed to update phone",
+        "failedToUpdateEmail": "Failed to update email",
+        "failedToUpdateLocation": "Failed to update location",
+        "failedToUpdateLatitude": "Failed to update latitude",
+        "failedToUpdateLongitude": "Failed to update longitude",
+        "failedToUpdateLogo": "Failed to update logo",
+        "failedToUpdateCover": "Failed to update cover",
+        "failedToUpdatePointBackRatio": "Failed to update point back ratio",
+        "failedToUpdatePointBackTerms": "Failed to update point back terms",
+        "failedToUpdateAboutBrand": "Failed to update about brand",
+        "failedToUpdateBrandUrl": "Failed to update brand url",
+        "failedToUpdateBankName": "Failed to update bank name",
+        "failedToUpdateBankAccountNumber": "Failed to update bank account number",
+        "failedToUpdateBankAccountName": "Failed to update bank account name",
+        "failedToUpdateBankAccountSwift": "Failed to update bank account swift",
+        "failedToUpdateBankAccountIban": "Failed to update bank account iban",
+        "failedToUpdateBankAccountAddress": "Failed to update bank account address",
+        "failedToUpdateBankAccountCity": "Failed to update bank account city",
+        "failedToUpdateBankAccountState": "Failed to update bank account state",
+        "failedToUpdateBankAccountZip": "Failed to update bank account zip",
+        "failedToUpdateBankAccountCountry": "Failed to update bank account country",
+        "failedToUpdateBankAccountPhone": "Failed to update bank account phone",
+        "failedToUpdateBankAccountEmail": "Failed to update bank account email",
+        "failedToUpdateBankAccountWebsite": "Failed to update bank account website",
+        "failedToUpdateBankAccountFacebook": "Failed to update bank account facebook",
+        "failedToUpdateBankAccountTwitter": "Failed to update bank account twitter",
+        "failedToUpdateBankAccountInstagram": "Failed to update bank account instagram",
+        "failedToUpdateBankAccountLinkedin": "Failed to update bank account linkedin",
+        "failedToUpdateBankAccountYoutube": "Failed to update bank account youtube",
+        "failedToUpdateBankAccountTiktok": "Failed to update bank account tiktok",
+        "failedToUpdateBankAccountWhatsapp": "Failed to update bank account whatsapp",
+        "failedToUpdateBankAccountTelegram": "Failed to update bank account telegram",
+        "failedToUpdateBankAccountSnapchat": "Failed to update bank account snapchat",
+        "failedToUpdateBankAccountPinterest": "Failed to update bank account pinterest",
+        "failedToUpdateBankAccountReddit": "Failed to update bank account reddit",
+        "failedToUpdateBankAccountX": "Failed to update bank account x",
+        "failedToUpdateBankAccountDiscord": "Failed to update bank account discord",
+        "failedToUpdateBankAccountTwitch": "Failed to update bank account twitch",
+        "failedToUpdateBankAccountSteam": "Failed to update bank account steam",
+        "failedToUpdateBankAccountSpotify": "Failed to update bank account spotify",
+        "failedToUpdateBankAccountAppleMusic": "Failed to update bank account apple music",
+        "failedToUpdateBankAccountSoundcloud": "Failed to update bank account soundcloud",
+        "failedToUpdateBankAccountBandcamp": "Failed to update bank account bandcamp",
+        "failedToUpdateBankAccountYandex": "Failed to update bank account yandex",
+        "failedToUpdateBankAccountVk": "Failed to update bank account vk",
+        "failedToUpdateBankAccountOdnoklassniki": "Failed to update bank account odnoklassniki",
+        "failedToUpdateBankAccountOk": "Failed to update bank account ok"   ,
+
+        "current": "Current",
+        "currently": "Currently",
+        "adminActive": "Admin Active",
+        "adminInactive": "Admin Inactive",
+        "active": "Active",
+        "inactive": "Inactive",
+        "saveBrandData": "Save Brand Data"
+
+
+
+
 
 
 
@@ -262,6 +349,9 @@
         "branddeleteButton": "Delete Brand",
         "Brand_offers_table_id": "ID",
         "Brand_offers_table_category": "Category",
+        "Brand_offers_table_url": "URL",
+
+
         "Brand_offers_table_point_back": "Point back",
         "Brand_offers_table_valid_from": "Valid from",
         "Brand_offers_table_valid_to": "Valid to",
@@ -347,7 +437,33 @@
         "viewType": "View Type",
         "startDate": "Start Date",
         "endDate": "End Date",
-        "actions": "Actions"
+
+
+        "category":"Category",
+
+
+        "actions": "Actions",
+        "DELETED":"Deleted",
+        "ADMINACTIVE":"(Admin) Active",
+        "ADMININACTIVE":"(Admin) Inactive",
+        "ACTIVE":"Active",
+        "INACTIVE":"Inactive",
+
+        "brands":"Brands",
+        "Report":"Reports",
+        "Total Records":"Total Records",
+        "page":"Page",
+        "of":"of"
+    },
+    "icons":{
+        "brand": "العلامة التجارية",
+        "edit":"تعديل",
+        "delete":"حذف",
+        "viewbrand":"عرض العلامة التجارية",
+        "ViewCategories":"عرض الفئات",
+        "openPage":"فتح صفحة العلامة التجارية"
+    
+
     },
     "pagination": {
         "showing": "Showing",

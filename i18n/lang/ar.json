@@ -477,7 +477,8 @@
         "branddeleteButton": "حذف علامة تجارية",
         "Brand_offers_table_id": "المعرف",
         "Brand_offers_table_category": "الفئة",
-        "Brand_offers_table_url": "الرابط",
+        "Brand_offers_table_url": "رابط",
+        
         "Brand_offers_table_point_back": "استرداد النقاط",
         "Brand_offers_table_valid_from": "صالح من",
         "Brand_offers_table_valid_to": "صالح حتى",
@@ -567,13 +568,37 @@
         "viewType": "نوع العرض",
         "startDate": "تاريخ البدء",
         "endDate": "تاريخ الانتهاء",
-        "actions": "الإجراءات"
+        "category":"الفئة",
+        "actions": "الإجراءات",
+        "DELETED":"محذوف",
+        "ADMINACTIVE":"(مدير) فعال",
+        "ADMININACTIVE":"(مدير) غير فعال",
+        "ACTIVE":"فعال",
+        "INACTIVE":"غير فعال",
+
+        "Report":"العلامات التجارية",
+        "brands":"تقارير",
+        "Total Records":"إجمالي السجلات",
+        "page":"الصفحة",
+        "of":"من"
+
     },
+    "icons":{
+        "brand": "العلامة التجارية",
+        "edit":"تعديل",
+        "delete":"حذف",
+        "viewbrand":"عرض العلامة التجارية",
+        "ViewCategories":"عرض الفئات",
+        "openPage":"فتح صفحة العلامة التجارية"
+    },
+
+
     "pagination": {
         "showing": "عرض",
         "to": "إلى",
         "of": "من",
         "results": "نتائج",
+
         "previous": "السابق",
         "next": "التالي",
         "rowPerPage": "عدد الصفوف في الصفحة",
