@@ -567,7 +567,7 @@
 
 'use client'
 import React, { useEffect, useState } from 'react'
-import { CategoryIconn, DeleteIcon, LoadingIcon, PluseCircelIcon } from '../icons'
+import { CategoryIconn,CategoryIconn_green, DeleteIcon, LoadingIcon, PluseCircelIcon } from '../icons'
 import { PencilSquareIcon, TrashIcon,ArrowTopRightOnSquareIcon, ArrowPathIcon,PencilIcon } from '@heroicons/react/24/outline'
 import { BrandEyeIcon, Restore_brand,ArrowTopRightOnSquareIconn,TrashIconn,PencilIconn,EyeIcon,EyeIcon2 } from '../icons'
 
@@ -910,10 +910,10 @@ const Brands: React.FC<BrandsProps> = ({ initialBrands, initialCount }) => {
                                     {/* View Categories button */}
                                     <button
                                         onClick={() => handleViewBrand(brand.id)}
-                                        className='text-green-500 hover:text-green-700'
+                                        className='text-green-500 hover:text-green-700 text-[#24ae9f]'
                                         aria-label={t('viewCategories')}
                                     >
-                                        <CategoryIconn className='w-5 h-5 text-[#00a18f] hover:text-gray-700' />
+                                        <CategoryIconn_green className='w-5 h-5 text-[#24ae9f]/80 hover:text-gray-700' />
                                     </button>
                                     
 

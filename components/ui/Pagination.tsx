@@ -255,7 +255,6 @@
 // };
 
 // export default Pagination;
-
 "use client";
 import { useLocale, useTranslations } from "next-intl";
 // import { ChevronLeftIcon, ChevronRightIcon } from "@icons/material";
@@ -395,7 +394,7 @@ const Pagination = ({
                 </button>
 
                 {isExportOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-50">
+                  <div className="absolute bottom-full left-0 mb-2 w-48 bg-white rounded-lg shadow-lg border z-50">
                     {['pdf', 'csv'].map((format) => (
                       <button
                         key={format}
