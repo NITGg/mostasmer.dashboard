@@ -42,9 +42,8 @@ const Page = async ({ searchParams }: { searchParams: any }) => {
     return (
         <div>
             <Brands 
-                initialBrands={data?.brands} 
-                initialCount={data?.count} 
-            />
+                initialBrands={data?.brands}
+                initialCount={data?.count} validTo={''} purchaseCount={0} isActive={false}            />
         </div>
     )
 }
