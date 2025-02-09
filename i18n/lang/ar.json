@@ -46,7 +46,9 @@
         "saveBrandData": "حفظ البيانات",
         "bankingInfo": "معلومات البنك",
         "bankName": "اسم البنك",
-        "confirm": "تأكيد"
+        
+        "confirm": "تأكيد",
+        "inactive": "غير نشط"
     },
     "nav": {
         "dashboard": "لوحة التحكم",
@@ -100,14 +102,25 @@
         "users": "إجمالي المستخدمين",
         "suppliers": "إجمالي الموردين",
         "products": "إجمالي المنتجات",
+        "pets": "إجمالي الحيوانات الأليفة",
         "imagegallery": "إجمالي معرض الصور",
         "articles": "إجمالي المقالات",
         "faqs": "إجمالي الأسئلة الشائعة",
         "categories": "إجمالي الفئات",
         "orders": "إجمالي الطلبات",
-        "coupons": "إجمالي الكوبونات",
+        "coupons": "إجمالي القسائم",
         "viewAll": "عرض الكل",
-        "ads": "الإعلانات"
+        "ads": "إجمالي الإعلانات",
+        "onBoarding": "إجمالي التوجيه",
+        "dashboardTitle": "نظرة عامة على لوحة القيادة",
+        "totalUsers": "إجمالي المستخدمين",
+        "totalBrands": "إجمالي العلامات التجارية",
+        "totalOffers": "إجمالي العروض",
+        "totalCoupons": "إجمالي القسائم",
+        "totalCategories": "إجمالي الفئات",
+        "totalRepresentatives": "إجمالي المندوبين",
+        "popularCategories": "الفئات الشائعة",
+        "recentActivity": "النشاط الأخير"
     },
     "order": {
         "title": "الطلبات",
@@ -191,6 +204,7 @@
         "supplier": "مورد",
         "details": "التفاصيل",
         "address": "العنوان",
+        "restoreUser": "استرجاع المستخدم",
         "percentage": "النسبة",
         "license": "الرخصة التجارية",
         "history": "السجل",
@@ -203,6 +217,8 @@
         "emailAlreadyInUse": "هذا البريد الإلكتروني مستخدم بالفعل",
         "passwordRequired": "يرجى إدخال كلمة المرور",
         "noHistory": "لا توجد مشتريات بعد",
+    "noRecords":"عدد البيانات",
+
         "order": {
             "orderDetails": "تفاصيل الطلب"
         },
@@ -540,7 +556,6 @@
         "phone": "الهاتف",
         "email": "البريد الإلكتروني",
         "location": "الموقع",
-        "status": "الحالة",
         "active": "فعال",
         "deactive": "غير فعال",
         "update": "تعديل",
@@ -579,17 +594,38 @@
         "brands": "تقارير",
         "Total Records": "إجمالي السجلات",
         "page": "الصفحة",
-        "of": "من"
+        "of": "من",
+        "SAR": "ريال",
+        "user-types": "أنواع المستخدمين",
+        "user-roles": "أدوار المستخدمين",
+        "code": "الكود",
+        "Description":"الوصف",
+        "coupons":"كوبونات",
+
+
+        "status": "الحالة"
+        
     },
     "icons": {
         "brand": "العلامة التجارية",
+
         "edit": "تعديل",
         "delete": "حذف",
         "viewbrand": "عرض العلامة التجارية",
         "ViewCategories": "عرض الفئات",
         "openPage": "فتح صفحة العلامة التجارية",
-        "Pluse": "اضافة"
+        "Pluse": "اضافة",
+        "eyeicon": "عرض المستخدم",
+        "viewuser": "عرض المستخدم",
+        "viewcategories": "عرض الفئات",
+        "view": "عرض ",
+        "editbrand": "تعديل العلامة التجارية",
+        "Restore": "استرجاع",
+        "pluse":"اضافة",
+        "restoredeletedbrand": "استرجاع العلامة التجارية المحذوفة",
+        "global": "تغير اللغة للأنجليزية"
     },
+
     "pagination": {
         "showing": "عرض",
         "to": "إلى",
@@ -602,10 +638,9 @@
         "pdfformat": "صيغة PDF",
         "csvformat": "صيغة CSV"
     },
-    "coupons": {
+    "Coupons": {
         "add": "إضافة",
         "title": "الكوبونات",
-        "addCoupon": "إضافة كوبون",
         "btn": "إضافة كوبون",
         "lable": "إضافة كوبون",
         "name": "الرمز",
@@ -619,6 +654,17 @@
         "delete": "حذف",
         "description": "الوصف",
         "deleteMessage": "هل تريد حذف هذا الكوبون؟",
+        "fetchError": "فشل في جلب الكوبونات",
+        "Brand": "العلامة التجارية",
+        "Code": "الكود",
+        "Ratio": "النسبة",
+        "ValidFrom": "صالح من",
+        "ValidTo": "صالح حتى",
+        "Description": "الوصف",
+        "tableView": "عرض الجدول",
+        "cardView": "عرض البطاقات",
+        "noCoupons": "لا توجد كوبونات",
+      
         "popup": {
             "lable": "حذف الكوبون",
             "message": "هل تريد حذف هذا الكوبون؟"
@@ -640,7 +686,11 @@
             "end": "تاريخ الانتهاء",
             "discount": "الخصم"
         },
-        "successDelete": "تم الحذف بنجاح"
+        "successDelete": "تم الحذف بنجاح",
+        "search": "البحث عن الكوبونات...",
+        "noCouponsFound": "لم يتم العثور على كوبونات",
+        "editCoupon": "تعديل الكوبون",
+        "addCoupon": "إضافة كوبون جديد"
     },
     "appInfo": {
         "englishContent": "المحتوى باللغة الإنجليزية",
