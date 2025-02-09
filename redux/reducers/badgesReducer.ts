@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { UserType } from "./userTypesReducer";
 
 export type Badge = {
   id: number;
@@ -14,6 +15,7 @@ export type Badge = {
   validTo?: string;
   createdAt: string;
   updatedAt: string;
+  userType?: UserType;
 };
 
 type BadgesState = {
