@@ -203,7 +203,10 @@
     "adminInactive": "Admin Inactive",
     "active": "Active",
     "inactive": "Inactive",
-    "saveBrandData": "Save Brand Data"
+    "deleted": "Deleted",
+    "restore":"Restore",
+    "saveBrandData": "Save Brand Data",
+    "inactive": "Inactive"
   },
   "dashboard": {
     "users": "Total users",
@@ -309,6 +312,7 @@
     "passwordRequired": "Please enter the password",
     "emailAlreadyInUse": "This email is already used",
     "noHistory": "No purchase yet",
+    "noRecords":"No Of Records",
     "order": {
       "orderDetails": "Order Details",
       "title": "Orders"
@@ -415,7 +419,6 @@
     "cardValue": "Card Value",
     "cardValueInSr": "Card Value in SR",
     "used": "Used",
-    "status": "Status",
     "fullName": "Full Name",
     "mobile": "Mobile",
     "email": "Email",
@@ -435,13 +438,22 @@
     "Report": "Reports",
     "Total Records": "Total Records",
     "page": "Page",
-    "of": "of"
+    "of": "of",
+    "SAR": "SAR",
+    "user-types": "User Type",
+    "user-roles": "User Role",
+    "code": "Code",
+    "Description":"Description",
+    "coupons":"Coupons",
+
+    "status":"Status"
   },
   "pagination": {
     "showing": "Showing",
     "to": "to",
     "of": "of",
     "results": "results",
+
     "previous": "Previous",
     "next": "Next",
     "rowPerPage": "Row per Page",
@@ -470,7 +482,7 @@
       "save": "Save"
     }
   },
-  "coupon": {
+  "Coupons": {
     "title": "Coupons",
     "addCoupon": "Add Coupon",
     "btn": "Add Coupon",
@@ -504,6 +516,19 @@
     "cancel": "Cancel",
     "update": "Edit Coupon",
     "add": "Add Coupon",
+    
+    "fetchError": "Failed to fetch coupons",
+    "Brand": "Brand",
+    "Code": "Code",
+    "Ratio": "Ratio",
+    "ValidFrom": "Valid From",
+    "ValidTo": "Valid To",
+    "Description": "Description",
+    "tableView": "Table View",
+    "cardView": "Card View",
+    "noCoupons": "No coupons found",
+  
+    
     "error": {
       "code": "Please enter the coupon code",
       "ratio": "Please enter the ratio percentage",
@@ -909,7 +934,11 @@
       "end": "End Date",
       "discount": "Discount"
     },
-    "successDelete": "Successfully delete"
+    "successDelete": "Successfully delete",
+    "search": "Search coupons...",
+    "noCouponsFound": "No coupons found",
+    "editCoupon": "Edit Coupon",
+    "addCoupon": "Add New Coupon"
   },
   "order": {
     "title": "Orders",
@@ -1090,6 +1119,21 @@
     "delete": "Delete",
     "viewbrand": "View Brand",
     "ViewCategories": "View Categories",
-    "openPage": "Open Brand Page"
+    "openPage": "Open Brand Page",
+    "eyeicon": "View ",
+    "viewuser": "View User",
+    "editbrand": "Edit Brand",
+    "restoredeletedbrand": "Restore Deleted Brand",
+    "eyeicon2": "View ",
+    "Restore": "Restore",
+    "view": "View",
+    "Pluse":"Add",
+    "Pluse2":"Add",
+    
+
+    "global": "Change Language to Arabic",
+    "globala": "تغير اللغة للأنجليزية"
+
   }
+
 }

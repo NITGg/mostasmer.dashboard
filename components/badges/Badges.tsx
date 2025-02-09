@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import Table from "@/components/ui/Table";
 import { DateToText } from "@/lib/DateToText";
-import { DeleteIcon, LoadingIcon } from "../icons";
-import { EyeIcon, Plus } from "lucide-react";
+import { DeleteIcon, LoadingIcon,EyeIcon } from "@/components/icons";
+import {  Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import axios from "axios";
@@ -203,6 +203,7 @@ const Badges = ({
                     >
                       <DeleteIcon className="size-6 text-primary" />
                     </button>
+                    
                   </div>
                 </div>
               </td>

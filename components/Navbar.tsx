@@ -9,7 +9,8 @@ import useClickOutside from '../hooks/useClickOutSide';
 import { deleteCookie } from '@/lib/deleteCookie';
 import { useAppContext } from '@/context/appContext';
 
-import { BellIcon, GlobeAltIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+// import { BellIcon, GlobeAltIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { Globalicon } from '@/components/icons';
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 const Navbar = ({ setOpen }: {
@@ -64,8 +65,9 @@ const Navbar = ({ setOpen }: {
                     onClick={handleLanguageChange}
                     className="flex items-center  py-2 rounded-lg hover:text-teal-500 text-teal-500 "
                 >
-                    <GlobeAltIcon className="h-6 w-6 text-teal-500" />
+                    <Globalicon className="h-6 w-6 text-teal-500" />
                     <span className='text-teal-600 uppercase'>{locale}</span> 
+
 
                 </button>
                 </div>
