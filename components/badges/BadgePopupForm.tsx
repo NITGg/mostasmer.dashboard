@@ -7,10 +7,7 @@ import axios from "axios";
 import { useAppContext } from "@/context/appContext";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "@/hooks/redux";
-import {
-  addBadge,
-  Badge,
-} from "@/redux/reducers/badgesReducer";
+import { addBadge, Badge } from "@/redux/reducers/badgesReducer";
 import UserInput from "../users/UserInput";
 import CustomDatePicker from "../CustomDatePicker";
 import {
@@ -55,7 +52,6 @@ const BadgePopupForm = ({
   const dispatch = useAppDispatch();
   const minAmount = watch("minAmount");
   const validFrom = watch("validFrom");
-
   useEffect(() => {
     reset(
       badge || {
@@ -96,17 +92,14 @@ const BadgePopupForm = ({
 
       if (formData.logoFile?.[0]) badgeData.logo = formData.logoFile[0];
 
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges`,
-        badgeData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const { data } = await axios.post(`$/api/badges`, badgeData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       dispatch(addBadge(data.badge));
+
       toast.success(t("success"));
       handelClose();
     } catch (error: any) {
@@ -145,16 +138,27 @@ const BadgePopupForm = ({
 
       if (formData.logoFile?.[0]) badgeData.logo = formData.logoFile[0];
 
+      const { data } = await axios.put(`/api/badges/${badge.id}`, badgeData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       await axios.put(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges/${badge.id}`,
-        badgeData,
+        `/api/user-types/${badge.userType?.id}`,
+        {
+          buyAmount: data.badge.maxAmount,
+          ratio: data.badge.points,
+          userType: data.badge.name,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
           },
         }
       );
+
       toast.success(t("successUpdate"));
       handelClose();
       setTimeout(() => window.location.reload(), 500);

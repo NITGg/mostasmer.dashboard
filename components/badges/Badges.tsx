@@ -9,11 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useAppContext } from "@/context/appContext";
-import {
-  Badge,
-  deleteBadge,
-  setBadges,
-} from "@/redux/reducers/badgesReducer";
+import { Badge, deleteBadge, setBadges } from "@/redux/reducers/badgesReducer";
 import BadgePopupForm from "./BadgePopupForm";
 import {
   Dialog,
@@ -52,7 +48,9 @@ const Badges = ({
   const [openForm, setOpenForm] = useState<boolean>(false);
   const [updateBadge, setUpdateBadge] = useState<Badge | undefined>(undefined);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const [deleteBadgeId, setDeleteBadgeId] = useState<number | undefined>(undefined);
+  const [deleteBadgeId, setDeleteBadgeId] = useState<Badge | undefined>(
+    undefined
+  );
   const [pending, setPending] = useState<boolean>(false);
   const { token } = useAppContext();
 
@@ -68,14 +66,23 @@ const Badges = ({
     try {
       setPending(true);
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges/${deleteBadgeId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user-types/${deleteBadgeId.userType?.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      dispatch(deleteBadge(deleteBadgeId));
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges/${deleteBadgeId.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(deleteBadge(deleteBadgeId.id));
       setOpenDelete(false);
       toast.success(t("successDelete"));
       setPending(false);
@@ -145,7 +152,7 @@ const Badges = ({
         pageSize={pageSize}
         onPageChange={handlePageChange}
         showCount={true}
-        currentItems={(badgesRedux?.length || badges?.length) || 0}
+        currentItems={badgesRedux?.length || badges?.length || 0}
       >
         {(badgesRedux?.length ? badgesRedux : badges)?.map(
           (badge: Badge, index) => (
@@ -153,7 +160,8 @@ const Badges = ({
               key={badge.id}
               className="group odd:bg-white even:bg-[#F0F2F5] border-b"
             >
-              <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{badge.id}</td>
+              {/* <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td> */}
               <td scope="row" className="px-6 py-4">
                 <div className="w-7 h-7 p-1 rounded-full group-even:bg-white justify-items-center content-center">
                   <ImageApi
@@ -190,7 +198,7 @@ const Badges = ({
                     <button
                       onClick={() => {
                         setOpenDelete(true);
-                        setDeleteBadgeId(badge.id);
+                        setDeleteBadgeId(badge);
                       }}
                     >
                       <DeleteIcon className="size-6 text-primary" />
