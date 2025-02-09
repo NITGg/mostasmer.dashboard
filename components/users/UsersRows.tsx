@@ -28,6 +28,7 @@ import {
 import axios from "axios";
 import Table from "../ui/Table";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import clsx from "clsx";
 
 const UsersRows = ({
   loading: initialLoading,
@@ -45,7 +46,6 @@ const UsersRows = ({
   const { token } = useAppContext();
   const dispatch = useAppDispatch();
 
-  // State
   const [addUser, setAddUser] = useState<boolean>(false);
   const [deleteUserId, setDeleteUserId] = useState<User | null>(null);
   const [pending, setPending] = useState<boolean>(false);
@@ -277,7 +277,10 @@ const UsersRows = ({
           {users?.map((user: User) => (
             <tr
               key={user.id}
-              className="odd:bg-white even:bg-[#F0F2F5] border-b"
+              className={clsx(
+                "odd:bg-white even:bg-[#F0F2F5]  border-b",
+                user.isDeleted && "text-red-500 font-bold"
+              )}
             >
               <td scope="row" className="px-6 py-4">
                 <div className="size-16">
@@ -317,8 +320,10 @@ const UsersRows = ({
                       </button>
                     ) : (
                       <>
-                        {" "}
-                        <Link href={`${pathname}/${user.id}`}>
+                        <Link
+                          className="hover:opacity-85 active:scale-95 transition-all"
+                          href={`${pathname}/${user.id}`}
+                        >
                           <EyeIcon className="size-6 text-primary" />
                         </Link>
                         <button
@@ -327,6 +332,7 @@ const UsersRows = ({
                             setDeleteUserId(user);
                             setOpenDeleteUser(true);
                           }}
+                          className="hover:opacity-85 active:scale-95 transition-all"
                         >
                           <DeleteIcon className="size-6 text-primary" />
                         </button>

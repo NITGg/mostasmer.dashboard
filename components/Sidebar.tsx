@@ -7,14 +7,14 @@ import Image from "next/image";
 import {
   AdsIcon,
   AppIcon,
-  CategoryIcon,
+  BrandIcon,
   CouponIcon,
   FaqIcon,
   ContactIcon,
   DashboardIcon,
   GroupUsersIcon,
   OnBoardingIcon,
-  PetsIcon,
+  CategoryIconn,
   BadgesIcon,
   GiftCardsIcon,
   UsersIcon,
@@ -80,25 +80,18 @@ const Sidebar = ({
 
     {
       label: t("brands"),
-      icon: (
-        <PetsIcon
-          className={clsx(
-            "size-6",
-            { "fill-white": pathname.includes("brands") },
-            { "stroke-white": !pathname.includes("brands") }
-          )}
-        />
-      ),
+      icon: <BrandIcon className="size-6" />,
       href: "/brands",
-      role: "normal",
+      role: "admin",
     },
 
     {
       label: t("category"),
-      icon: <CategoryIcon className="size-6" />,
+      icon: <CategoryIconn className="size-6" />,
       href: "/category",
       role: "admin",
     },
+
     {
       label: t("orders"),
       icon: <ShoppingBasket className="size-6" />,
