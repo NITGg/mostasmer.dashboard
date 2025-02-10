@@ -1,6 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserType } from "./userTypesReducer";
 
+export type UserType = {
+  id: number;
+  userType: string;
+  color?: string;
+  buyAmount: number;
+  ratio: number;
+  badgeId?: number;
+  badge?: Badge;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type Badge = {
   id: number;
   name: string;
@@ -22,7 +34,7 @@ type BadgesState = {
   badges: Badge[];
   isLastPage: boolean;
   badgeById: Badge | null;
-  lastDoc: any; 
+  lastDoc: any;
 };
 
 const initialState: BadgesState = {

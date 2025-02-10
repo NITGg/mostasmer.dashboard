@@ -15,11 +15,11 @@ import UserDetailsForm from "./UserDetailsForm";
 import { LoadingIcon } from "@/components/icons";
 import { useRouter } from "next/navigation";
 import { Role, updateUser, User } from "@/redux/reducers/usersReducer";
-import { UserType } from "@/redux/reducers/userTypesReducer";
 import { useAppDispatch } from "@/hooks/redux";
 import MultipleSelect from "../../MultipleSelect";
 import { Brand } from "../BrandSelect";
 import { fetchBrands, fetchRoles } from "../AddUserForm";
+import { UserType } from "@/redux/reducers/badgesReducer";
 
 type Wallet = {
   id: number;

@@ -62,9 +62,9 @@ const Sidebar = ({
           role: "admin",
         },
         {
-          href: "/user-types",
-          label: t("userTypes"),
-          icon: <Users className="size-6" />,
+          href: "/badges",
+          label: t("badges"),
+          icon: <BadgesIcon className="size-6" />,
           role: "admin",
         },
         {
@@ -97,18 +97,6 @@ const Sidebar = ({
       icon: <ShoppingBasket className="size-6" />,
       href: "/orders",
       role: "supplier",
-    },
-    {
-      label: t("userTypes"),
-      icon: <Users className="size-6" />,
-      href: "/user-types",
-      role: "admin",
-    },
-    {
-      label: t("badges"),
-      icon: <BadgesIcon className="size-6" />,
-      href: "/badges",
-      role: "admin",
     },
     {
       label: t("ads"),
@@ -227,15 +215,14 @@ const Sidebar = ({
     <div className="lg:w-72 flex-shrink-0">
       <div
         ref={eleRef}
-        className={`w-64 lg:w-72 bg-[#001529] h-lvh max-h-lvh fixed top-0 z-[9999] flex flex-col ${
-          open
+        className={`w-64 lg:w-72 bg-[#001529] h-lvh max-h-lvh fixed top-0 z-[9999] flex flex-col ${open
             ? locale == "en"
               ? "rtl"
               : "ar-ltr"
             : locale == "en"
-            ? "ltr"
-            : "ar-rtl"
-        }`}
+              ? "ltr"
+              : "ar-rtl"
+          }`}
       >
         {/* Logo Section */}
         <div className="p-4">
