@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import Table from "@/components/ui/Table";
 import { DateToText } from "@/lib/DateToText";
-import { DeleteIcon, LoadingIcon,EyeIcon } from "@/components/icons";
-import {  Plus } from "lucide-react";
+import { DeleteIcon, LoadingIcon, EditIcon } from "../icons";
+import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import axios from "axios";
@@ -106,9 +106,9 @@ const Badges = ({
             .map((badge: Badge) => (
               <div
                 key={badge.id}
-                className="bg-[#F0F2F5] overflow-hidden shadow-[0px_4px_10px_-4px_#00000040] w-48 h-44 rounded-2xl flex flex-col"
+                className="bg-[#F0F2F5] relative hover:-translate-y-2 transition-all  shadow-[0px_4px_10px_-4px_#00000040] w-48 h-44 rounded-2xl flex flex-col"
               >
-                <div className="h-2/3 w-full p-2 relative flex flex-col justify-end text-white">
+                <div className="h-2/3 w-full p-2 relative rounded-t-2xl overflow-hidden flex flex-col justify-end text-white">
                   <Image
                     src={badge.cover}
                     alt={badge.name}
@@ -129,17 +129,26 @@ const Badges = ({
                   <span className="capitalize text-lg font-bold">points</span>
                   <span className="text-lg font-bold">{badge.points}%</span>
                 </div>
+                <button
+                  className="absolute rounded-2xl inset-0 z-10"
+                  type="button"
+                  onClick={() => {
+                    setUpdateBadge(badge);
+                    setOpenForm(true);
+                  }}
+                />
               </div>
             ))}
         </div>
-        <div className="bg-[#F0F2F5] grid place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-1/5 h-44 rounded-2xl">
-          <button
-            onClick={() => setOpenForm(true)}
-            className="p-1 bg-primary rounded-md text-white font-medium"
-          >
+        <button
+          type="button"
+          onClick={() => setOpenForm(true)}
+          className="bg-[#F0F2F5] grid place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-1/5 h-44 rounded-2xl hover:-translate-y-2 transition-all"
+        >
+          <span className="p-1 bg-primary rounded-md text-white font-medium hover:text-gray-700 transition-colors">
             <Plus className="size-6" />
-          </button>
-        </div>
+          </span>
+        </button>
       </div>
 
       <Table
@@ -160,9 +169,8 @@ const Badges = ({
               key={badge.id}
               className="group odd:bg-white even:bg-[#F0F2F5] border-b"
             >
-              <td className="px-6 py-4 whitespace-nowrap">{badge.id}</td>
-              {/* <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td> */}
-              <td scope="row" className="px-6 py-4">
+              <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+              <td className="px-6 py-4">
                 <div className="w-7 h-7 p-1 rounded-full group-even:bg-white justify-items-center content-center">
                   <ImageApi
                     src={badge.logo}
@@ -180,31 +188,32 @@ const Badges = ({
               <td className="px-6 py-4 whitespace-nowrap">
                 {badge?.validFrom ? DateToText(badge?.validFrom) : "--"}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4">
                 {badge?.validTo ? DateToText(badge.validTo) : "--"}
               </td>
-              <td className="px-6 py-4">
-                <div className="flex justify-center">
-                  <div className="flex gap-2 items-center">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setUpdateBadge(badge);
-                        setOpenForm(true);
-                      }}
-                    >
-                      <EyeIcon className="size-6 text-primary" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setOpenDelete(true);
-                        setDeleteBadgeId(badge);
-                      }}
-                    >
-                      <DeleteIcon className="size-6 text-primary" />
-                    </button>
-                    
-                  </div>
+              <td className="px-6 py-4 text-right">
+                <div className="flex justify-end gap-6">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUpdateBadge(badge);
+                      setOpenForm(true);
+                    }}
+                    className="text-primary hover:text-gray-700 transition-colors"
+                  >
+                    <EditIcon className="size-4" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenDelete(true);
+                      setDeleteBadgeId(badge);
+                    }}
+                    className="text-primary hover:text-gray-700 transition-colors"
+                  >
+                    <DeleteIcon className="size-4" />
+                  </button>
                 </div>
               </td>
             </tr>
