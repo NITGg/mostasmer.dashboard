@@ -18,6 +18,7 @@ import {
   BadgesIcon,
   GiftCardsIcon,
   UsersIcon,
+  SettingsIcon,
 } from "./icons";
 import { Link } from "@/i18n/routing";
 import useClickOutside from "@/hooks/useClickOutSide";
@@ -114,6 +115,12 @@ const Sidebar = ({
       label: t("aboutapp"),
       icon: <AppIcon className="size-6" />,
       href: "/about-app",
+      role: "admin",
+    },
+    {
+      label: t("Settings"),
+      icon: <SettingsIcon className="size-6" />,
+      href: "/settings",
       role: "admin",
     },
 

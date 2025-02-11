@@ -10,7 +10,7 @@ import { deleteCookie } from '@/lib/deleteCookie';
 import { useAppContext } from '@/context/appContext';
 
 // import { BellIcon, GlobeAltIcon, UserCircleIcon } from "@heroicons/react/24/solid";
-import { Globalicon } from '@/components/icons';
+import { Globalicon, BellIcon } from '@/components/icons';
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 const Navbar = ({ setOpen }: {
@@ -45,6 +45,11 @@ const Navbar = ({ setOpen }: {
         router.push(newPath);
     };
 
+    const handleBellClick = () => {
+        console.log('bell clicked')
+        router.push(`/${locale}/notification`)
+    }
+
     return (
         <nav className='p-container flex justify-between lg:justify-end py-5 items-center'>
             <button onClick={() => { setOpen(o => !o) }} className='lg:hidden'>
@@ -65,9 +70,16 @@ const Navbar = ({ setOpen }: {
                     onClick={handleLanguageChange}
                     className="flex items-center  py-2 rounded-lg hover:text-teal-500 text-teal-500 "
                 >
-                    <Globalicon className="h-6 w-6 text-teal-500" />
-                    <span className='text-teal-600 uppercase'>{locale}</span> 
+                        <Globalicon className="h-6 w-6 text-teal-500" />
+                        <span className='text-teal-600 uppercase'>{locale}</span> 
 
+                </button>
+
+                <button 
+                    onClick={handleBellClick}
+                    className="flex items-center  py-2 rounded-lg hover:text-teal-500 text-teal-500 "
+                >
+                        <BellIcon className="h-6 w-6 text-teal-500" />
 
                 </button>
                 </div>
