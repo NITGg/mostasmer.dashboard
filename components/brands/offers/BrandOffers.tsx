@@ -533,7 +533,7 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
             headers.append('Authorization', `Bearer ${token}`)
             
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/api/offers?brandId=${brandId}&fields=id,ratio,validFrom,validTo,brandId,category=id-name-imageUrl,url&sort=-ratio`,
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/offers?brandId=${brandId}&sort=-ratio`,
                 {
                     method: 'GET',
                     headers,
