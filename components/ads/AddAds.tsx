@@ -99,16 +99,12 @@ const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ads }) => {
       nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
       adData.endDate = nextYearDate;
 
-      const { data } = await axios.post(
-        `/api/ads`,
-        adData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const { data } = await axios.post(`/api/ads`, adData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       toast.success(t("success"));
       dispatch(addAds(data.ad));
       setTimeout(() => window.location.reload(), 500);
@@ -173,16 +169,12 @@ const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ads }) => {
       if (formData.imageFile[0]) {
         adData.imageUrl = formData.imageFile[0];
       }
-      const { data } = await axios.put(
-        `/api/ads/${ad?.id}`,
-        adData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const { data } = await axios.put(`/api/ads/${ad?.id}`, adData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       toast.success(t("successUpdate"));
       dispatch(updateAds(data.ad));
       reset();
@@ -199,22 +191,26 @@ const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ads }) => {
 
   const fetchBrand = async ({
     search,
-    page,
+    skip,
     limit,
   }: {
     search: string;
-    page: number;
+    skip: number;
     limit: number;
   }) => {
     try {
-      const { data } = await axios.get("/api/brand", {
-        params: {
-          sort: "-purchaseCount",
-          limit,
-          keyword: search,
-          page,
-        },
+      const queryParams = new URLSearchParams({
+        sort: "name",
+        limit: String(limit),
+        keyword: search,
+        skip: String(skip),
+        fields: "id,name",
+        status: "ACTIVE",
       });
+      const { data } = await axios.get(
+        `/api/brand?${queryParams.toString()}`,
+        {}
+      );
 
       return {
         data: data.brands,
@@ -268,7 +264,7 @@ const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ads }) => {
             fetchFunction={fetchBrand}
             getOptionLabel={(brand) => brand.name}
             getOptionValue={(brand) => brand.id}
-            defaultValue={ad?.brand ?? null}
+            defaultValues={ad?.brand && [ad?.brand]}
             roles={{ required: t("brandIsRequired") }}
             register={register}
             setValue={setValue}
