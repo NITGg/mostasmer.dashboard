@@ -1491,7 +1491,7 @@ const locale = useLocale()
             const data = await response.json();
             setBrand(prev => prev ? { ...prev, ...data.brand } : null);
             setEditedBrandFields(new Set());
-            toast.success('Brand information updated successfully');
+            toast.success(t('successUpdate'));
         } catch (error: unknown) {
             console.error('Error:', error)
             if (error instanceof Error) {
@@ -1528,10 +1528,10 @@ const locale = useLocale()
             } : null);
             
             setEditedRatio(null);
-            toast.success('Brand updated successfully');
+            toast.success(t('successUpdate'));
         } catch (error) {
             console.error('Error:', error);
-            toast.error('Failed to update brand');
+            toast.error(t('failedToUpdateBrand'));
         } finally {
             setIsSaving(false);
         }
@@ -2023,7 +2023,7 @@ const locale = useLocale()
 
                     <div className="bg-white rounded-[32px] shadow-2xl p-4 md:p-7">
                         <form className="mt-5 space-y-2">
-                            <div className="text-lg font-bold text-slate-950 translate-y-[-50%]">Brand Info</div>
+                            <div className="text-lg font-bold text-slate-950 translate-y-[-50%]">{(t('brandInfo'))}</div>
                             <div className="flex gap-4 items-center">
                                 <label className="w-24 text-xs text-slate-950 text-left">{(t('brandUrl'))} :</label>
                                 <input

@@ -8,6 +8,10 @@ import Table from '@/components/ui/Table'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { useForm } from 'react-hook-form'
 import { PlusIcon } from '@heroicons/react/24/outline'
+import Select from 'react-select/async'
+import debounce from 'lodash/debounce'
+import { GroupBase } from 'react-select'
+import { OptionsOrGroups } from 'react-select'
 
 interface Representative {
     id: number
@@ -16,6 +20,13 @@ interface Representative {
     userId: string
     createdAt: string
     updatedAt: string
+}
+
+interface UserOption {
+    value: string
+    label: string
+    roles: Array<{id: number, name: string}>
+    imageUrl?: string
 }
 
 interface RepresentativeFormData {
@@ -44,6 +55,7 @@ const BrandRepresentative = ({ brandId }: { brandId: string }) => {
     const [currentPage, setCurrentPage] = useState(1)
     const [pageSize, setPageSize] = useState(10)
     const [currentItems, setCurrentItems] = useState<Representative[]>([])
+    const [selectedUser, setSelectedUser] = useState<UserOption | null>(null)
 
     const headers = [
         { name: 'brand_representatives_table_id' },
@@ -87,7 +99,7 @@ const BrandRepresentative = ({ brandId }: { brandId: string }) => {
 
     const handleDelete = async (representativeId: number) => {
         try {
-            if (!window.confirm('Are you sure you want to delete this representative?')) {
+            if (!window.confirm(t('brand.deleteRepresentativeConfirm'))) {
                 return;
             }
 
@@ -95,72 +107,203 @@ const BrandRepresentative = ({ brandId }: { brandId: string }) => {
             const headers = new Headers();
             headers.append('Authorization', `Bearer ${token}`);
 
+            const requestOptions = {
+                method: 'DELETE',
+                headers,
+                body: '', // Empty string as body
+                redirect: 'follow' as RequestRedirect
+            };
+
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/representative/${brandId}/${representativeId}?lang=en`, 
-                {
-                    method: 'DELETE',
-                    headers,
-                    redirect: 'follow'
-                }
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/representative/${brandId}/${representativeId}`,
+                requestOptions
             );
 
+            const result = await response.text();
+
             if (!response.ok) {
-                throw new Error('Failed to delete representative');
+                throw new Error(result || t('brand.representativeDeleteError'));
             }
 
-            toast.success('Representative deleted successfully');
-            // Refresh the representatives list
-            fetchRepresentatives();
-        } catch (error) {
+            toast.success(t('brand.representativeDeleteSuccess'));
+            await fetchRepresentatives();
+        } catch (error: any) {
             console.error('Error deleting representative:', error);
-            toast.error('Failed to delete representative');
+            toast.error(error.message || t('brand.representativeDeleteError'));
         } finally {
             setLoading(false);
         }
     };
 
-    const onSubmit = async (data: RepresentativeFormData) => {
-        console.debug('Submitting new representative data:', data)
+    const loadInitialOptions = async () => {
         try {
-            setLoading(true)
-            const headers = new Headers()
-            headers.append('Authorization', `Bearer ${token}`)
-            headers.append('Content-Type', 'application/json')
+            const headers = new Headers();
+            headers.append('Authorization', `Bearer ${token}`);
 
-            const requestBody = {
-                userId: data.userId,
-                brandId: Number(brandId),
-                status: data.status || 'ACTIVE',
-                validFrom: data.validFrom,
-                validTo: data.validTo
+            // First, get the current brand representatives to exclude them
+            const representativesResponse = await fetch(
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/representative/${brandId}`,
+                {
+                    method: 'GET',
+                    headers,
+                }
+            );
+
+            if (!representativesResponse.ok) {
+                throw new Error('Failed to fetch current representatives');
             }
 
-            console.debug('Request body:', requestBody)
+            const representativesData = await representativesResponse.json();
+            const currentRepresentativeIds = representativesData.brandRepresentatives.map(
+                (rep: Representative) => rep.userId
+            );
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/representative/${brandId}`, {
+            // Fetch all users without limit
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/user`,
+                {
+                    method: 'GET',
+                    headers,
+                }
+            );
+
+            if (!response.ok) throw new Error('Failed to fetch users');
+
+            const data = await response.json();
+            
+            // Filter out users who are already representatives for this brand
+            return data.users
+                .filter((user: any) => !currentRepresentativeIds.includes(user.id))
+                .map((user: any) => ({
+                    value: user.id,
+                    label: `${user.fullname} (${user.email})`,
+                    roles: user.roles,
+                    imageUrl: user.imageUrl
+                }));
+        } catch (error) {
+            console.error('Error loading initial users:', error);
+            return [];
+        }
+    };
+
+    const loadUsers = debounce(
+        (
+            inputValue: string
+        ): Promise<OptionsOrGroups<UserOption, GroupBase<UserOption>>> => {
+            return new Promise(async (resolve) => {
+                try {
+                    const headers = new Headers();
+                    headers.append('Authorization', `Bearer ${token}`);
+
+                    // First, get the current brand representatives to exclude them
+                    const representativesResponse = await fetch(
+                        `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/representative/${brandId}`,
+                        {
+                            method: 'GET',
+                            headers,
+                        }
+                    );
+
+                    if (!representativesResponse.ok) {
+                        throw new Error('Failed to fetch current representatives');
+                    }
+
+                    const representativesData = await representativesResponse.json();
+                    const currentRepresentativeIds = representativesData.brandRepresentatives.map(
+                        (rep: Representative) => rep.userId
+                    );
+
+                    // If searching, use the keyword parameter
+                    const url = inputValue 
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/user?keyword=${inputValue}`
+                        : `${process.env.NEXT_PUBLIC_BASE_URL}/api/user`;
+
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers,
+                    });
+
+                    if (!response.ok) throw new Error('Failed to fetch users');
+
+                    const data = await response.json();
+                    
+                    const options = data.users
+                        .filter((user: any) => !currentRepresentativeIds.includes(user.id))
+                        .map((user: any) => ({
+                            value: user.id,
+                            label: `${user.fullname} (${user.email})`,
+                            roles: user.roles,
+                            imageUrl: user.imageUrl
+                        }));
+
+                    resolve(options);
+                } catch (error) {
+                    console.error('Error loading users:', error);
+                    resolve([]);
+                }
+            });
+        },
+        300
+    );
+
+    const onSubmit = async (data: RepresentativeFormData) => {
+        if (!selectedUser) {
+            toast.error(t('user.selectRepresentative'));
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const headers = new Headers();
+            headers.append('Authorization', `Bearer ${token}`);
+            headers.append('Content-Type', 'application/json');
+
+            const requestBody = {
+                userId: selectedUser.value
+            };
+
+            const requestOptions = {
                 method: 'POST',
                 headers,
-                body: JSON.stringify(requestBody)
-            })
+                body: JSON.stringify(requestBody),
+                redirect: 'follow' as RequestRedirect
+            };
 
-            console.debug('Add representative API response status:', response.status)
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/representative/${brandId}`,
+                requestOptions
+            );
 
-            if (!response.ok) throw new Error('Failed to add representative')
+            const result = await response.text();
+            let errorMessage;
 
-            const result = await response.json()
-            console.debug('Add representative API response:', result)
+            try {
+                const data = JSON.parse(result);
+                if (!response.ok) {
+                    // Check if the error is about existing representative
+                    if (data.message && data.message.includes('already')) {
+                        errorMessage = data.message;
+                    } else {
+                        errorMessage = t('brand.representativeAddError');
+                    }
+                    throw new Error(errorMessage);
+                }
 
-            toast.success('Representative added successfully')
-            setIsAddDialogOpen(false)
-            reset()
-            fetchRepresentatives()
-        } catch (error) {
-            console.error('Error adding representative:', error)
-            toast.error('Failed to add representative')
+                toast.success(t('brand.representativeAddSuccess'));
+                setIsAddDialogOpen(false);
+                reset();
+                setSelectedUser(null);
+                await fetchRepresentatives();
+            } catch (parseError) {
+                throw new Error(errorMessage || result || t('brand.representativeAddError'));
+            }
+        } catch (error: any) {
+            console.error('Error adding representative:', error);
+            toast.error(error.message);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     const handleEdit = async (data: EditRepresentativeFormData) => {
         if (!selectedRepresentative) return
@@ -281,20 +424,55 @@ const BrandRepresentative = ({ brandId }: { brandId: string }) => {
 
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogContent>
-                    <h2 className="text-lg font-semibold mb-4">Add new representative</h2>
+                    <h2 className="text-lg font-semibold mb-4 text-center">{(t('addRepresentative'))}</h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                            <label className="block text-sm mb-1">User ID:</label>
-                            <input
-                                type="text"
-                                {...register('userId', { required: true })}
-                                className="w-full px-3 py-2 border rounded-lg"
-                                placeholder="Enter user ID"
+                            <label className="block text-sm mb-1">{(t('user.selectUser'))}:</label>
+                            <Select
+                                cacheOptions
+                                defaultOptions={true}
+                                loadOptions={loadUsers}
+                                value={selectedUser}
+                                onChange={(option) => setSelectedUser(option)}
+                                isSearchable
+                                className="w-full"
+                                classNamePrefix="select"
+                                placeholder={t('user.searchRepresentative')}
+                                noOptionsMessage={({ inputValue }) => t('user.noRepresentativesFound')}
+                                formatOptionLabel={(option: UserOption) => (
+                                    <div className="flex items-center gap-2">
+                                        {option.imageUrl && (
+                                            <img 
+                                                src={option.imageUrl} 
+                                                alt="" 
+                                                className="w-8 h-8 rounded-full object-cover"
+                                            />
+                                        )}
+                                        <div>
+                                            <div>{option.label}</div>
+                                            <div className="flex gap-1">
+                                                {option.roles.map(role => (
+                                                    <span
+                                                        key={role.id}
+                                                        className={`inline-block px-2 py-0.5 text-xs rounded-full ${
+                                                            role.name === 'admin' ? 'bg-red-100 text-red-800' :
+                                                            role.name === 'brand representative' ? 'bg-blue-100 text-blue-800' :
+                                                            role.name === 'customer' ? 'bg-green-100 text-green-800' :
+                                                            'bg-gray-100 text-gray-800'
+                                                        }`}
+                                                    >
+                                                        {role.name}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm mb-1">Valid From:</label>
+                            <label className="block text-sm mb-1">{(t('user.validFrom'))}:</label>
                             <input
                                 type="date"
                                 {...register('validFrom', { required: true })}
@@ -303,7 +481,7 @@ const BrandRepresentative = ({ brandId }: { brandId: string }) => {
                         </div>
 
                         <div>
-                            <label className="block text-sm mb-1">Valid To:</label>
+                            <label className="block text-sm mb-1">{(t('user.validTo'))}:</label>
                             <input
                                 type="date"
                                 {...register('validTo', { required: true })}
@@ -312,14 +490,14 @@ const BrandRepresentative = ({ brandId }: { brandId: string }) => {
                         </div>
 
                         <div>
-                            <label className="block text-sm mb-1">Status:</label>
+                            <label className="block text-sm mb-1">{(t('user.status'))}:</label>
                             <select
                                 {...register('status')}
                                 defaultValue="ACTIVE"
                                 className="w-full px-3 py-2 border rounded-lg"
                             >
-                                <option value="ACTIVE">Active</option>
-                                <option value="DEACTIVE">Deactive</option>
+                                <option value="ACTIVE">{(t('active'))}</option>
+                                <option value="DEACTIVE">{(t('deactive'))}</option>
                             </select>
                         </div>
 
@@ -329,14 +507,14 @@ const BrandRepresentative = ({ brandId }: { brandId: string }) => {
                                 onClick={() => setIsAddDialogOpen(false)}
                                 className="px-4 py-2 border rounded-lg"
                             >
-                                Cancel
+                                {(t('cancel'))}
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading}
                                 className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
                             >
-                                Add
+                                {(t('add'))}
                             </button>
                         </div>
                     </form>

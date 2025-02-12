@@ -46,7 +46,16 @@
         "saveBrandData": "حفظ البيانات",
         "bankingInfo": "معلومات البنك",
         "bankName": "اسم البنك",
-        
+        "status": "الحالة",
+        "currently":"حاليا",
+        "adminActive":"مفعل",
+        "adminInactive":"غير مفعل",
+        "current":"الحالي",
+        "validTo":"صالح حتى",
+        "about":"حول الماركة",
+        "BrandInfo":"معلومات الماركة",
+        "cancel":"إلغاء",
+        "saveChanges":"حفظ التغييرات",
         "confirm": "تأكيد",
         "inactive": "غير نشط"
     },
@@ -555,6 +564,12 @@
         "brand_representatives_table_status": "الحالة",
         "brand_representatives_table_brand_id": "العلامة التجارية",
         "brand_representatives_table_user_id": "المستخدم",
+        "brand_representatives_table_userId": "المستخدم",
+        "brand.representativeDeleteSuccess": "تم حذف الممثل بنجاح",
+        
+        "brand.representativeDeleteError": "فشل حذف الممثل",
+        "brand.representativeAddSuccess": "تم إضافة الممثل بنجاح",
+        "brand.representativeAddError": "فشل إضافة الممثل",
         "editRepresentative": "تعديل المستخدم",
         "addRepresentative": "إضافة مستخدم",
         "cancel_delete_brand": "إلغاء",
@@ -612,9 +627,32 @@
         "code": "الكود",
         "Description":"الوصف",
         "coupons":"كوبونات",
+        "add":"إضافة ",
+        
 
 
-        "status": "الحالة"
+        "status": "الحالة",
+        "brand":{
+            "deleteRepresentativeConfirm": "هل أنت متأكد أنك تريد حذف هذا الممثل؟",
+            "representativeDeleteSuccess": "تم حذف الممثل بنجاح",
+            "representativeDeleteError": "فشل حذف الممثل",
+            "representativeAddSuccess": "تم إضافة الممثل بنجاح",
+            "representativeAddError": "فشل إضافة الممثل"
+        },
+        "user":{
+            "selectRepresentative": "يجب أن يتم اختيار مستخدم",
+            "searchRepresentative": "ابحث عن ممثل",
+            "selectUser": "اختر مستخدم",
+            "validFrom": "صالح من",
+            "validTo": "صالح إلى",
+            "status": "الحالة",
+            "actions": "الإجراءات",
+            "delete": "حذف",
+            "edit": "تعديل",
+            "add": "إضافة"
+        }
+
+
         
     },
     "icons": {
