@@ -657,7 +657,7 @@ const Brands: React.FC<BrandsProps> = ({ initialBrands, initialCount }) => {
     const handleViewBrand = async (id: number) => {
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/api/offers?brandId=${id}&fields=id,category=id-name-imageUrl`,
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/offers?brandId=${id}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
