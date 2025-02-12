@@ -19,6 +19,7 @@ import {
   GiftCardsIcon,
   UsersIcon,
   SettingsIcon,
+  PaymentIcon,
 } from "./icons";
 import { Link } from "@/i18n/routing";
 import useClickOutside from "@/hooks/useClickOutSide";
@@ -103,6 +104,12 @@ const Sidebar = ({
       label: t("ads"),
       icon: <AdsIcon className="size-6" />,
       href: "/ads",
+      role: "admin",
+    },
+    {
+      label: t("payment"),
+      icon: <PaymentIcon className="size-6" />,
+      href: "/payment",
       role: "admin",
     },
     {
