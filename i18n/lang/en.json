@@ -44,6 +44,7 @@
     "badges": "Badges",
     "manage_user": "Users",
     "categories": "Categories",
+    "Settings": "Settings",
     "payment": "Payment"
   },
   "navbar": {
@@ -213,7 +214,7 @@
     "representativeAddSuccess": "Representative added successfully",
     "representativeAddError": "Failed to add representative",
     "alreadyRepresentative": "This user is already a representative for brand {0}",
-    "BrandInfo":"Brand Information"
+    "BrandInfo": "Brand Information"
   },
   "dashboard": {
     "users": "Total users",
@@ -404,10 +405,10 @@
     "brand_representatives_table_status": "Status",
     "brand_representatives_table_brand_id": "Brand ID",
     "brand_representatives_table_user_id": "User ID",
-    
+
     "brand_representatives_table_userId": "User ID",
     "brand.representativeDeleteSuccess": "Representative deleted successfully",
-    
+
     "brand.representativeDeleteError": "Failed to delete representative",
     "brand.representativeAddSuccess": "Representative added successfully",
     "brand.representativeAddError": "Failed to add representative",
@@ -484,7 +485,7 @@
   },
   "payment": {
     "proceedToPayment": "Proceed to Payment",
-    "brand":"Brand",
+    "brand": "Brand",
     "supplierPayment": "Supplier Payment",
     "appPercentage": "App Percentage",
     "supplierPercentage": "Supplier Percentage",
@@ -498,7 +499,7 @@
     "thetotal": "The Total",
     "totalAmount": "Total Amount",
     "amountIsRequired": "Total Amount Is Required",
-    "brandIsRequired":"Brand is required",
+    "brandIsRequired": "Brand is required",
     "totalPercentage": "Total Percentage",
     "form": {
       "percentage": "Please Enter Percentage.",
@@ -1156,5 +1157,52 @@
 
     "global": "Change Language to Arabic",
     "globala": "تغير اللغة للأنجليزية"
+  },
+  "settings": {
+    "settings": "Settings",
+    "basicinformation": "Basic Information",
+    "applicationpoints": "Application Points",
+    "displaysettings": "Display Settings",
+    "classificationpolicy": "Classification Policy",
+    "addnewclassification": "Add New Classification",
+    "purchasecount": "Purchase Count",
+    "purchasenumber": "Purchase Number",
+    "monthlyduration": "Monthly Duration",
+    "description": "Description",
+    "action": "Action",
+    "confirmdelete": "Confirm Delete",
+    "confirmdeleteclassification": "Are you sure you want to delete this classification?",
+    "deleting": "Deleting...",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "name": "Name",
+    "vatPercentage": "VAT Percentage",
+
+    "Current": "Current",
+    "Total": "Total",
+    "settingsUpdated": "Settings updated successfully",
+    "numberOfLatestOffers": "Number of Latest Offers",
+    "numberOfBestSellingBrands": "Number of Best Selling Brands",
+    "numberOfNewArrivals": "Number of New Arrivals",
+    "pointBackRatio": "Point Back Ratio",
+    "numberOfBrandsOnHomepage": "Number of Brands On Homepage",
+    "numberOfCategoriesOnHomepage": "Number of Categories On Homepage",
+    "loginAttemptDuration": "Login Attempt Duration",
+    "loginAttempts": "Login Attempts",
+    "months": "Months",
+    "srRatio": "SR Ratio",
+    "edit": "Edit",
+    "add": "Add",
+    "save": "Save",
+
+    "color": "Color",
+    "successDelete": "Successfully deleted",
+
+    "error": {
+      "failedtodeleteclassification": "Failed to delete classification",
+      "email": "Please Enter the email",
+      "password": "Please Enter the password",
+      "denied": "Access denied. You are not an admin."
+    }
   }
 }
