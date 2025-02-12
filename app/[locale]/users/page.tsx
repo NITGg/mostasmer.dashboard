@@ -122,7 +122,7 @@ const Users = async ({ searchParams }: { searchParams: any }) => {
       {loading && <LoadingIcon />}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && data && (
-        <UsersRows loading={loading} users={data?.users} count={data?.count} roleStats={[]} />
+        <UsersRows loading={loading} users={data?.users} count={data?.count}  />
       )}
     </div>
   );
