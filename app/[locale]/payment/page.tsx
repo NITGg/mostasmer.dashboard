@@ -18,7 +18,6 @@ const Page = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-    // reset,
   } = useForm();
   const t = useTranslations("payment");
   const { token } = useAppContext();
