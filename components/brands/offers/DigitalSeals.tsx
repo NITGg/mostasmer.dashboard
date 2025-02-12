@@ -14,6 +14,7 @@ interface ExclusiveOffer {
     validFrom: string
     validTo: string
     ratio: number
+    purchaseCount: number
     createdAt: string
     updatedAt: string
 }
@@ -22,6 +23,7 @@ interface OfferFormData {
     ratio: number
     validFrom: string
     validTo: string
+    purchaseCount: number
 }
 
 const DigitalSeals = ({ brandId }: { brandId: string }) => {
@@ -58,7 +60,7 @@ const handlePageSizeChange = (newPageSize: number) => {
             headers.append('Authorization', `Bearer ${token}`)
             headers.append('Content-Type', 'application/json')
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/exclusive-offer/${brandId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/digital-seals/${brandId}`, {
                 method: 'GET',
                 headers,
             })
@@ -66,9 +68,10 @@ const handlePageSizeChange = (newPageSize: number) => {
             if (!response.ok) throw new Error('Failed to fetch offers')
 
             const data = await response.json()
-            setOffers(data.exclusiveOffers)
-        } catch (error) {
-            console.error('Error:', error)
+            setOffers(data.digitalSeals || [])
+        } catch (error: unknown) {
+            const err = error as Error
+            console.error('Error:', err)
             toast.error('Failed to load offers')
         } finally {
             setLoading(false)
@@ -83,6 +86,7 @@ const handlePageSizeChange = (newPageSize: number) => {
         { name: 'digital_seal_table_id' },
         { name: 'digital_seal_table_title' },
         { name: 'digital_seal_table_point_back' },
+        { name: 'digital_seal_table_purchase_count' },
         { name: 'digital_seal_table_valid_from' },
         { name: 'digital_seal_table_valid_to' },
         { name: 'digital_seal_table_actions' }
@@ -94,14 +98,25 @@ const handlePageSizeChange = (newPageSize: number) => {
                 <td className="px-6 py-4">{offer.id.toString().padStart(3, '0')}</td>
                 <td className="px-6 py-4 font-medium">Digital seal</td>
                 <td className="px-6 py-4">{offer.ratio}%</td>
+                <td className="px-6 py-4">{offer.purchaseCount || 0}</td>
                 <td className="px-6 py-4">{formatDate(offer.validFrom)}</td>
                 <td className="px-6 py-4">{formatDate(offer.validTo)}</td>
                 <td className="px-6 py-4">
                     <div className="flex gap-2">
-                        <button onClick={() => handleEdit(offer)} className="p-1 hover:bg-slate-100 rounded" disabled={loading}>
+                        <button 
+                            onClick={() => handleEdit(offer)} 
+                            className="p-1 hover:bg-slate-100 rounded" 
+                            disabled={loading}
+                            title="Edit digital seal"
+                        >
                             <PencilSquareIcon className="w-4 h-4 text-teal-500" />
                         </button>
-                        <button onClick={() => handleDelete(offer.id)} className="p-1 hover:bg-slate-100 rounded" disabled={loading}>
+                        <button 
+                            onClick={() => handleDelete(offer.id)} 
+                            className="p-1 hover:bg-slate-100 rounded" 
+                            disabled={loading}
+                            title="Delete digital seal"
+                        >
                             <TrashIcon className="w-4 h-4 text-red-500" />
                         </button>
                     </div>
@@ -111,27 +126,37 @@ const handlePageSizeChange = (newPageSize: number) => {
     )
 
     const onSubmit = async (data: OfferFormData) => {
+        // Validate dates
+        const validFrom = new Date(data.validFrom)
+        const validTo = new Date(data.validTo)
+
+        if (validTo <= validFrom) {
+            toast.error(t('validTo_error'))
+            return
+        }
+
         try {
             setLoading(true)
             const headers = new Headers()
             headers.append('Authorization', `Bearer ${token}`)
             headers.append('Content-Type', 'application/json')
 
-            // Format dates to match the required format YYYY/MM/DD
+            // Format dates to match the required ISO format
             const formatDate = (dateStr: string) => {
                 const date = new Date(dateStr)
-                return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+                return date.toISOString()
             }
 
             const body = JSON.stringify({
                 ratio: Number(data.ratio),
+                purchaseCount: Number(data.purchaseCount),
                 validFrom: formatDate(data.validFrom),
                 validTo: formatDate(data.validTo)
             })
 
             const url = editingOffer 
-                ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/exclusive-offer/${brandId}/${editingOffer.id}`
-                : `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/exclusive-offer/${brandId}`
+                ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/digital-seals/${brandId}/${editingOffer.id}`
+                : `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/digital-seals/${brandId}`
 
             const response = await fetch(url, {
                 method: editingOffer ? 'PUT' : 'POST',
@@ -145,12 +170,13 @@ const handlePageSizeChange = (newPageSize: number) => {
                 throw new Error(responseData.message || 'Failed to save offer')
             }
 
-            toast.success(editingOffer ? 'Offer updated successfully' : 'Offer added successfully')
+            toast.success(editingOffer ? t('offer_updated_successfully') : t('offer_added_successfully'))
             fetchExclusiveOffers()
             handleCloseDialog()
-        } catch (error: any) {
-            console.error('Error details:', error)
-            toast.error(error.message || 'Failed to save offer')
+        } catch (error: unknown) {
+            const err = error as Error
+            console.error('Error details:', err)
+            toast.error(err.message || t('failed_to_save_offer'))
         } finally {
             setLoading(false)
         }
@@ -174,6 +200,7 @@ const handlePageSizeChange = (newPageSize: number) => {
 
         reset({
             ratio: offer.ratio,
+            purchaseCount: offer.purchaseCount,
             validFrom: formatDateForInput(offer.validFrom),
             validTo: formatDateForInput(offer.validTo)
         })
@@ -186,12 +213,18 @@ const handlePageSizeChange = (newPageSize: number) => {
             setLoading(true)
             const headers = new Headers()
             headers.append('Authorization', `Bearer ${token}`)
+            headers.append('Content-Type', 'application/json')
+
+            const body = JSON.stringify({
+                ratio: 10 // Required by the API
+            })
 
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/exclusive-offer/${brandId}/${offerId}`,
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/digital-seals/${brandId}/${offerId}`,
                 {
                     method: 'DELETE',
                     headers,
+                    body
                 }
             )
 
@@ -202,9 +235,10 @@ const handlePageSizeChange = (newPageSize: number) => {
 
             toast.success('Offer deleted successfully')
             fetchExclusiveOffers()
-        } catch (error: any) {
-            console.error('Delete error:', error)
-            toast.error(error.message || 'Failed to delete offer')
+        } catch (error: unknown) {
+            const err = error as Error
+            console.error('Delete error:', err)
+            toast.error(err.message || 'Failed to delete offer')
         } finally {
             setLoading(false)
         }
@@ -212,29 +246,34 @@ const handlePageSizeChange = (newPageSize: number) => {
 
     return (
         <div className="mt-8">
-<Table
-    data={offers}  // offers, coupons, etc.
-    headers={headers}
-    count={offers.length}
-    loading={loading}
-    showDateFilter={false}
-    pageSize={pageSize}
-    currentPage={currentPage}
-    onPageChange={handlePageChange}
-    onPageSizeChange={handlePageSizeChange}
-    showExport={true}
-    bgColor="#dfe2e8"
-    // currentItems={currentItems}
-    initialData={offers}
->
-    {renderTableRows()}
-</Table>
+            <Table
+                data={offers}
+                headers={headers}
+                count={offers.length}
+                loading={loading}
+                showDateFilter={false}
+                pageSize={pageSize}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+                showExport={true}
+                bgColor="#dfe2e8"
+                initialData={offers}
+            >
+                {renderTableRows()}
+            </Table>
 
             {/* Add Button */}
             <div className="flex justify-center mt-4">
                 <button
                     onClick={() => setIsAddDialogOpen(true)}
-                    className="p-2 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition-colors"
+                    className={`p-2 text-white rounded-full transition-colors ${
+                        offers.length > 0 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-teal-500 hover:bg-teal-600'
+                    }`}
+                    disabled={offers.length > 0}
+                    title={offers.length > 0 ? t('digital_seal_already_exists') : t('add_digital_seal')}
                 >
                     <PlusIcon className="w-5 h-5" />
                 </button>
@@ -244,30 +283,42 @@ const handlePageSizeChange = (newPageSize: number) => {
             <Dialog open={isAddDialogOpen} onOpenChange={handleCloseDialog}>
                 <DialogContent>
                     <h2 className="text-lg font-semibold mb-4">
-                        {editingOffer ? 'Edit Offer' : 'Add New Offer'}
+                        {editingOffer ? t('editOffer') : t('addOffer')}
                     </h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                            <label className="block text-sm mb-1">Point Back Ratio (%)</label>
+                            <label className="block text-sm mb-1">{t('Tablecomponent.digital_seal_table_point_back')}</label>
                             <input
                                 type="number"
-                                {...register('ratio', { required: 'Ratio is required' })}
+                                step="0.1"
+                                {...register('ratio', { required: t('pointbackratio_required') })}
                                 className="w-full px-3 py-2 border rounded-lg"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm mb-1">Valid From</label>
+                            <label className="block text-sm mb-1">{t('Tablecomponent.digital_seal_table_purchase_count')}</label>
                             <input
-                                type="date"
-                                {...register('validFrom', { required: 'Start date is required' })}
+                                type="number"
+                                {...register('purchaseCount', { 
+                                    required: 'Purchase count is required',
+                                    min: { value: 0, message: 'Purchase count must be positive' }
+                                })}
                                 className="w-full px-3 py-2 border rounded-lg"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm mb-1">Valid To</label>
+                            <label className="block text-sm mb-1">{t('Tablecomponent.digital_seal_table_valid_from')}</label>
                             <input
                                 type="date"
-                                {...register('validTo', { required: 'End date is required' })}
+                                {...register('validFrom', { required: t('validFrom_required') })}
+                                className="w-full px-3 py-2 border rounded-lg"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm mb-1">{t('Tablecomponent.digital_seal_table_valid_to')}</label>
+                            <input
+                                type="date"
+                                {...register('validTo', { required: t('validTo_required') })}
                                 className="w-full px-3 py-2 border rounded-lg"
                             />
                         </div>
@@ -277,14 +328,14 @@ const handlePageSizeChange = (newPageSize: number) => {
                                 onClick={handleCloseDialog}
                                 className="px-4 py-2 border rounded-lg"
                             >
-                                Cancel
+                                {t('cancel')}
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading}
                                 className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
                             >
-                                {loading ? 'Saving...' : editingOffer ? 'Update' : 'Add'}
+                                {loading ? t('saving') : editingOffer ? t('update') : t('add')}
                             </button>
                         </div>
                     </form>

@@ -213,7 +213,11 @@
     "representativeAddSuccess": "Representative added successfully",
     "representativeAddError": "Failed to add representative",
     "alreadyRepresentative": "This user is already a representative for brand {0}",
-    "BrandInfo":"Brand Information"
+    "BrandInfo":"Brand Information",
+    "digital_seal_already_exists": "A digital seal already exists for this brand",
+    "add_digital_seal": "Add new digital seal",
+    "exclusive_offer_already_exists": "An exclusive offer already exists for this brand",
+    "add_exclusive_offer": "Add new exclusive offer"
   },
   "dashboard": {
     "users": "Total users",
@@ -423,6 +427,10 @@
     
     "brand_representatives_table_userId": "User ID",
     "brand.representativeDeleteSuccess": "Representative deleted successfully",
+    "editRepresentative": "Edit Representative",
+    "deleteRepresentative": "Delete Representative",
+    "update": "Update Representative",
+    "cancel_delete_brand": "Cancel ",
     
     "brand.representativeDeleteError": "Failed to delete representative",
     "brand.representativeAddSuccess": "Representative added successfully",
@@ -431,6 +439,7 @@
       "name": "Brand Offers",
       "add": "Add Brand Offer"
     },
+    "digital_seal_table_purchase_count": "Purchase Count",
     "contacts_name": "Name",
     "contacts_email": "Email",
     "contacts_message": "Message",

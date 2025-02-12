@@ -1005,7 +1005,7 @@ const BrandRepresentative = ({ brandId }: { brandId: string }) => {
                                                         key={role.id}
                                                         className={`inline-block px-2 py-0.5 text-xs rounded-full ${
                                                             role.name === 'admin' ? 'bg-red-100 text-red-800' :
-                                                            role.name === 'brand representative' ? 'bg-blue-100 text-blue-800' :
+                                                            role.name === 'brand representative' ? 'bg-teal-100 text-blue-800' :
                                                             role.name === 'customer' ? 'bg-green-100 text-green-800' :
                                                             'bg-gray-100 text-gray-800'
                                                         }`}
@@ -1100,7 +1100,7 @@ const BrandRepresentative = ({ brandId }: { brandId: string }) => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
                             >
                                 {(t('update'))}
                             </button>

@@ -917,7 +917,7 @@ export function SettingsDetails({ settings }: Props) {
             <h2 className="text-lg font-semibold">{t('classificationpolicy')}</h2>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors "
             >
               <PlusIcon className="h-5 w-5 mr-2" />
               {t('addnewclassification')}
@@ -925,7 +925,7 @@ export function SettingsDetails({ settings }: Props) {
           </div>
           
           <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full font-bold">
               <thead>
                 <tr className="border-b">
                   <th className="text-left py-3 px-4">{t('name')}</th>

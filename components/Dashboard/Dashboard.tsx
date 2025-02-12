@@ -122,7 +122,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
             icon: ShoppingBagIcon,
             color: 'border-red-500',
             trend: 3,
-            href: `/${locale}/categories`
+            href: `/${locale}/category`
         }
     ]
 

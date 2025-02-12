@@ -254,7 +254,13 @@ const handlePageSizeChange = (newPageSize: number) => {
             <div className="flex justify-center mt-4">
                 <button
                     onClick={() => setIsAddDialogOpen(true)}
-                    className="p-2 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition-colors"
+                    className={`p-2 text-white rounded-full transition-colors ${
+                        offers.length > 0 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-teal-500 hover:bg-teal-600'
+                    }`}
+                    disabled={offers.length > 0}
+                    title={offers.length > 0 ? t('exclusive_offer_already_exists') : t('add_exclusive_offer')}
                 >
                     <PlusIcon className="w-5 h-5" />
                 </button>

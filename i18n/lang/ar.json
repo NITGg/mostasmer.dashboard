@@ -566,6 +566,7 @@
         "brand_representatives_table_user_id": "المستخدم",
         "brand_representatives_table_userId": "المستخدم",
         "brand.representativeDeleteSuccess": "تم حذف الممثل بنجاح",
+        "deleteRepresentative": "Delete Representative",
         
         "brand.representativeDeleteError": "فشل حذف الممثل",
         "brand.representativeAddSuccess": "تم إضافة الممثل بنجاح",

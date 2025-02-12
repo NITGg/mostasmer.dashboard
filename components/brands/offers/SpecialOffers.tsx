@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useAppContext } from '@/context/appContext'
-import { PencilSquareIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline'
+import {  TrashIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
