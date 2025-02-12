@@ -46,7 +46,16 @@
         "saveBrandData": "حفظ البيانات",
         "bankingInfo": "معلومات البنك",
         "bankName": "اسم البنك",
-        
+        "status": "الحالة",
+        "currently":"حاليا",
+        "adminActive":"مفعل",
+        "adminInactive":"غير مفعل",
+        "current":"الحالي",
+        "validTo":"صالح حتى",
+        "about":"حول الماركة",
+        "BrandInfo":"معلومات الماركة",
+        "cancel":"إلغاء",
+        "saveChanges":"حفظ التغييرات",
         "confirm": "تأكيد",
         "inactive": "غير نشط"
     },
@@ -70,6 +79,7 @@
         "pets": "الحيوانات الأليفة",
         "brands": "الماركات",
         "chat": "الدردشة",
+        "giftCards": "البطاقات الهدايا",
         "contact": "الرسائل",
         "faq": "الأسئلة الشائعة",
         "orders": "الطلبات",
@@ -79,8 +89,11 @@
         "badges": "شارات",
         "manage_users": "إدارة المستخدمين",
         "users": "المستخدمين",
-        "userRoles": "أدوار المستخدم"
+        "userRoles": "أدوار المستخدم",
+        "Settings": "الاعدادات"
     },
+
+
     "navbar": {
         "admin": "مسؤول",
         "ar": "عربي",
@@ -217,8 +230,15 @@
         "emailAlreadyInUse": "هذا البريد الإلكتروني مستخدم بالفعل",
         "passwordRequired": "يرجى إدخال كلمة المرور",
         "noHistory": "لا توجد مشتريات بعد",
-    "noRecords":"عدد البيانات",
-
+        "noRecords":"عدد البيانات",
+        "showing":"عرض",
+        "of":"من",
+        "records":"البيانات",
+        "count":"عدد",
+        "userStatistics":"إحصاءات المستخدمين",
+        "barChart":"رسم بياني عمودي",
+        "lineChart":"رسم بياني خطي",
+        "pieChart":"رسم بياني دائري",
         "order": {
             "orderDetails": "تفاصيل الطلب"
         },
@@ -544,6 +564,12 @@
         "brand_representatives_table_status": "الحالة",
         "brand_representatives_table_brand_id": "العلامة التجارية",
         "brand_representatives_table_user_id": "المستخدم",
+        "brand_representatives_table_userId": "المستخدم",
+        "brand.representativeDeleteSuccess": "تم حذف الممثل بنجاح",
+        
+        "brand.representativeDeleteError": "فشل حذف الممثل",
+        "brand.representativeAddSuccess": "تم إضافة الممثل بنجاح",
+        "brand.representativeAddError": "فشل إضافة الممثل",
         "editRepresentative": "تعديل المستخدم",
         "addRepresentative": "إضافة مستخدم",
         "cancel_delete_brand": "إلغاء",
@@ -601,9 +627,32 @@
         "code": "الكود",
         "Description":"الوصف",
         "coupons":"كوبونات",
+        "add":"إضافة ",
+        
 
 
-        "status": "الحالة"
+        "status": "الحالة",
+        "brand":{
+            "deleteRepresentativeConfirm": "هل أنت متأكد أنك تريد حذف هذا الممثل؟",
+            "representativeDeleteSuccess": "تم حذف الممثل بنجاح",
+            "representativeDeleteError": "فشل حذف الممثل",
+            "representativeAddSuccess": "تم إضافة الممثل بنجاح",
+            "representativeAddError": "فشل إضافة الممثل"
+        },
+        "user":{
+            "selectRepresentative": "يجب أن يتم اختيار مستخدم",
+            "searchRepresentative": "ابحث عن ممثل",
+            "selectUser": "اختر مستخدم",
+            "validFrom": "صالح من",
+            "validTo": "صالح إلى",
+            "status": "الحالة",
+            "actions": "الإجراءات",
+            "delete": "حذف",
+            "edit": "تعديل",
+            "add": "إضافة"
+        }
+
+
         
     },
     "icons": {
@@ -623,6 +672,7 @@
         "Restore": "استرجاع",
         "pluse":"اضافة",
         "restoredeletedbrand": "استرجاع العلامة التجارية المحذوفة",
+        "Settings": "الاعدادات",
         "global": "تغير اللغة للأنجليزية"
     },
 
@@ -812,5 +862,55 @@
         "name": "الاسم",
         "nameIsRequired": "يرجى إدخال اسم الدور.",
         "nameUnique": "هذا الدور موجود بالفعل"
-    }
+    },
+
+    
+        "settings": {
+          "settings": "الإعدادات",
+          "basicinformation": "المعلومات الأساسية",
+          "applicationpoints": "نقاط التطبيق",
+          "displaysettings": "إعدادات العرض",
+          "classificationpolicy": "سياسة التصنيف",
+          "addnewclassification": "إضافة تصنيف جديد",
+          "purchasecount": "عدد المشتريات",
+          "purchasenumber": "رقم الشراء",
+          "monthlyduration": "المدة الشهرية",
+          "description": "الوصف",
+          "action": "الإجراء",
+          "confirmdelete": "تأكيد الحذف",
+          "confirmdeleteclassification": "هل أنت متأكد أنك تريد حذف هذا التصنيف؟",
+          "deleting": "جاري الحذف...",
+          "delete": "حذف",
+          "cancel": "إلغاء",
+          "name": "الاسم",
+          "color": "اللون",
+          "successDelete": "تم الحذف بنجاح",
+          "numberOfLatestOffers": "عدد العروض الأخرى",
+          "numberOfBestSellingBrands": "عدد العلامات التجارية الأكثر مبيعاً",
+          "numberOfNewArrivals": "عدد المنتجات الجديدة",
+          "vatPercentage": "نسبة الضريبة",
+          "numberOfBrandsOnHomepage": "عدد العلامات التجارية على الصفحة الرئيسية",
+          "numberOfCategoriesOnHomepage": "عدد الفئات على الصفحة الرئيسية",
+          "loginAttemptDuration": "مدة محاولات الدخول",
+          "loginAttempts": "عدد محاولات الدخول",
+          "pointBackRatio": "نسبة النقاط المستردة",
+          "settingsUpdated": "تم تحديث الإعدادات بنجاح",
+          "months": "اشهر",
+          "srRatio": "نسبة الريال",
+          "Current": "الحالي",
+          "Total": "المجموع",
+          "save": "حفظ",
+          "edit": "تعديل",
+          "add": "إضافة",
+          "error": {
+            "failedtodeleteclassification": "فشل في حذف التصنيف",
+            "email": "يرجى إدخال البريد الإلكتروني",
+            "password": "يرجى إدخال كلمة المرور",
+            "denied": "تم رفض الوصول. أنت لست مسؤولاً."
+          }}
+        
+      
+      
+
+
 }

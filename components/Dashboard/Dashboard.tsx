@@ -14,6 +14,8 @@ import LoadingSkeleton from '@/components/ui/LoadingSkeleton'
 import { DashboardProps, DashboardCardStats } from '@/types/dashboard'
 import axios from 'axios'
 import { useAppContext } from '@/context/appContext'
+import Link from 'next/link'
+import { useLocale } from 'next-intl'
 
 const Dashboard: React.FC<DashboardProps> = ({ data }) => {
     const { token } = useAppContext()
@@ -26,6 +28,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
     })
     const [loading, setLoading] = useState(true)
     const t = useTranslations('dashboard')
+    const locale = useLocale()
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -87,6 +90,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
             icon: UsersIcon,
             color: 'border-blue-500',
             trend: 12,
+            href: `/${locale}/users`
         },
         {
             title: t('totalBrands'),
@@ -94,20 +98,23 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
             icon: BuildingStorefrontIcon,
             color: 'border-green-500',
             trend: -5,
+            href: `/${locale}/brands`
         },
         {
             title: t('totalOffers'),
             value: stats.totalOffers,
             icon: TagIcon,
-            color: 'border-purple-500',
+            color: 'border-[#2ab09c]',
             trend: 8,
+            href: `/${locale}/offers`
         },
         {
             title: t('totalCoupons'),
             value: stats.totalCoupons,
             icon: GiftIcon,
-            color: 'border-yellow-500',
+            color: 'border-yellow-100',
             trend: 15,
+            href: `/${locale}/coupons`
         },
         {
             title: t('totalCategories'),
@@ -115,6 +122,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
             icon: ShoppingBagIcon,
             color: 'border-red-500',
             trend: 3,
+            href: `/${locale}/categories`
         }
     ]
 
@@ -124,40 +132,26 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                 {statCards.map((card, index) => (
-                    <StatCard key={index} {...card} />
+                    <Link key={index} href={card.href} className={`p-6 rounded-lg shadow-md bg-white border-l-4 ${card.color} hover:bg-gray-50 transition-all hover:animate-bounce`}>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-gray-500 font-medium">{card.title}</p>
+                                <h3 className="text-2xl font-bold mt-2">{card.value}</h3>
+                                <div className={`flex items-center mt-2 ${card.trend >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                    {card.trend >= 0 ? (
+                                        <ArrowTrendingUpIcon className="w-4 h-4 mr-1" />
+                                    ) : (
+                                        <ArrowTrendingDownIcon className="w-4 h-4 mr-1" />
+                                    )}
+                                    <span className="text-sm font-medium">{Math.abs(card.trend)}%</span>
+                                </div>
+                            </div>
+                            <div className={`p-3 rounded-full ${card.color.replace('border-', 'bg-').replace('/', '/20')}`}>
+                                <card.icon className="w-6 h-6" />
+                            </div>
+                        </div>
+                    </Link>
                 ))}
-            </div>
-        </div>
-    )
-}
-
-interface StatCardProps {
-    title: string;
-    value: number;
-    icon: React.ElementType;
-    color: string;
-    trend: number;
-}
-
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, color, trend }) => {
-    return (
-        <div className={`p-6 rounded-lg shadow-md bg-white border-l-4 ${color}`}>
-            <div className="flex items-center justify-between">
-                <div>
-                    <p className="text-sm text-gray-500 font-medium">{title}</p>
-                    <h3 className="text-2xl font-bold mt-2">{value}</h3>
-                    <div className={`flex items-center mt-2 ${trend >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {trend >= 0 ? (
-                            <ArrowTrendingUpIcon className="w-4 h-4 mr-1" />
-                        ) : (
-                            <ArrowTrendingDownIcon className="w-4 h-4 mr-1" />
-                        )}
-                        <span className="text-sm font-medium">{Math.abs(trend)}%</span>
-                    </div>
-                </div>
-                <div className={`p-3 rounded-full ${color.replace('border-', 'bg-').replace('/', '/20')}`}>
-                    <Icon className="w-6 h-6" />
-                </div>
             </div>
         </div>
     )
