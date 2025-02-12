@@ -670,8 +670,7 @@ export function SettingsDetails({ settings }: Props) {
     e.preventDefault()
     
     try {
-      await axios.post(
-        'http://localhost:3100/api/user-classes',
+      await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user-classes`,
         formData,
         {
           headers: {
