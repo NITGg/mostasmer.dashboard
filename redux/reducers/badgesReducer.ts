@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserType } from "./userTypesReducer";
 
 export type UserType = {
   id: number;
