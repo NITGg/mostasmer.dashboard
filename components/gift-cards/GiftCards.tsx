@@ -75,13 +75,16 @@ const GiftCards = ({
   return (
     <>
       <Table
-        data={giftCards} count={giftCards.length} loading={loading}
+        data={giftCards}
+        count={giftCards.length}
+        loading={loading}
         showDateFilter={false}
         pageSize={pageSize}
         currentPage={currentPage}
         onPageChange={(page) => setCurrentPage(page)}
         onPageSizeChange={(size) => setPageSize(size)}
-        headers={headers}>
+        headers={headers}
+      >
         {giftCards?.map((card) => (
           <tr key={card.id} className="odd:bg-white even:bg-[#F0F2F5] border-b">
             <td scope="row" className="px-6 py-4 text-primary">
@@ -129,7 +132,7 @@ const GiftCards = ({
             <div className="flex gap-4 w-1/2 flex-col items-center ">
               <img
                 alt="card"
-                src={"/imgs/untitled.svg"}
+                src={"/imgs/Untitled.svg"}
                 style={{ objectFit: "contain", width: "100%" }}
               />
               <p className="-mt-12 text-xl tracking-wider ">
