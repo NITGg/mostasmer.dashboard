@@ -225,7 +225,40 @@
     "category":"Category",
     "custom_offer_table_add_new_custom_offer":"Add New Brand Offer",
 
-    "pointbackratio":"Point Back Ratio"
+    "pointbackratio":"Point Back Ratio",
+    "digital_seal_table_point_back":"Point Back",
+    "digital_seal_table_purchase_count":"Purchase Count",
+    "digital_seal_table_valid_from":"Valid From",
+    "digital_seal_table_valid_to":"Valid To",
+    "digital_seal_table_actions":"Actions",
+    "digital_seal_table_user":"User",
+    "digital_seal_table_brand":"Brand",
+    "digital_seal_table_id":"ID",
+    "digital_seal_table_title":"Title",
+    "digital_seal_table_description":"Description",
+    "add_special_offer":"Add Special Offer",
+    "Tablecomponent":{
+      "digital_seal_table_point_back":"Point Back Ratio",
+      "digital_seal_table_purchase_count":"Purchase count",
+      "digital_seal_table_valid_from":"Valid From",
+      "digital_seal_table_valid_to":"Valid To",
+      "digital_seal_table_actions":"Actions",
+      "digital_seal_table_user":"User",
+      "digital_seal_table_brand":"Brand",
+      "digital_seal_table_id":"ID",
+      "digital_seal_table_title":"Title",
+      "digital_seal_table_description":"Description",
+      "special_offers_table_Type":"Type",
+      "special_offers_table_valid_from":"Valid From",
+      "special_offers_table_valid_to":"Valid To",
+      "special_offers_table_point_back":"Point Back",
+      "selectType":"Select Type",
+      "add_special_offer":"Add Special Offer"
+      
+
+
+
+    }
   },
   "CustomOffers": {
     "custom_offer_table_edit_custom_offer": "Edit Custom Offer",

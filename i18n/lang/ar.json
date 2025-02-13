@@ -57,7 +57,27 @@
         "cancel":"إلغاء",
         "saveChanges":"حفظ التغييرات",
         "confirm": "تأكيد",
-        "inactive": "غير نشط"
+        "inactive": "غير نشط",
+        "add_special_offer":"إضافة عرض خاص",
+
+        "Tablecomponent":{
+            "digital_seal_table_point_back":"نسبة الاسترجاع",
+            "digital_seal_table_purchase_count":"عدد الشراء",
+            "digital_seal_table_valid_from":"صالح من",
+            "digital_seal_table_valid_to":"صالح حتى",
+            "digital_seal_table_actions":"الإجراءات",
+            "digital_seal_table_user":"المستخدم",
+            "digital_seal_table_brand":"العلامة التجارية",
+            "digital_seal_table_id":"المعرف",
+            "digital_seal_table_title":"العنوان",
+            "digital_seal_table_description":"الوصف",
+            "special_offers_table_Type":"النوع",
+            "special_offers_table_valid_from":"صالح من",
+            "special_offers_table_valid_to":"صالح حتى",
+            "special_offers_table_point_back":"نسبة الاسترجاع",
+            "selectType":"اختر النوع",
+            "add_special_offer":"إضافة عرض خاص"
+        }
     },
     "nav": {
         "dashboard": "لوحة التحكم",
