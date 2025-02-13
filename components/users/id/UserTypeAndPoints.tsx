@@ -49,7 +49,7 @@ const UserTypeAndPoints = ({
     useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const { userType, wallet, nextType } = type;
-  const pointsLeft = nextType.buyAmount - wallet.buyerAmount;
+  const pointsLeft = nextType ? nextType.buyAmount - wallet.buyerAmount : 0;
 
   const handelChangePoints = handleSubmit(async (formData) => {
     try {
@@ -120,10 +120,11 @@ const UserTypeAndPoints = ({
           })}
         </h3>
         <p>
-          {t("pointsDetails", {
-            pointsLeft,
-            nextType: nextType.userType,
-          })}
+          {nextType &&
+            t("pointsDetails", {
+              pointsLeft,
+              nextType: nextType.userType,
+            })}
         </p>
       </div>
       <div className="flex items-center gap-2">
@@ -194,8 +195,8 @@ const UserTypeAndPoints = ({
                 userType.userType === "Basic"
                   ? 0
                   : userType.userType === "Standard"
-                    ? 2001
-                    : 5001
+                  ? 2001
+                  : 5001
               }
               errors={errors}
               register={register}
@@ -272,8 +273,9 @@ const UserTypeAndPoints = ({
                     {t("updatedAt")}: {DateToText(entry.updatedAt)}
                   </p>
                   <p
-                    className={`text-sm font-medium mt-2 ${entry.status ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`text-sm font-medium mt-2 ${
+                      entry.status ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {t("status")}: {entry.status ? t("active") : t("inactive")}
                   </p>
