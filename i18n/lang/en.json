@@ -218,8 +218,43 @@
     "digital_seal_already_exists": "A digital seal already exists for this brand",
     "add_digital_seal": "Add new digital seal",
     "exclusive_offer_already_exists": "An exclusive offer already exists for this brand",
-    "add_exclusive_offer": "Add new exclusive offer"
+    "add_exclusive_offer": "Add new exclusive offer",
+    "customOffers": "Custom Offers",
+    "enter":"Enter",
+    "url":"URL",
+    "category":"Category",
+    "custom_offer_table_add_new_custom_offer":"Add New Brand Offer",
+
+    "pointbackratio":"Point Back Ratio"
   },
+  "CustomOffers": {
+    "custom_offer_table_edit_custom_offer": "Edit Custom Offer",
+    "custom_offer_table_add_new_custom_offer": "Add New Custom Offer",
+    "custom_offer_table_cancel": "Cancel",
+    "custom_offer_table_saving": "Saving...",
+    "custom_offer_table_update": "Update",
+    "custom_offer_table_add": "Add",
+    "custom_offer_table_confirm_delete": "Confirm Delete",
+    "custom_offer_table_confirm_delete_message": "Are you sure you want to delete this custom offer?",
+    "custom_offer_table_failed_to_delete_custom_offer": "Failed to delete custom offer",
+    "custom_offer_table_custom_offer_deleted_successfully": "Custom offer deleted successfully",
+    "custom_offer_table_failed_to_save_custom_offers": "Failed to save custom offers",
+    "custom_offer_table_custom_offers_added": "Custom offers added",
+    "custom_offer_table_custom_offers_updated": "Custom offers updated",
+    "custom_offer_table_point_back": "Point back",
+    "custom_offer_table_valid_from": "Valid from",
+    "custom_offer_table_valid_to": "Valid to",
+    "custom_offer_table_actions": "Actions",
+    "custom_offer_table_user_class": "User Class",
+    "custom_offer_table_brand": "Brand",
+    "custom_offer_table_user": "User",
+    "custom_offer_table_id": "ID",
+    "custom_offer_table_title": "Title",
+    "custom_offer_table_description": "Description",
+    "custom_offer_table_delete":"Delete"
+    
+  },
+  
   "dashboard": {
     "users": "Total users",
     "suppliers": "Total suppliers",
@@ -325,6 +360,15 @@
     "emailAlreadyInUse": "This email is already used",
     "noHistory": "No purchase yet",
     "noRecords": "No Of Records",
+    "showing":"Showing",
+    "of":"of",
+    "records":"records",
+    "count":"Count",
+    "userStatistics":"User Statistics",
+    "barChart":"Bar Chart",
+    "lineChart":"Line Chart",
+    "pieChart":"Pie Chart",
+    
     "order": {
       "orderDetails": "Order Details",
       "title": "Orders"
@@ -399,6 +443,15 @@
     "custom_offer_table_valid_from": "Valid from",
     "custom_offer_table_valid_to": "Valid to",
     "custom_offer_table_actions": "Actions",
+    "custom_offer_table_user_class": "User Class",
+    "custom_offer_table_brand": "Brand",
+    "Custom_offers_table_id": "ID",
+    "Custom_offers_table_user_class": "User Class",
+    "Custom_offers_table_point_back": "Point back",
+    "Custom_offers_table_valid_from": "Valid from",
+    "Custom_offers_table_valid_to": "Valid to",
+    "Custom_offers_table_actions": "Actions",
+    "custom_offer_table_user": "User",
     "brand_representatives_table_id": "ID",
     "brand_representatives_table_name": "Name",
     "brand_representatives_table_phone": "Phone",
@@ -562,6 +615,7 @@
     "tableView": "Table View",
     "cardView": "Card View",
     "noCoupons": "No coupons found",
+
 
     "error": {
       "code": "Please enter the coupon code",
@@ -1163,6 +1217,8 @@
     "Pluse": "Add",
     "Pluse2": "Add",
     "payment": "Payment",
+    
+    "PencilSquareIcon":"Edit",
 
     "global": "Change Language to Arabic",
     "globala": "تغير اللغة للأنجليزية"

@@ -784,8 +784,8 @@ const BrandOffers = ({ brandId }: { brandId: string }) => {
             {/* Add/Edit Dialog */}
             <Dialog open={isAddDialogOpen} onOpenChange={handleCloseDialog}>
                 <DialogContent>
-                    <h2 className="text-lg font-semibold mb-4">
-                        {editingOffer ? 'Edit Offer' : 'Add New Offer'}
+                    <h2 className="text-lg font-semibold mb-4 text-center">
+                        {editingOffer ? t('custom_offer_table_edit_custom_offer') : t('custom_offer_table_add_new_custom_offer')}
                     </h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>

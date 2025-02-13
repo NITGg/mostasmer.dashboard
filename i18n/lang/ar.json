@@ -90,8 +90,62 @@
         "manage_users": "إدارة المستخدمين",
         "users": "المستخدمين",
         "userRoles": "أدوار المستخدم",
-        "Settings": "الاعدادات"
+        "Settings": "الاعدادات",
+        "bankName": "اسم البنك",
+        "adminActive": "مسؤول نشط",
+        "adminInactive": "مسؤول غير نشط",
+        "active": "نشط",
+        "confirm": "تأكيد",
+        "status": "الحالة",
+        "currently": "حاليا",
+        "inactive": "غير نشط",
+        "deleted": "محذوف",
+        "restore": "استرجاع",
+        "current": "حالي",
+        "cancel": "إلغاء",
+        "saveChanges": "حفظ التغييرات",
+        "pointbackratio":"نسبة الاسترجاع",
+        "validFrom":"صالح من",
+        "validTo":"صالح حتى",
+        "enter": "ادخل",
+        "category_select":"اختر الفئة",
+        "category_required":"يجب اختيار الفئة",
+        "custom_offer_table_edit_custom_offer":"تعديل العرض المخصص",
+        "custom_offer_table_add_new_custom_offer":"إضافة عرض مخصص جديد",
+        "validTo_error":"يجب أن يكون التاريخ النهائي أكبر من التاريخ البداية",
+        "url": "رابط"
+
+        
+        
+        
     },
+    
+    "CustomOffers": {
+        "custom_offer_table_edit_custom_offer": "تعديل العرض المخصص",
+        "custom_offer_table_add_new_custom_offer": "إضافة عرض مخصص جديد",
+        "custom_offer_table_cancel": "إلغاء",
+        "custom_offer_table_saving": "جاري الحفظ...",
+        "custom_offer_table_update": "تحديث",
+        "custom_offer_table_add": "إضافة",
+        "custom_offer_table_confirm_delete": "تأكيد الحذف",
+        "custom_offer_table_confirm_delete_message": "هل أنت متأكد من حذف هذا العرض المخصص؟",
+        "custom_offer_table_failed_to_delete_custom_offer": "فشل حذف العرض المخصص",
+        "custom_offer_table_custom_offer_deleted_successfully": "تم حذف العرض المخصص بنجاح",
+        "custom_offer_table_failed_to_save_custom_offers": "فشل حفظ العروض المخصصة",
+        "custom_offer_table_custom_offers_added": "تمت إضافة العروض المخصصة",
+        "custom_offer_table_custom_offers_updated": "تم تحديث العروض المخصصة",
+        "custom_offer_table_point_back": "استرجاع النقاط",
+        "custom_offer_table_valid_from": "صالح من",
+        "custom_offer_table_valid_to": "صالح حتى",
+        "custom_offer_table_actions": "الإجراءات",
+        "custom_offer_table_user_class": "فئة المستخدم",
+        "custom_offer_table_brand": "العلامة التجارية",
+        "custom_offer_table_user": "المستخدم",
+        "custom_offer_table_id": "المعرف",
+        "custom_offer_table_title": "العنوان",
+        "custom_offer_table_description": "الوصف"
+      }
+    ,
 
 
     "navbar": {
@@ -554,6 +608,16 @@
         "custom_offer_table_valid_from": "صالح من",
         "custom_offer_table_valid_to": "صالح إلى",
         "custom_offer_table_actions": "إجراءات",
+        "custom_offer_table_user_class": "الفئة المستخدم",
+        "custom_offer_table_brand": "العلامة التجارية",
+        "custom_offer_table_user": "المستخدم",
+        "Custom_offers_table_id": "المعرف",
+        "Custom_offers_table_user_class": "الفئة المستخدم",
+        "Custom_offers_table_point_back": "نقاط استرجاع",
+        "Custom_offers_table_valid_from": "صالح من",
+        "Custom_offers_table_valid_to": "صالح إلى",
+        "Custom_offers_table_actions": "إجراءات",
+
         "brand_representatives_table_id": "المعرف",
         "brand_representatives_table_name": "الاسم",
         "brand_representatives_table_phone": "الهاتف",
@@ -672,8 +736,10 @@
     "editbrand": "تعديل العلامة التجارية",
     "Restore": "استرجاع",
     "pluse": "اضافة",
+    "PencilSquareIcon":"تعديل",
+    "PluseCircelIcon":"اضافة",    
     "restoredeletedbrand": "استرجاع العلامة التجارية المحذوفة",
-        "Settings": "الاعدادات",
+    "Settings": "الاعدادات",
     "global": "تغير اللغة للأنجليزية",
     "payment": "المدفوعات"
   },
