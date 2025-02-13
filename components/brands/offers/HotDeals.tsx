@@ -29,6 +29,8 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
     const [coupons, setCoupons] = useState<Coupon[]>([])
     const [loading, setLoading] = useState(false)
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+    const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null)
+    const [deleteConfirmationId, setDeleteConfirmationId] = useState<number | null>(null)
     const { token } = useAppContext()
     const t = useTranslations('brand')
 
@@ -48,7 +50,7 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
     };
 
 
-    const { register, handleSubmit, setValue, reset } = useForm<CouponFormData>()
+    const { register, handleSubmit, setValue, reset, watch } = useForm<CouponFormData>()
 
     const headers = [
         { name: 'hot_deals_table_code' },
@@ -95,6 +97,52 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
         setValue('code', code)
     }
 
+    const handleEdit = (coupon: Coupon) => {
+        setEditingCoupon(coupon)
+        setIsAddDialogOpen(true)
+        
+        // Format dates for the form
+        const formatDateForInput = (dateStr: string) => {
+            const date = new Date(dateStr)
+            return date.toISOString().split('T')[0]
+        }
+
+        reset({
+            code: coupon.code,
+            ratio: coupon.ratio,
+            description: coupon.description,
+            validFrom: formatDateForInput(coupon.validFrom),
+            validTo: formatDateForInput(coupon.validTo)
+        })
+    }
+
+    const handleDelete = async (couponId: number) => {
+        try {
+            setLoading(true)
+            const headers = new Headers()
+            headers.append('Authorization', `Bearer ${token}`)
+
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/coupons/${brandId}/${couponId}`,
+                {
+                    method: 'DELETE',
+                    headers,
+                }
+            )
+
+            if (!response.ok) throw new Error('Failed to delete coupon')
+
+            toast.success(t('Coupons.deleteSuccess'))
+            setDeleteConfirmationId(null)
+            fetchCoupons()
+        } catch (error) {
+            console.error('Error:', error)
+            toast.error(t('Coupons.delete_error'))
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const onSubmit = async (data: CouponFormData) => {
         try {
             setLoading(true)
@@ -102,28 +150,35 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
             headers.append('Authorization', `Bearer ${token}`)
             headers.append('Content-Type', 'application/json')
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/coupons/${brandId}`, {
-                method: 'POST',
+            const url = editingCoupon 
+                ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/coupons/${brandId}/${editingCoupon.id}`
+                : `${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/coupons/${brandId}`
+
+            const response = await fetch(url, {
+                method: editingCoupon ? 'PUT' : 'POST',
                 headers,
                 body: JSON.stringify(data)
             })
 
-            if (!response.ok) throw new Error('Failed to add coupon')
+            if (!response.ok) throw new Error('Failed to save coupon')
 
-            toast.success('Coupon added successfully')
+            toast.success(editingCoupon ? t('Coupons.successUpdate') : t('Coupons.success'))
             setIsAddDialogOpen(false)
             reset()
+            setEditingCoupon(null)
             fetchCoupons()
         } catch (error) {
             console.error('Error:', error)
-            toast.error('Failed to add coupon')
+            toast.error(t('failed_to_save_offer'))
         } finally {
             setLoading(false)
         }
     }
 
-    const handleDelete = async (couponId: number) => {
-        // Implement delete functionality
+    const handleCloseDialog = () => {
+        setIsAddDialogOpen(false)
+        setEditingCoupon(null)
+        reset()
     }
 
     const renderTableRows = () => {
@@ -137,9 +192,18 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
                 <td className="px-6 py-4">
                     <div className="flex gap-2">
                         <button
-                            onClick={() => handleDelete(coupon.id)}
+                            onClick={() => handleEdit(coupon)}
                             className="p-1 hover:bg-slate-100 rounded"
                             disabled={loading}
+                            title={t('edit')}
+                        >
+                            <PencilSquareIcon className="w-4 h-4 text-teal-500" />
+                        </button>
+                        <button
+                            onClick={() => setDeleteConfirmationId(coupon.id)}
+                            className="p-1 hover:bg-slate-100 rounded"
+                            disabled={loading}
+                            title={t('delete')}
                         >
                             <TrashIcon className="w-4 h-4 text-red-500" />
                         </button>
@@ -151,21 +215,20 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
 
     return (
         <div className="mt-8">
-<Table
-    data={coupons}  // offers, coupons, etc.
-    headers={headers}
-    count={coupons.length}
-    loading={loading}
-    showDateFilter={false}
-    pageSize={pageSize}
-    currentPage={currentPage}
-    onPageChange={handlePageChange}
-    onPageSizeChange={handlePageSizeChange}
-    showExport={true}
-    bgColor="#dfe2e8"
-    // currentItems={currentItems}
-    initialData={coupons}
->
+            <Table
+                data={coupons}
+                headers={headers}
+                count={coupons.length}
+                loading={loading}
+                showDateFilter={false}
+                pageSize={pageSize}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+                showExport={true}
+                bgColor="#dfe2e8"
+                initialData={coupons}
+            >
                 {renderTableRows()}
             </Table>
 
@@ -174,37 +237,43 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
                 <button
                     onClick={() => setIsAddDialogOpen(true)}
                     className="p-2 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition-colors"
+                    title={t('Coupons.addCoupon')}
                 >
                     <PlusIcon className="w-5 h-5" />
                 </button>
             </div>
 
-            {/* Add Dialog */}
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            {/* Add/Edit Dialog */}
+            <Dialog open={isAddDialogOpen} onOpenChange={handleCloseDialog}>
                 <DialogContent>
-                    <h2 className="text-lg font-semibold mb-4">Add new coupon</h2>
+                    <h2 className="text-lg font-semibold mb-4">
+                        {editingCoupon ? t('Coupons.editCoupon') : t('Coupons.addCoupon')}
+                    </h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="flex items-center gap-2">
                             <div className="flex-1">
-                                <label className="block text-sm mb-1">Code:</label>
+                                <label className="block text-sm mb-1">{t('Coupons.name')}:</label>
                                 <input
                                     type="text"
                                     {...register('code', { required: true })}
                                     className="w-full px-3 py-2 border rounded-lg"
                                     maxLength={4}
+                                    disabled={!!editingCoupon}
                                 />
                             </div>
-                            <button
-                                type="button"
-                                onClick={generateCode}
-                                className="mt-6 px-3 py-2 text-teal-500 hover:text-teal-600"
-                            >
-                                Auto-Generate
-                            </button>
+                            {!editingCoupon && (
+                                <button
+                                    type="button"
+                                    onClick={generateCode}
+                                    className="mt-6 px-3 py-2 text-teal-500 hover:text-teal-600"
+                                >
+                                    {t('Coupons.auto')}
+                                </button>
+                            )}
                         </div>
 
                         <div>
-                            <label className="block text-sm mb-1">Percentage:</label>
+                            <label className="block text-sm mb-1">{t('Coupons.discount')}:</label>
                             <input
                                 type="number"
                                 step="0.1"
@@ -214,7 +283,7 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
                         </div>
 
                         <div>
-                            <label className="block text-sm mb-1">Description:</label>
+                            <label className="block text-sm mb-1">{t('Coupons.description')}:</label>
                             <textarea
                                 {...register('description', { required: true })}
                                 className="w-full px-3 py-2 border rounded-lg"
@@ -223,7 +292,7 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
                         </div>
 
                         <div>
-                            <label className="block text-sm mb-1">Valid From:</label>
+                            <label className="block text-sm mb-1">{t('Coupons.start')}:</label>
                             <input
                                 type="date"
                                 {...register('validFrom', { required: true })}
@@ -232,7 +301,7 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
                         </div>
 
                         <div>
-                            <label className="block text-sm mb-1">Valid To:</label>
+                            <label className="block text-sm mb-1">{t('Coupons.end')}:</label>
                             <input
                                 type="date"
                                 {...register('validTo', { required: true })}
@@ -243,20 +312,43 @@ const HotDeals = ({ brandId }: { brandId: string }) => {
                         <div className="flex justify-end gap-4">
                             <button
                                 type="button"
-                                onClick={() => setIsAddDialogOpen(false)}
+                                onClick={handleCloseDialog}
                                 className="px-4 py-2 border rounded-lg"
                             >
-                                Cancel
+                                {t('Coupons.cancel')}
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading}
                                 className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
                             >
-                                Add
+                                {loading ? t('saving') : editingCoupon ? t('update') : t('add')}
                             </button>
                         </div>
                     </form>
+                </DialogContent>
+            </Dialog>
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={!!deleteConfirmationId} onOpenChange={() => setDeleteConfirmationId(null)}>
+                <DialogContent>
+                    <h2 className="text-lg font-semibold mb-4">{t('Coupons.popup.lable')}</h2>
+                    <p className="mb-4">{t('Coupons.popup.message')}</p>
+                    <div className="flex justify-end gap-4">
+                        <button
+                            onClick={() => setDeleteConfirmationId(null)}
+                            className="px-4 py-2 border rounded-lg"
+                        >
+                            {t('Coupons.cancel')}
+                        </button>
+                        <button
+                            onClick={() => deleteConfirmationId && handleDelete(deleteConfirmationId)}
+                            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                            disabled={loading}
+                        >
+                            {loading ? t('deleting') : t('Coupons.delete')}
+                        </button>
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

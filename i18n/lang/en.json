@@ -237,6 +237,9 @@
     "digital_seal_table_title":"Title",
     "digital_seal_table_description":"Description",
     "add_special_offer":"Add Special Offer",
+    "selectType":"Select Type",
+    "Enter vaild user type name":"Enter vaild user type name",
+    "special_offers_table_Type":"Type",
     "Tablecomponent":{
       "digital_seal_table_point_back":"Point Back Ratio",
       "digital_seal_table_purchase_count":"Purchase count",
@@ -424,7 +427,7 @@
     "categoryName": "Categories Name",
     "categoryImages": "Images",
     "nodata": "No data to be Shown",
-    "no data yat": "Loading Data...",
+    "no data yat": "No data to be Shown",
     "no data yat1": "No data to be Shown",
     "BrandContactNumber": "Contact Number",
     "BrandValidFrom": "Valid from",
@@ -1292,12 +1295,13 @@
     "edit": "Edit",
     "add": "Add",
     "save": "Save",
+    "deletefail": "user class is used in another user type",
 
     "color": "Color",
     "successDelete": "Successfully deleted",
 
     "error": {
-      "failedtodeleteclassification": "Failed to delete classification",
+      "failedtodeleteclassification": "user class is used in another user type",
       "email": "Please Enter the email",
       "password": "Please Enter the password",
       "denied": "Access denied. You are not an admin."

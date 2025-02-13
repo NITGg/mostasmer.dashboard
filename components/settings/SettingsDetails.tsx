@@ -652,7 +652,7 @@ export function SettingsDetails({ settings }: Props) {
         }
       )
       
-      if (!response.ok) throw new Error('Failed to delete classification')
+      if (!response.ok) throw new Error(t('deletefail'))
 
       dispatch(deleteClassification(openDelete))
       setOpenDelete(null)

@@ -58,8 +58,8 @@
         "saveChanges":"حفظ التغييرات",
         "confirm": "تأكيد",
         "inactive": "غير نشط",
-        "add_special_offer":"إضافة عرض خاص",
-
+        "failed_to_save_offer":"فشل حفظ العرض الخاص",
+        "Enter vaild user type name":"ادخل اسم نوع المستخدم الصالح",
         "Tablecomponent":{
             "digital_seal_table_point_back":"نسبة الاسترجاع",
             "digital_seal_table_purchase_count":"عدد الشراء",
@@ -575,7 +575,7 @@
         "categoryName": "اسم الفئة",
         "categoryImages": "صور",
         "nodata": "لا توجد بيانات للعرض",
-        "no data yat": "جاري تحميل البيانات ",
+        "no data yat": "لا توجد بيانات للعرض ",
         "no data yat1": "لا توجد بيانات للعرض",
         "BrandContactNumber": "رقم الاتصال",
         "BrandValidFrom": "صالح من",
@@ -990,6 +990,8 @@
           "save": "حفظ",
           "edit": "تعديل",
           "add": "إضافة",
+          "deletefail": "تم استخدام التصنيف في نوع مستخدم",
+          "deletefailclassification": "تم استخدام التصنيف في نوع مستخدم",
           "error": {
             "failedtodeleteclassification": "فشل في حذف التصنيف",
             "email": "يرجى إدخال البريد الإلكتروني",

@@ -39,8 +39,17 @@ interface OfferFormData {
     validTo: string
 }
 
+interface Badge {
+    id: number
+    name: string
+    userType: {
+        userType: string
+    } | null
+}
+
 const SpecialOffers = ({ brandId }: { brandId: string }) => {
     const [offers, setOffers] = useState<SpecialOffer[]>([])
+    const [badges, setBadges] = useState<Badge[]>([])
     const [loading, setLoading] = useState(false)
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
     const { token } = useAppContext()
@@ -59,6 +68,7 @@ const SpecialOffers = ({ brandId }: { brandId: string }) => {
 
     useEffect(() => {
         fetchSpecialOffers()
+        fetchBadges()
     }, [brandId])
 
     const handlePageChange = (page: number) => {
@@ -87,6 +97,23 @@ const SpecialOffers = ({ brandId }: { brandId: string }) => {
             toast.error('Failed to load offers')
         } finally {
             setLoading(false)
+        }
+    }
+
+    const fetchBadges = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/badges`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (!response.ok) throw new Error('Failed to fetch badges')
+            const data = await response.json()
+            setBadges(data.badges || [])
+        } catch (error) {
+            console.error('Error fetching badges:', error)
+            toast.error('Failed to load badges')
         }
     }
 
@@ -178,28 +205,34 @@ const SpecialOffers = ({ brandId }: { brandId: string }) => {
     }
 
     // Update the Select component in the form
-    const renderUserTypeSelect = () => (
-        <div>
-            <label className="block text-sm mb-1">{t('Tablecomponent.special_offers_table_Type')}</label>
-            <Select
-                value={watch('type') || ''}
-                onValueChange={(value) => {
-                    if (value) {
-                        setValue('type', value as 'Basic' | 'Standard' | 'VIP')
-                    }
-                }}
-                options={[
-                    { value: 'Basic', label: 'Basic' },
-                    { value: 'Standard', label: 'Standard' },
-                    { value: 'VIP', label: 'VIP' }
-                ]}
-                placeholder={t('selectType')}
-            />
-            {errors.type && (
-                <p className="text-sm text-red-500 mt-1">{t('Enter vaild user type name')}</p>
-            )}
-        </div>
-    )
+    const renderUserTypeSelect = () => {
+        // Filter out badges without userType and create options
+        const badgeOptions = badges
+            .filter(badge => badge.userType)
+            .map(badge => ({
+                value: badge.userType?.userType || '',
+                label: badge.userType?.userType || ''
+            }))
+
+        return (
+            <div>
+                <label className="block text-sm mb-1">{t('Tablecomponent.special_offers_table_Type')}</label>
+                <Select
+                    value={watch('type') || ''}
+                    onValueChange={(value) => {
+                        if (value) {
+                            setValue('type', value as 'Basic' | 'Standard' | 'VIP')
+                        }
+                    }}
+                    options={badgeOptions}
+                    placeholder={t('selectType')}
+                />
+                {errors.type && (
+                    <p className="text-sm text-red-500 mt-1">{t('Enter vaild user type name')}</p>
+                )}
+            </div>
+        )
+    }
 
     // Update the form to use single ratio input
     const renderRatioInput = () => (
