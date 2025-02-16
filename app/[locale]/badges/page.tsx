@@ -11,7 +11,7 @@ const Page = async ({ searchParams }: { searchParams: any }) => {
     try {
       loading = true;
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges?sort=points`,
         {
           method: "GET",
           credentials: "include",
