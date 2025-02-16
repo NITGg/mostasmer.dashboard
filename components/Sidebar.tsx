@@ -19,7 +19,7 @@ import {
   GiftCardsIcon,
   UsersIcon,
   SettingsIcon,
-  payment
+  PaymentIcon
 } from "./icons";
 import { Link } from "@/i18n/routing";
 import useClickOutside from "@/hooks/useClickOutSide";
