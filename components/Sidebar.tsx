@@ -19,6 +19,7 @@ import {
   GiftCardsIcon,
   UsersIcon,
   SettingsIcon,
+  payment
 } from "./icons";
 import { Link } from "@/i18n/routing";
 import useClickOutside from "@/hooks/useClickOutSide";
@@ -98,6 +99,12 @@ const Sidebar = ({
       icon: <ShoppingBasket className="size-6" />,
       href: "/orders",
       role: "supplier",
+    },
+    {
+      label: t("payment"),
+      icon: <PaymentIcon className="size-6" />,
+      href: "/payment",
+      role: "admin",
     },
     {
       label: t("ads"),
@@ -223,12 +230,12 @@ const Sidebar = ({
       <div
         ref={eleRef}
         className={`w-64 lg:w-72 bg-[#001529] h-lvh max-h-lvh fixed top-0 z-[9999] flex flex-col ${open
-            ? locale == "en"
-              ? "rtl"
-              : "ar-ltr"
-            : locale == "en"
-              ? "ltr"
-              : "ar-rtl"
+          ? locale == "en"
+            ? "rtl"
+            : "ar-ltr"
+          : locale == "en"
+            ? "ltr"
+            : "ar-rtl"
           }`}
       >
         {/* Logo Section */}
