@@ -92,7 +92,7 @@ const BadgePopupForm = ({
 
       if (formData.logoFile?.[0]) badgeData.logo = formData.logoFile[0];
 
-      const { data } = await axios.post(`$/api/badges`, badgeData, {
+      const { data } = await axios.post(`/api/badges`, badgeData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
