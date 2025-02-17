@@ -1193,6 +1193,7 @@
     "logoRequired": "صورة الشعار مطلوبة.",
     "badgeName": "اسم الشارة",
     "nameIsRequired": "يرجى إدخال اسم الشارة.",
+    "nameMinLength": "يجب أن يكون الاسم على الأقل 3 أحرف",
     "badgeNameError": "اسم الشارة مستخدم بالفعل",
     "badgeColor": "لون الشارة",
     "colorIsRequired": "يرجى إدخال لون الشارة.",

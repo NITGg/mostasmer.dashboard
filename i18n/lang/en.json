@@ -855,8 +855,8 @@
     "loading": "Loading",
     "no_brands_in_category": "No brands in category",
     "page": "Page",
-    "success.add": "Category added successfully",
-    "success.update": "Category updated successfully",
+    "success_add": "Category added successfully",
+    "success_update": "Category updated successfully",
     "viewBrands": "View Brands",
     "error_fetching_brands": "Failed to fetch brands",
 
@@ -1347,6 +1347,7 @@
     "coverRequired": "Cover image is required.",
     "logoRequired": "Logo image is required.",
     "badgeName": "Badge Name",
+    "nameMinLength": "Name must be at least 3 characters",
     "nameIsRequired": "Please enter the badge name.",
     "badgeNameError": "Badge name is used",
     "badgeColor": "Badge Color",
