@@ -45,7 +45,22 @@
     "manage_user": "Users",
     "categories": "Categories",
     "Settings": "Settings",
+    "filterByBrand": "Filter By Brand",
     "payment": "Payment"
+
+
+  },
+  "orders": {
+    "action": "Action",
+    "address": "Address",
+    "createdAt": "Created At",
+    "id": "ID",
+    "name": "Name",
+    "notfoundUser": "Not found User",
+    "phone": "Phone",
+    "status": "Status",
+    "totalPrice": "Total Price"
+  
   },
   "navbar": {
     "admin": "Admin",
@@ -224,7 +239,6 @@
     "url":"URL",
     "category":"Category",
     "custom_offer_table_add_new_custom_offer":"Add New Brand Offer",
-
     "pointbackratio":"Point Back Ratio",
     "digital_seal_table_point_back":"Point Back",
     "digital_seal_table_purchase_count":"Purchase Count",
@@ -238,8 +252,51 @@
     "digital_seal_table_description":"Description",
     "add_special_offer":"Add Special Offer",
     "selectType":"Select Type",
+    "addBrand":"Add Brand",
+    "addOffer":"Add Offer",
+    "brandNotFound":"Brand Not Found",
+    "brandNotFoundDesc":"Brand Not Found Description",
+    "brandOffersChanged":"Brand Offers Changed",
+    "categoryId":"Category Id",
+    "categoryName":"Category Name",
+    "clear_filter":"Clear Filter",
+    "deleteFailed":"Delete Failed",
+    "deleting":"Deleting",
+    "edit":"Edit",
+    "editOffer":"Edit Offer",
+    "goBack":"Go Back",
+    "ids":"Ids",
+    "noPhone":"No Phone",
+    "restoreFailed":"Restore Failed",
+    "saveAllChanges":"Save All Changes",
+    "saving":"Saving",
+    "successEdit":"Success Edit",
+    "successRestore":"Success Restore",
+    "update":"Update",
+    "updateBrand":"Update Brand",
     "Enter vaild user type name":"Enter vaild user type name",
-    "special_offers_table_Type":"Type",
+    "GreaterThanZero":"Greater Than Zero",
+    "MustBeGreaterThanPreviousTier":"Must Be Greater Than Previous Tier",
+    "Coupons":{
+      "addCoupon":"Add Coupon",
+      "auto":"Auto",
+      "cancel":"Cancel",
+      "delete":"Delete",
+      "deleteSuccess":"Delete Success",
+      "delete_error":"Delete Error",
+      "description":"Description",
+      "discount":"Discount",
+      "editCoupon":"Edit Coupon",
+      "end":"End",
+      "name":"Name",
+      "start":"Start",
+      "success":"Success",
+      "successUpdate":"Success Update",
+      "popup":{
+        "lable":"Popup Lable",
+        "message":"Popup Message"
+      }
+    },
     "Tablecomponent":{
       "digital_seal_table_point_back":"Point Back Ratio",
       "digital_seal_table_purchase_count":"Purchase count",
@@ -256,6 +313,10 @@
       "special_offers_table_valid_to":"Valid To",
       "special_offers_table_point_back":"Point Back",
       "selectType":"Select Type",
+
+    "exclusive_offer_table_valid_from":"Valid From",
+    "exclusive_offer_table_valid_to":"Valid To",
+
       "add_special_offer":"Add Special Offer"
       
 
@@ -287,7 +348,11 @@
     "custom_offer_table_id": "ID",
     "custom_offer_table_title": "Title",
     "custom_offer_table_description": "Description",
-    "custom_offer_table_delete":"Delete"
+    "custom_offer_table_delete":"Delete",
+
+
+    "custom_offer_table_deleting":"Deleting"
+
     
   },
   
@@ -404,6 +469,20 @@
     "barChart":"Bar Chart",
     "lineChart":"Line Chart",
     "pieChart":"Pie Chart",
+
+
+    "keyword":"keyword",
+    "limit":"limit",
+    "noDataAvailable":"noDataAvailable",
+
+    "page":"page",
+
+    "roleStatistics":"roleStatistics",
+
+    "successRestore":"successRestore",
+
+    "userRoleDistribution":"userRoleDistribution",
+
     
     "order": {
       "orderDetails": "Order Details",
@@ -566,7 +645,75 @@
     "Description": "Description",
     "coupons": "Coupons",
 
-    "status": "Status"
+    "BrandImage": "Brand Image",
+
+
+
+    "addRepresentative": "Add Representative",
+    "saveAllChanges": "Save All Changes",
+    "enter": "Enter",
+    "url": "URL",
+    "appPercentage": "App Percentage",
+    "saveBrandData": "Save Brand Data",
+    "brandUrl": "Brand URL",
+    "phone": "Phone",
+    "location": "Location",
+    "active": "Active",
+    "deactive": "Deactive",
+    "cancel": "Cancel",
+
+    "add":"Add",
+    "saving":"Saving",
+
+
+    
+
+    "status": "Status",
+    "deleteRepresentativeConfirm": "Are you sure you want to delete this representative?",
+    "representativeDeleteSuccess": "Representative deleted successfully",
+    "representativeDeleteError": "Failed to delete representative",
+    "representativeAddSuccess": "Representative added successfully",
+    "deleteRepresentativeMessage": "Are you sure you want to delete this representative?",
+    "representativeUpdateError": "Failed to update representative",
+    "representativeUpdateSuccess": "Representative updated successfully",
+    "representativeAddError": "Failed to add representative",
+
+
+
+    "1":"1",
+    "current":"Current",
+    "delete":"Delete",
+    "deleting":"Deleting",
+    "edit":"Edit",
+    "Failed to export data":"Failed to export data",
+    "NotoNaskhArabic-Regular":"NotoNaskhArabic-Regular",
+    "normal":"Normal",
+    "T":"T",
+    "a":"a",
+      "update_validity_dates":"Update Validity Dates",
+    "brand":{
+        "deleteRepresentativeConfirm": "Are you sure you want to delete this representative?",
+        "representativeDeleteSuccess": "Representative deleted successfully",
+        "representativeDeleteError": "Failed to delete representative",
+        "representativeAddSuccess": "Representative added successfully",
+        "deleteRepresentativeMessage": "Are you sure you want to delete this representative?",
+        "representativeUpdateError": "Failed to update representative",
+        "representativeUpdateSuccess": "Representative updated successfully",
+        "representativeAddError": "Failed to add representative"
+    },
+    "user":{
+        "selectRepresentative": "Please select a user",
+        "searchRepresentative": "Search for a representative...",
+        "selectUser": "Select User",
+        "validFrom": "Valid From",
+        "validTo": "Valid To",
+        "status": "Status",
+        "actions": "Actions",
+        "delete": "Delete",
+        "edit": "Edit",
+        "noRepresentativesFound":"No representatives found",
+        "add": "Add"
+    }
   },
   "pagination": {
     "showing": "Showing",
@@ -579,6 +726,11 @@
     "rowPerPage": "Row per Page",
     "downloadas": "Download as",
     "pdfformat": "PDF Format",
+    "from": "from",
+    "keyword": "keyword",
+    "limit": "limit",
+    "page": "Page",
+    "skip": "skip",
     "csvformat": "CSV Format"
   },
   "payment": {
@@ -606,61 +758,91 @@
       "save": "Save"
     }
   },
-  "Coupons": {
-    "title": "Coupons",
-    "addCoupon": "Add Coupon",
-    "btn": "Add Coupon",
-    "lable": "Add Coupon",
-    "name": "Code",
-    "start": "Start Date",
-    "end": "End Date",
-    "discount": "Percentage",
-    "auto": "Auto-generate",
-    "deleteCoupon": "Delete Coupon",
-    "cancel_button_coupon": "Cancel",
-    "deleteConfirm_coupon": "Are you sure you want to delete this coupon?",
-    "successDelete_coupon": "Successfully delete coupon!!",
-    "deleteFailed_coupon": "Failed to delete coupon!!",
-    "allCoupons": "All Coupons",
-    "editCoupon": "Edit Coupon",
-    "selectBrand": "Select Brand",
-    "selectBrandPlaceholder": "choose Brand",
-    "selectBrandError": "Please select a brand",
-    "code": "please Enter coupon code (4 char)",
-    "codePlaceholder": "Enter coupon code",
-    "autoGenerate": "Auto-generate",
-    "ratio": "Ratio",
-    "ratioPlaceholder": "Enter Coupon Percentage",
-    "description": "Coupon Description",
-    "descriptionPlaceholder": "This coupon will provide you a discount of 20%",
-    "validFrom": "Valid From",
-    "validFromPlaceholder": "Enter start date",
-    "validTo": "Valid To",
-    "validToPlaceholder": "Enter end date",
-    "cancel": "Cancel",
-    "update": "Edit Coupon",
-    "add": "Add Coupon",
+    "Coupons": {
+      "title": "Coupons",
+      "addCoupon": "Add Coupon",
+      "btn": "Add Coupon",
+      "lable": "Add Coupon",
+      "name": "Code",
+      "start": "Start Date",
+      "end": "End Date",
+      "discount": "Percentage",
+      "auto": "Auto-generate",
+      "deleteCoupon": "Delete Coupon",
+      "cancel_button_coupon": "Cancel",
+      "deleteConfirm_coupon": "Are you sure you want to delete this coupon?",
+      "successDelete_coupon": "Successfully delete coupon!!",
+      "deleteFailed_coupon": "Failed to delete coupon!!",
+      "allCoupons": "All Coupons",
+      "editCoupon": "Edit Coupon",
+      "selectBrand": "Select Brand",
+      "selectBrandPlaceholder": "choose Brand",
+      "selectBrandError": "Please select a brand",
+      "code": "please Enter coupon code (4 char)",
+      "codePlaceholder": "Enter coupon code",
+      "autoGenerate": "Auto-generate",
+      "ratio": "Ratio",
+      "ratioPlaceholder": "Enter Coupon Percentage",
+      "description": "Coupon Description",
+      "descriptionPlaceholder": "This coupon will provide you a discount of 20%",
+      "validFrom": "Valid From",
+      "validFromPlaceholder": "Enter start date",
+      "validTo": "Valid To",
+      "validToPlaceholder": "Enter end date",
+      "cancel": "Cancel",
+      "update": "Edit Coupon",
+      "add": "Add Coupon",
 
-    "fetchError": "Failed to fetch coupons",
-    "Brand": "Brand",
-    "Code": "Code",
-    "Ratio": "Ratio",
-    "ValidFrom": "Valid From",
-    "ValidTo": "Valid To",
-    "Description": "Description",
-    "tableView": "Table View",
-    "cardView": "Card View",
-    "noCoupons": "No coupons found",
+      "fetchError": "Failed to fetch coupons",
+      "Brand": "Brand",
+      "Code": "Code",
+      "Ratio": "Ratio",
+      "ValidFrom": "Valid From",
+      "ValidTo": "Valid To",
+      "Description": "Description",
+      "tableView": "Table View",
+      "cardView": "Card View",
+      "noCoupons": "No coupons found",
+
+      "addSuccess": "Coupon added successfully",
+      "adding": "Adding...",
+      "allBrands": "All Brands",
+
+      "button": "Button",
+
+      "confirmDelete": "Confirm Delete",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this coupon?",
+      "deleteSuccess": "Coupon deleted successfully",
+      "deleting": "Deleting...",
+      "deleteCouponMessage": "Are you sure you want to delete this coupon?",
+      "deleteCouponSuccess": "Coupon deleted successfully",
+      "deleteCouponError": "Failed to delete coupon",
+
+      "edit": "Edit",
+      "editSuccess": "Coupon updated successfully",
 
 
-    "error": {
-      "code": "Please enter the coupon code",
-      "ratio": "Please enter the ratio percentage",
-      "description": "Please enter the coupon description",
-      "validFrom": "Please enter the start date",
-      "validTo": "Please enter the end date"
-    }
-  },
+      "filterByBrand": "Filter by Brand",
+      "limit": "Limit",
+      "page": "Page",
+
+
+
+
+      "error": {
+        "code": "Please enter the coupon code",
+        "ratio": "Please enter the ratio percentage",
+        "description": "Please enter the coupon description",
+        "validFrom": "Please enter the start date",
+        
+        "fetchBrands": "Failed to fetch brands",
+        "editFailed": "Failed to update coupon",
+        "deleteFailed": "Failed to delete coupon",
+        "addFailed": "Failed to add coupon",
+        "validTo": "Please enter the end date"
+      }
+    },
   "category": {
     "category": "Category",
     "addCategory": "Add Category",
@@ -678,10 +860,23 @@
     "deleteConfirm": "Are you sure you want to delete this category?",
     "deleteConfirmTitle": "Delete Category",
     "cancel": "Cancel",
+
+    "editCategory":"Edit Category",
+
+    "limit":"Limit",
+    "loading":"Loading",
+    "no_brands_in_category":"No brands in category",
+    "page":"Page",
+    "success.add":"Category added successfully",
+    "success.update":"Category updated successfully",
+    "viewBrands":"View Brands",
+    "error_fetching_brands":"Failed to fetch brands",
+
     "error": {
       "name": "Please Enter Category name!",
       "error_image_required": "Please upload an image",
       "general": "An error occurred",
+      "image_load_failed": "Image load failed",
       "error_name_required": "Please enter atleast one name"
     },
     "categoryimages": "Images",
@@ -764,6 +959,10 @@
     "petDetails": "pet Details",
     "pets": "Pets",
     "addPet": "Add pet",
+
+
+
+    "success" :"تمت العملية بنجاح",
     "error": {
       "name": "Please Enter product name!",
       "price": "Please Enter price!",
@@ -886,6 +1085,7 @@
     "privacyAr": "Privacy Policy Arabic",
     "terms": "Terms And Condition English",
     "termsAr": "Terms And Condition Arabic",
+    
     "digitalCard": "Digital Card Information",
     "digitalCardAr": "Digital Card Information Arabic"
   },
@@ -1017,6 +1217,8 @@
     "analytics": "Analytics",
     "adPlacement": "Ad Placement",
     "adPlacementRequired": "Ad Placement is required",
+    
+
     "success": "Successfully add new ad!!",
     "successUpdate": "Successfully updated ad!"
   },
@@ -1139,6 +1341,9 @@
     "brandUrl": "Brand URL",
     "termsEn": "Terms And Condition English",
     "phoneNumber": "Phone Number",
+
+
+
     "phoneError": {
       "startPlus": "Phone number must start with +",
       "length": "Phone number must be 13 characters long"
@@ -1176,9 +1381,9 @@
     "nameMinLength": "Name must be at least 3 characters long.",
     "colorMinLength": "Color must be at least 3 characters long.",
     "GreaterThanZero": "Value must be greater than 0.",
-    "invalidDate": "Invalid date format.",
-    "edit": "Edit",
-    "add": "Add"
+    "invalidDate": "Invalid date format."
+
+
   },
   "userTypes": {
     "title": "User Types",
@@ -1223,6 +1428,8 @@
     "delete": "Delete",
     "name": "Name",
     "nameIsRequired": "Please enter the Role name.",
+    
+
     "nameUnique": "This role already exist"
   },
   "giftCards": {
@@ -1253,6 +1460,14 @@
     "Pluse": "Add",
     "Pluse2": "Add",
     "payment": "Payment",
+
+    "Bell":"Bell",
+    "BellMuteIcon":"Bell Mute Icon",
+    "BellRingIcon":"Bell Ring Icon",
+
+    "Settings":"Settings",
+
+    "viewcategories":"View Categories",
     
     "PencilSquareIcon":"Edit",
 
@@ -1294,16 +1509,21 @@
     "srRatio": "SR Ratio",
     "edit": "Edit",
     "add": "Add",
-    "save": "Save",
     "deletefail": "user class is used in another user type",
-
     "color": "Color",
     "successDelete": "Successfully deleted",
+
+    "save":"save",
+    "saving":"saving",
+    "token":"token=",
 
     "error": {
       "failedtodeleteclassification": "user class is used in another user type",
       "email": "Please Enter the email",
       "password": "Please Enter the password",
+      "failedToAddClassification": "failedToAddClassification",
+      "failedToFetchSettings": "failedToFetchSettings",
+      "failedToUpdateSettings": "failedToUpdateSettings",
       "denied": "Access denied. You are not an admin."
     }
   }

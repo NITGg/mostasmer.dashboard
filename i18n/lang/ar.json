@@ -16,6 +16,26 @@
             "emailorphone": "يرجى إدخال البريد الإلكتروني أو الهاتف"
         }
     },
+
+    "about-app": {
+        "title": "عن التطبيق",
+        "phone": "الهاتف",
+        "email": "البريد الإلكتروني",
+        "vat": "القيمة المضافة",
+        "about": "عن الماركة",
+        "aboutAr": "عن الماركة",
+        "missin": "المهمة",
+        "missinAr": "المهمة",
+        "vission": "الرؤية",
+        "vissionAr": "الرؤية",
+        "privacy": "السياسة الخاصة",
+        "privacyAr": "السياسة الخاصة",
+        "terms": "الشروط والأحكام",
+        "termsAr": "الشروط والأحكام",
+        
+        "digitalCard": "المعلومات الرقمية",
+        "digitalCardAr": "المعلومات الرقمية"
+      },
     "brand": {
         "title": "الماركات",
         "add": "إضافة ماركة",
@@ -59,8 +79,193 @@
         "confirm": "تأكيد",
         "inactive": "غير نشط",
         "failed_to_save_offer":"فشل حفظ العرض الخاص",
-        "Enter vaild user type name":"ادخل اسم نوع المستخدم الصالح",
-        "Tablecomponent":{
+        "Enter vaild user type name": "أدخل اسم نوع المستخدم الصالح",
+        "brandName": "اسم العلامة التجارية",
+        "contactNumber": "رقم الاتصال",
+        "cancel_button_coupon": "إلغاء",
+        "deleteBrand": "حذف العلامة التجارية",
+        "deleteMessage": "هل أنت متأكد من أنك تريد حذف هذه العلامة التجارية؟",
+        "successDelete": "تم حذف العلامة التجارية بنجاح!!",
+        "successAdd": "تمت إضافة علامة تجارية جديدة بنجاح!!",
+        "editRepresentative": "تعديل ممثل",
+        "addRepresentative": "إضافة ممثل",
+        "editBrand": "تعديل العلامة التجارية",
+        "latitude": "خط العرض",
+        "langitude": "خط الطول",
+        "logo": "شعار",
+        "cover": "غلاف",
+        "pointBackRatio": "نسبة استرجاع النقاط",
+        "pointBackTerms": "شروط استرجاع النقاط",
+        "yes": "نعم",
+        "no": "لا",
+        "notActive": "غير نشط",
+        "filteredBy": "تمت التصفية بواسطة",
+        "selectCategories": "اختر الفئات...",
+        "nothingFound": "لم يتم العثور على فئات",
+        "brandCategoriesDescription": "هنا يمكنك إدارة فئات العلامات التجارية",
+        "brandCategories": "فئات العلامة التجارية",
+        "viewBrandDetails": "عرض تفاصيل العلامة التجارية",
+        "viewCategories": "عرض الفئات المشتركة",
+        "viewOffers": "عرض العروض",
+        "viewCoupons": "عرض الكوبونات",
+        "viewRepresentatives": "عرض الممثلين",
+        "viewBankingInfo": "عرض المعلومات المصرفية",
+        "noCategoriesFound": "لم يتم العثور على فئات لهذه العلامة التجارية",
+        "no_available_categories": "جميع الفئات مستخدمة بالفعل لهذه العلامة التجارية",
+        "category_in_use": "هذه الفئة مستخدمة بالفعل لهذه العلامة التجارية",
+        "validFrom_required": "تاريخ الصلاحية من مطلوب",
+        "validTo_required": "تاريخ الصلاحية إلى مطلوب",
+        "category_select": "اختر فئة",
+        "category_required": "الفئة مطلوبة",
+        "pointbackratio_required": "نسبة استرجاع النقاط مطلوبة",
+        "validTo_error": "يجب أن يكون تاريخ الصلاحية إلى أكبر من تاريخ الصلاحية من",
+        "offer_added_successfully": "تمت إضافة العرض بنجاح",
+        "offer_updated_successfully": "تم تحديث العرض بنجاح",
+        "offer_deleted_successfully": "تم حذف العرض بنجاح",
+        "offer_not_found": "لم يتم العثور على عرض",
+        "restoreBrand": "استعادة العلامة التجارية",
+        "statusBrand": "الحالة",
+        "brand_not_found": "لم يتم العثور على العلامة التجارية",
+        "brand_deleted_successfully": "تم حذف العلامة التجارية بنجاح",
+        "brand_restored_successfully": "تمت استعادة العلامة التجارية بنجاح",
+        "brand_status_updated_successfully": "تم تحديث حالة العلامة التجارية بنجاح",
+        "brand_status_updated_failed": "فشل تحديث حالة العلامة التجارية",
+        "brand_deleted_failed": "فشل حذف العلامة التجارية",
+        "brand_restored_failed": "فشل استعادة العلامة التجارية",
+        "failedToUpdate": "فشل التحديث",
+        "makeSureItIsAValidUrl": "تأكد من أنه عنوان URL صالح",
+        "updated": "تم التحديث",
+        "successfully": "بنجاح",
+        "successfullyUpdated": "تم التحديث بنجاح",
+        "failedToUpdateSocialMedia": "فشل تحديث وسائل التواصل الاجتماعي",
+        "failedToUpdateBankingInfo": "فشل تحديث المعلومات المصرفية",
+        "failedToUpdateRepresentative": "فشل تحديث الممثل",
+        "failedToUpdateAbout": "فشل تحديث حول",
+        "failedToUpdatePointsBackTerms": "فشل تحديث شروط استرجاع النقاط",
+        "failedToLoadSocialMediaData": "فشل تحميل بيانات وسائل التواصل الاجتماعي",
+        "failedToFetchSocialMedia": "فشل جلب وسائل التواصل الاجتماعي",
+        "failedToUpdateTerms": "فشل تحديث الشروط",
+        "failedToUpdateName": "فشل تحديث الاسم",
+        "failedToUpdatePhone": "فشل تحديث رقم الهاتف",
+        "failedToUpdateEmail": "فشل تحديث البريد الإلكتروني",
+        "failedToUpdateLocation": "فشل تحديث الموقع",
+        "failedToUpdateLatitude": "فشل تحديث خط العرض",
+        "failedToUpdateLongitude": "فشل تحديث خط الطول",
+        "failedToUpdateLogo": "فشل تحديث الشعار",
+        "failedToUpdateCover": "فشل تحديث الغلاف",
+        "failedToUpdatePointBackRatio": "فشل تحديث نسبة استرجاع النقاط",
+        "failedToUpdatePointBackTerms": "فشل تحديث شروط استرجاع النقاط",
+        "failedToUpdateAboutBrand": "فشل تحديث حول العلامة التجارية",
+        "failedToUpdateBrandUrl": "فشل تحديث عنوان URL للعلامة التجارية",
+        "failedToUpdateBankName": "فشل تحديث اسم البنك",
+        "failedToUpdateBankAccountNumber": "فشل تحديث رقم الحساب المصرفي",
+        "failedToUpdateBankAccountName": "فشل تحديث اسم صاحب الحساب المصرفي",
+        "failedToUpdateBankAccountSwift": "فشل تحديث رمز سويفت للحساب المصرفي",
+        "failedToUpdateBankAccountIban": "فشل تحديث رقم الحساب المصرفي الدولي",
+        "failedToUpdateBankAccountAddress": "فشل تحديث عنوان الحساب المصرفي",
+        "failedToUpdateBankAccountCity": "فشل تحديث مدينة الحساب المصرفي",
+        "failedToUpdateBankAccountState": "فشل تحديث ولاية الحساب المصرفي",
+        "failedToUpdateBankAccountZip": "فشل تحديث الرمز البريدي للحساب المصرفي",
+        "failedToUpdateBankAccountCountry": "فشل تحديث بلد الحساب المصرفي",
+        "failedToUpdateBankAccountPhone": "فشل تحديث هاتف الحساب المصرفي",
+        "failedToUpdateBankAccountEmail": "فشل تحديث بريد إلكتروني الحساب المصرفي",
+        "failedToUpdateBankAccountWebsite": "فشل تحديث موقع الحساب المصرفي",
+        "failedToUpdateBankAccountFacebook": "فشل تحديث فيسبوك الحساب المصرفي",
+        "failedToUpdateBankAccountTwitter": "فشل تحديث تويتر الحساب المصرفي",
+        "failedToUpdateBankAccountInstagram": "فشل تحديث انستغرام الحساب المصرفي",
+        "failedToUpdateBankAccountLinkedin": "فشل تحديث لينكد إن الحساب المصرفي",
+        "failedToUpdateBankAccountYoutube": "فشل تحديث يوتيوب الحساب المصرفي",
+        "failedToUpdateBankAccountTiktok": "فشل تحديث تيك توك الحساب المصرفي",
+        "failedToUpdateBankAccountWhatsapp": "فشل تحديث واتساب الحساب المصرفي",
+        "failedToUpdateBankAccountTelegram": "فشل تحديث تيليجرام الحساب المصرفي",
+        "failedToUpdateBankAccountSnapchat": "فشل تحديث سناب شات الحساب المصرفي",
+        "failedToUpdateBankAccountPinterest": "فشل تحديث بنترست الحساب المصرفي",
+        "failedToUpdateBankAccountReddit": "فشل تحديث ريديت الحساب المصرفي",
+        "failedToUpdateBankAccountX": "فشل تحديث X الحساب المصرفي",
+        "failedToUpdateBankAccountDiscord": "فشل تحديث ديسكورد الحساب المصرفي",
+        "failedToUpdateBankAccountTwitch": "فشل تحديث تويتش الحساب المصرفي",
+        "failedToUpdateBankAccountSteam": "فشل تحديث ستيم الحساب المصرفي",
+        "failedToUpdateBankAccountSpotify": "فشل تحديث سبوتيفاي الحساب المصرفي",
+        "failedToUpdateBankAccountAppleMusic": "فشل تحديث آبل ميوزك الحساب المصرفي",
+        "failedToUpdateBankAccountSoundcloud": "فشل تحديث ساوند كلاود الحساب المصرفي",
+        "failedToUpdateBankAccountBandcamp": "فشل تحديث باند كامب الحساب المصرفي",
+        "failedToUpdateBankAccountYandex": "فشل تحديث ياندكس الحساب المصرفي",
+        "failedToUpdateBankAccountVk": "فشل تحديث VK الحساب المصرفي",
+        "failedToUpdateBankAccountOdnoklassniki": "فشل تحديث حساب البنك في Odnoklassniki",
+        "failedToUpdateBankAccountOk": "فشل تحديث حساب البنك في Ok",
+        "active": "نشط",
+        "deleted": "محذوف",
+        "restore": "استعادة",
+        "deleteRepresentativeConfirm": "هل أنت متأكد من أنك تريد حذف هذا الممثل؟",
+        "representativeDeleteSuccess": "تم حذف الممثل بنجاح",
+        "representativeDeleteError": "فشل حذف الممثل",
+        "representativeAddSuccess": "تمت إضافة الممثل بنجاح",
+        "representativeAddError": "فشل إضافة الممثل",
+        "alreadyRepresentative": "هذا المستخدم هو بالفعل ممثل للعلامة التجارية {0}",
+        "digital_seal_already_exists": "يوجد ختم رقمي بالفعل لهذه العلامة التجارية",
+        "add_digital_seal": "إضافة ختم رقمي جديد",
+        "exclusive_offer_already_exists": "يوجد عرض حصري بالفعل لهذه العلامة التجارية",
+        "add_exclusive_offer": "إضافة عرض حصري جديد",
+        "customOffers": "عروض مخصصة",
+        "category": "الفئة",
+        "custom_offer_table_add_new_custom_offer": "إضافة عرض علامة تجارية جديد",
+        "pointbackratio": "نسبة استرجاع النقاط",
+        "digital_seal_table_point_back": "استرجاع النقاط",
+        "digital_seal_table_purchase_count": "عدد المشتريات",
+        "digital_seal_table_valid_from": "صالح من",
+        "digital_seal_table_valid_to": "صالح إلى",
+        "digital_seal_table_actions": "الإجراءات",
+        "digital_seal_table_user": "المستخدم",
+        "digital_seal_table_brand": "العلامة التجارية",
+        "digital_seal_table_id": "المعرّف",
+        "digital_seal_table_title": "العنوان",
+        "digital_seal_table_description": "الوصف",
+        "add_special_offer": "إضافة عرض خاص",
+        "selectType": "اختر النوع",
+        "addBrand": "إضافة علامة تجارية",
+        "addOffer": "إضافة عرض",
+        "brandNotFound": "لم يتم العثور على العلامة التجارية",
+        "brandNotFoundDesc": "وصف العلامة التجارية غير موجود",
+        "brandOffersChanged": "تم تغيير عروض العلامة التجارية",
+        "categoryId": "معرّف الفئة",
+        "categoryName": "اسم الفئة",
+        "clear_filter": "مسح الفلتر",
+        "deleteFailed": "فشل الحذف",
+        "deleting": "جارٍ الحذف",
+        "edit": "تعديل",
+        "editOffer": "تعديل عرض",
+        "goBack": "الرجوع",
+        "ids": "المعرّفات",
+        "noPhone": "لا يوجد رقم هاتف",
+        "restoreFailed": "فشل الاستعادة",
+        "saving": "جارٍ الحفظ",
+        "successEdit": "تم التعديل بنجاح",
+        "successRestore": "تمت الاستعادة بنجاح",
+        "update": "تحديث",
+        "updateBrand": "تحديث العلامة التجارية",
+        "GreaterThanZero": "أكبر من صفر",
+        "MustBeGreaterThanPreviousTier": "يجب أن يكون أكبر من المستوى السابق",
+        "Coupons": {
+          "addCoupon": "إضافة كوبون",
+          "auto": "تلقائي",
+          "cancel": "إلغاء",
+          "delete": "حذف",
+          "deleteSuccess": "تم الحذف بنجاح",
+          "delete_error": "خطأ في الحذف",
+          "description": "الوصف",
+          "discount": "الخصم",
+          "editCoupon": "تعديل كوبون",
+          "end": "النهاية",
+          "name": "الاسم",
+          "start": "البداية",
+          "success": "نجاح",
+          "successUpdate": "تم التحديث بنجاح",
+          "popup": {
+            "lable": "تسمية النافذة",
+            "message": "رسالة النافذة"
+          }
+        },
+              "Tablecomponent":{
             "digital_seal_table_point_back":"نسبة الاسترجاع",
             "digital_seal_table_purchase_count":"عدد الشراء",
             "digital_seal_table_valid_from":"صالح من",
@@ -76,7 +281,9 @@
             "special_offers_table_valid_to":"صالح حتى",
             "special_offers_table_point_back":"نسبة الاسترجاع",
             "selectType":"اختر النوع",
-            "add_special_offer":"إضافة عرض خاص"
+            "add_special_offer":"إضافة عرض خاص",
+          "exclusive_offer_table_valid_from":"صالح من",
+          "exclusive_offer_table_valid_to":"صالح حتى"     
         }
     },
     "nav": {
@@ -133,13 +340,30 @@
         "custom_offer_table_edit_custom_offer":"تعديل العرض المخصص",
         "custom_offer_table_add_new_custom_offer":"إضافة عرض مخصص جديد",
         "validTo_error":"يجب أن يكون التاريخ النهائي أكبر من التاريخ البداية",
+
+
+        "payment":"المدفوعات",
+
+    
+        
         "url": "رابط"
 
         
         
         
     },
-    
+    "orders": {
+        "action": "الإجراء",
+        "address": "العنوان",
+        "createdAt": "تاريخ الإنشاء",
+        "id": "المعرف",
+        "name": "الاسم",
+        "notfoundUser": "لم يتم العثور على المستخدم",
+        "phone": "الهاتف",
+        "status": "الحالة",
+        "totalPrice": "السعر الإجمالي"
+      
+      },
     "CustomOffers": {
         "custom_offer_table_edit_custom_offer": "تعديل العرض المخصص",
         "custom_offer_table_add_new_custom_offer": "إضافة عرض مخصص جديد",
@@ -163,7 +387,11 @@
         "custom_offer_table_user": "المستخدم",
         "custom_offer_table_id": "المعرف",
         "custom_offer_table_title": "العنوان",
-        "custom_offer_table_description": "الوصف"
+        "custom_offer_table_description": "الوصف",
+        "custom_offer_table_delete":"حذف",
+    
+    
+        "custom_offer_table_deleting":"يحذف"
       }
     ,
 
@@ -172,7 +400,8 @@
         "admin": "مسؤول",
         "ar": "عربي",
         "en": "إنجليزي",
-        "logout": "تسجيل الخروج"
+        "logout": "تسجيل الخروج",
+        "supplier": "مورد"
     },
     "contact": {
         "title": "الرسائل",
@@ -438,6 +667,12 @@
         "petDetails": "تفاصيل الحيوان الأليف",
         "pets": "الحيوانات الأليفة",
         "addPet": "إضافة حيوان أليف",
+
+        "discount" :"الخصم",
+
+        "isOffer" :"هل هو عرض",
+
+        "success" :"تمت العملية بنجاح",
         "error": {
             "name": "يرجى إدخال اسم المنتج!",
             "price": "يرجى إدخال السعر!",
@@ -497,7 +732,7 @@
         "submitError": "فشل في حفظ شاشة الترحيب",
         "titlePlaceholder": "أدخل عنوان شاشة الترحيب",
         "contentPlaceholder": "أدخل محتوى شاشة الترحيب",
-        "addButton": "إضافة شاشة ترحيب",
+        "addButton": "إضافة شاشة ترحيب", 
         "updateButton": "تحديث شاشة الترحيب"
     },
     "ads": {
@@ -563,6 +798,8 @@
         "analytics": "التحليلات",
         "adPlacement": "موضع الإعلان",
         "adPlacementRequired": "موضع الإعلان مطلوب",
+
+        
         "success": "تمت إضافة الإعلان بنجاح!",
         "successUpdate": "تم تحديث الإعلان بنجاح!"
     },
@@ -651,10 +888,7 @@
         "brand_representatives_table_userId": "المستخدم",
         "brand.representativeDeleteSuccess": "تم حذف الممثل بنجاح",
         "deleteRepresentative": "Delete Representative",
-        
-        "brand.representativeDeleteError": "فشل حذف الممثل",
-        "brand.representativeAddSuccess": "تم إضافة الممثل بنجاح",
-        "brand.representativeAddError": "فشل إضافة الممثل",
+
         "editRepresentative": "تعديل المستخدم",
         "addRepresentative": "إضافة مستخدم",
         "cancel_delete_brand": "إلغاء",
@@ -713,15 +947,35 @@
         "Description":"الوصف",
         "coupons":"كوبونات",
         "add":"إضافة ",
-        
-
-
+        "saving":"حفظ",
+        "1":"1",
+        "current":"حالي",
+        "delete":"حذف",
+        "deleting":"حذف",
+        "edit":"تعديل",
+        "Failed to export data":"فشل تصدير البيانات",
+        "NotoNaskhArabic-Regular":"NotoNaskhArabic-Regular",
+        "normal":"عادي",
+        "T":"T",
+        "a":"a",
+        "update_validity_dates":"تحديث التاريخ الصالح",
         "status": "الحالة",
+        "deleteRepresentativeConfirm": "هل أنت متأكد أنك تريد حذف هذا الممثل؟",
+        "representativeDeleteSuccess": "تم حذف الممثل بنجاح",
+        "representativeDeleteError": "فشل حذف الممثل",
+        "representativeAddSuccess": "تم إضافة الممثل بنجاح",
+        "deleteRepresentativeMessage": "هل أنت متأكد أنك تريد حذف هذا الممثل؟",
+        "representativeUpdateError": "فشل تحديث الممثل",
+        "representativeUpdateSuccess": "تم تحديث الممثل بنجاح",
+        "representativeAddError": "فشل إضافة الممثل",
         "brand":{
             "deleteRepresentativeConfirm": "هل أنت متأكد أنك تريد حذف هذا الممثل؟",
             "representativeDeleteSuccess": "تم حذف الممثل بنجاح",
             "representativeDeleteError": "فشل حذف الممثل",
             "representativeAddSuccess": "تم إضافة الممثل بنجاح",
+            "deleteRepresentativeMessage": "هل أنت متأكد أنك تريد حذف هذا الممثل؟",
+            "representativeUpdateError": "فشل تحديث الممثل",
+            "representativeUpdateSuccess": "تم تحديث الممثل بنجاح",
             "representativeAddError": "فشل إضافة الممثل"
         },
         "user":{
@@ -734,11 +988,9 @@
             "actions": "الإجراءات",
             "delete": "حذف",
             "edit": "تعديل",
+            "noRepresentativesFound":"لا يوجد ممثلين",
             "add": "إضافة"
         }
-
-
-        
     },
     "icons": {
         "brand": "العلامة التجارية",
@@ -761,6 +1013,16 @@
     "restoredeletedbrand": "استرجاع العلامة التجارية المحذوفة",
     "Settings": "الاعدادات",
     "global": "تغير اللغة للأنجليزية",
+
+    "eyeicon2": "عرض",
+    "Pluse2": "اضافة",
+
+    "Bell":"جرس",
+    "BellMuteIcon":"جرس غير مضغوط",
+    "BellRingIcon":"جرس مضغوط",
+
+
+
     "payment": "المدفوعات"
   },
 
@@ -776,60 +1038,104 @@
         "pdfformat": "صيغة PDF",
         "csvformat": "صيغة CSV"
     },
-    "Coupons": {
-        "add": "إضافة",
-        "title": "الكوبونات",
-        "btn": "إضافة كوبون",
-        "lable": "إضافة كوبون",
-        "name": "الرمز",
-        "start": "تاريخ البدء",
-        "end": "تاريخ الانتهاء",
-        "discount": "الخصم",
-        "auto": "إنشاء تلقائي",
-        "success": "تمت إضافة كوبون جديد بنجاح!",
-        "deleteSuccess": "تم حذف الكوبون بنجاح!",
-        "cancel": "إلغاء",
-        "delete": "حذف",
-        "description": "الوصف",
-        "deleteMessage": "هل تريد حذف هذا الكوبون؟",
-        "fetchError": "فشل في جلب الكوبونات",
-        "Brand": "العلامة التجارية",
-        "Code": "الكود",
-        "Ratio": "النسبة",
-        "ValidFrom": "صالح من",
-        "ValidTo": "صالح حتى",
-        "Description": "الوصف",
-        "tableView": "عرض الجدول",
-        "cardView": "عرض البطاقات",
-        "noCoupons": "لا توجد كوبونات",
+
+        "Coupons": {
+          "title": "كوبونات",
+          "addCoupon": "إضافة كوبون",
+          "btn": "إضافة كوبون",
+          "lable": "إضافة كوبون",
+          "name": "الرمز",
+          "start": "تاريخ البدء",
+          "end": "تاريخ الانتهاء",
+          "discount": "النسبة المئوية",
+          "auto": "إنشاء تلقائي",
+          "deleteCoupon": "حذف كوبون",
+          "cancel_button_coupon": "إلغاء",
+          "deleteConfirm_coupon": "هل أنت متأكد من أنك تريد حذف هذا الكوبون؟",
+          "successDelete_coupon": "تم حذف الكوبون بنجاح!!",
+          "deleteFailed_coupon": "فشل حذف الكوبون!!",
+          "allCoupons": "جميع الكوبونات",
+          "editCoupon": "تعديل كوبون",
+          "selectBrand": "اختر العلامة التجارية",
+          "selectBrandPlaceholder": "اختر العلامة التجارية",
+          "selectBrandError": "الرجاء تحديد علامة تجارية",
+          "code": "الرجاء إدخال رمز الكوبون (4 أحرف)",
+          "codePlaceholder": "أدخل رمز الكوبون",
+          "autoGenerate": "إنشاء تلقائي",
+          "ratio": "النسبة",
+          "ratioPlaceholder": "أدخل نسبة الكوبون",
+          "description": "وصف الكوبون",
+          "descriptionPlaceholder": "سيمنحك هذا الكوبون خصمًا بنسبة 20٪",
+          "validFrom": "صالح من",
+          "validFromPlaceholder": "أدخل تاريخ البدء",
+          "validTo": "صالح إلى",
+          "validToPlaceholder": "أدخل تاريخ الانتهاء",
+          "cancel": "إلغاء",
+          "update": "تعديل كوبون",
+          "add": "إضافة كوبون",
+          "fetchError": "فشل جلب الكوبونات",
+          "Brand": "العلامة التجارية",
+          "Code": "الرمز",
+          "Ratio": "النسبة",
+          "ValidFrom": "صالح من",
+          "ValidTo": "صالح إلى",
+          "Description": "الوصف",
+          "tableView": "عرض الجدول",
+          "cardView": "عرض البطاقة",
+          "noCoupons": "لم يتم العثور على كوبونات",
+          "addSuccess": "تمت إضافة الكوبون بنجاح",
+          "adding": "جارٍ الإضافة...",
+          "allBrands": "جميع العلامات التجارية",
+          "button": "زر",
+          "confirmDelete": "تأكيد الحذف",
+          "delete": "حذف",
+          "deleteConfirm": "هل أنت متأكد من أنك تريد حذف هذا الكوبون؟",
+          "deleteSuccess": "تم حذف الكوبون بنجاح",
+          "deleting": "جارٍ الحذف...",
+          "edit": "تعديل",
+          "editSuccess": "تم تحديث الكوبون بنجاح",
+          "filterByBrand": "تصفية حسب العلامة التجارية",
+          "limit": "الحد",
+          "page": "الصفحة",
+
+          "filterByCode": "تصفية بالكود",
+          "deleteCouponMessage": "هل أنت متأكد أنك تريد حذف هذا الكوبون؟",
+          "deleteCouponSuccess": "تم حذف الكوبون بنجاح",
+          "deleteCouponError": "فشل حذف الكوبون",
+          "successDelete": "تم الحذف بنجاح",
+          "search": "البحث عن الكوبونات...",
+          "noCouponsFound": "لم يتم العثور على كوبونات",
+  
+        
+          "table": {
+              "add": "إضافة",
+              "name": "الرمز",
+              "image": "الصورة",
+              "action": "الإجراء",
+              "start": "تاريخ البدء",
+              "end": "تاريخ الانتهاء",
+              "discount": "الخصم"
+          },
+          "popup": {
+              "lable": "حذف الكوبون",
+              "message": "هل تريد حذف هذا الكوبون؟"
+          },
+
+          "error": {
+            "code": "الرجاء إدخال رمز الكوبون",
+            "ratio": "الرجاء إدخال النسبة المئوية",
+            "description": "الرجاء إدخال وصف الكوبون",
+            "validFrom": "الرجاء إدخال تاريخ البدء",
+            "fetchBrands": "فشل جلب العلامات التجارية",
+            "editFailed": "فشل تحديث الكوبون",
+            "deleteFailed": "فشل حذف الكوبون",
+            "addFailed": "فشل إضافة الكوبون",
+            "validTo": "الرجاء إدخال تاريخ الانتهاء"
+          }
+        },
       
-        "popup": {
-            "lable": "حذف الكوبون",
-            "message": "هل تريد حذف هذا الكوبون؟"
-        },
-        "error": {
-            "image": "يرجى إدخال صورة",
-            "name": "يرجى إدخال رمز الكوبون",
-            "start": "يرجى إدخال تاريخ البدء",
-            "end": "يرجى إدخال تاريخ الانتهاء",
-            "discount": "يرجى إدخال قيمة الخصم",
-            "notvaild": "يجب أن يكون تاريخ البدء قبل تاريخ الانتهاء"
-        },
-        "table": {
-            "add": "إضافة",
-            "name": "الرمز",
-            "image": "الصورة",
-            "action": "الإجراء",
-            "start": "تاريخ البدء",
-            "end": "تاريخ الانتهاء",
-            "discount": "الخصم"
-        },
-        "successDelete": "تم الحذف بنجاح",
-        "search": "البحث عن الكوبونات...",
-        "noCouponsFound": "لم يتم العثور على كوبونات",
-        "editCoupon": "تعديل الكوبون",
-        "addCoupon": "إضافة كوبون جديد"
-    },
+
+    
     "appInfo": {
         "englishContent": "المحتوى باللغة الإنجليزية",
         "arabicContent": "المحتوى باللغة العربية",
@@ -855,6 +1161,17 @@
         "contactInformation": "معلومات التواصل",
         "phoneNumber": "رقم الهاتف",
         "email": "البريد الإلكتروني",
+
+
+        "loading":"جاري تحميل البيانات...",
+
+        "phone":"رقم الهاتف",
+
+
+        "saveAllChanges":"حفظ الكل",
+        "saveChanges":"حفظ",
+        "socialMediaAccounts":"الحسابات المختلفة",
+
         "enterUrl": "أدخل رابط المنصة",
         "phoneError": {
             "startPlus": "رقم الهاتف يجب أن يبدأ بـ +",
@@ -894,7 +1211,9 @@
         "GreaterThanZero": "يجب أن تكون القيمة أكبر من 0.",
         "invalidDate": "تنسيق التاريخ غير صالح.",
         "edit": "تعديل",
-        "add": "إضافة"
+        "add": "إضافة",
+        "ValidToAfterValidFrom": "يجب أن يكون تاريخ الانتهاء أكبر من تاريخ البدء."
+
     },
     "userTypes": {
         "title": "أنواع المستخدمين",
@@ -930,6 +1249,7 @@
         "notActive": "غير نشط",
         "giftCardsDetails": "تفاصيل بطاقة الهدية",
         "resend": "إعادة إرسال",
+        
         "giftResendSuccessfully": "تم إعادة إرسال بطاقة الهدية بنجاح",
         "errorResendGift": "حدث خطأ أثناء إعادة إرسال بطاقة الهدية"
     },
@@ -992,15 +1312,17 @@
           "add": "إضافة",
           "deletefail": "تم استخدام التصنيف في نوع مستخدم",
           "deletefailclassification": "تم استخدام التصنيف في نوع مستخدم",
+          "saving":"حفظ",
+          "token":"token=",
           "error": {
             "failedtodeleteclassification": "فشل في حذف التصنيف",
             "email": "يرجى إدخال البريد الإلكتروني",
             "password": "يرجى إدخال كلمة المرور",
-            "denied": "تم رفض الوصول. أنت لست مسؤولاً."
-          }}
-        
+            "denied": "تم رفض الوصول. أنت لست مسؤولاً.",
+            "failedToAddClassification": "فشل إضافة التصنيف",
+            "failedToFetchSettings": "فشل جلب الإعدادات",
+            "failedToUpdateSettings": "فشل تحديث الإعدادات"
       
-      
-
-
+          
+            }}
 }
