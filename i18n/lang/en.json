@@ -274,6 +274,18 @@
     "successRestore":"Success Restore",
     "update":"Update",
     "updateBrand":"Update Brand",
+    "exclusive_offer_table_point_back":"Point Back",
+
+    "brand_offerAddError" :"Failed to add offer",
+    "brand_offerAddSuccess" :"Offer added successfully",
+    "brand_offerDeleteError" :"Failed to delete offer",
+    "brand_offerDeleteSuccess" :"Offer deleted successfully",
+    "brand_offerSaving" :"Saving...",
+    "brand_offerUpdateSuccess" :"Offer updated successfully",
+
+    "AddOfferTitle": "Add New Offer",
+    "EditOfferTitle": "Edit Offer",
+
     "Enter vaild user type name":"Enter vaild user type name",
     "GreaterThanZero":"Greater Than Zero",
     "MustBeGreaterThanPreviousTier":"Must Be Greater Than Previous Tier",
@@ -579,20 +591,20 @@
     "brand_representatives_table_user_id": "User ID",
 
     "brand_representatives_table_userId": "User ID",
-    "brand.representativeDeleteSuccess": "Representative deleted successfully",
     "editRepresentative": "Edit Representative",
     "deleteRepresentative": "Delete Representative",
     "update": "Update Representative",
     "cancel_delete_brand": "Cancel ",
+
+    "brand_representatives_table_user_class": "User ",
+    "brand_representatives_table_user": "User",
+
     
-    "brand.representativeDeleteError": "Failed to delete representative",
-    "brand.representativeAddSuccess": "Representative added successfully",
-    "brand.representativeAddError": "Failed to add representative",
+    "digital_seal_table_purchase_count": "Purchase Count",
     "brand_offers": {
       "name": "Brand Offers",
       "add": "Add Brand Offer"
     },
-    "digital_seal_table_purchase_count": "Purchase Count",
     "contacts_name": "Name",
     "contacts_email": "Email",
     "contacts_message": "Message",

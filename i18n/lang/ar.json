@@ -42,6 +42,7 @@
         "name": "الاسم",
         "image": "الصورة",
         "action": "الإجراء",
+        "delete": "حذف",
         "brandaddButton": "إضافة ماركة",
         "brandeditButton": "تعديل ماركة",
         "branddeleteButton": "حذف ماركة",
@@ -242,8 +243,23 @@
         "successEdit": "تم التعديل بنجاح",
         "successRestore": "تمت الاستعادة بنجاح",
         "update": "تحديث",
+        "brand_deleteLoading": "جارٍ الحذف",
         "updateBrand": "تحديث العلامة التجارية",
+        "exclusive_offer_table_point_back":"نسبة الاسترجاع",
+
+        "AddOfferTitle": "إضافة عرض جديد",
+        "EditOfferTitle": "تعديل العرض",
         "GreaterThanZero": "أكبر من صفر",
+
+
+        "brand_offerAddError" :"فشل إضافة العرض",
+        "brand_offerAddSuccess" :"تم إضافة العرض بنجاح",
+        "brand_offerDeleteError" :"فشل حذف العرض",
+        "brand_offerDeleteSuccess" :"تم حذف العرض بنجاح",
+        "brand_offerSaving" :"جارٍ الحفظ",
+        "brand_offerUpdateSuccess" :"تم تحديث العرض بنجاح",
+
+
         "MustBeGreaterThanPreviousTier": "يجب أن يكون أكبر من المستوى السابق",
         "Coupons": {
           "addCoupon": "إضافة كوبون",
@@ -266,6 +282,8 @@
           }
         },
               "Tablecomponent":{
+
+
             "digital_seal_table_point_back":"نسبة الاسترجاع",
             "digital_seal_table_purchase_count":"عدد الشراء",
             "digital_seal_table_valid_from":"صالح من",
@@ -886,9 +904,13 @@
         "brand_representatives_table_brand_id": "العلامة التجارية",
         "brand_representatives_table_user_id": "المستخدم",
         "brand_representatives_table_userId": "المستخدم",
-        "brand.representativeDeleteSuccess": "تم حذف الممثل بنجاح",
-        "deleteRepresentative": "Delete Representative",
+        "brand_representativeDeleteSuccess": "تم حذف الممثل بنجاح",
+        "deleteRepresentative": "حذف الممثل",
 
+        "brand_representatives_table_user_class": "الفئة المستخدم",
+        "brand_representatives_table_user": "المستخدم",
+
+        
         "editRepresentative": "تعديل المستخدم",
         "addRepresentative": "إضافة مستخدم",
         "cancel_delete_brand": "إلغاء",
@@ -960,6 +982,7 @@
         "a":"a",
         "update_validity_dates":"تحديث التاريخ الصالح",
         "status": "الحالة",
+        "digital_seal_table_purchase_count": "عداد المشتريات",
         "deleteRepresentativeConfirm": "هل أنت متأكد أنك تريد حذف هذا الممثل؟",
         "representativeDeleteSuccess": "تم حذف الممثل بنجاح",
         "representativeDeleteError": "فشل حذف الممثل",
@@ -1105,7 +1128,7 @@
           "successDelete": "تم الحذف بنجاح",
           "search": "البحث عن الكوبونات...",
           "noCouponsFound": "لم يتم العثور على كوبونات",
-  
+          "digital_seal_table_purchase_count": "عدد المشتريات",
         
           "table": {
               "add": "إضافة",
