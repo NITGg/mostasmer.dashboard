@@ -65,22 +65,16 @@ const Badges = ({
     if (!deleteBadgeId) return;
     try {
       setPending(true);
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user-types/${deleteBadgeId.userType?.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges/${deleteBadgeId.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`/api/user-types/${deleteBadgeId.userType?.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      await axios.delete(`/api/badges/${deleteBadgeId.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       dispatch(deleteBadge(deleteBadgeId.id));
       setOpenDelete(false);

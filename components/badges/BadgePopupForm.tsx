@@ -59,6 +59,7 @@ const BadgePopupForm = ({
         cover: "",
         logo: "",
         color: "",
+        points: "",
         minAmount: "",
         maxAmount: "",
         validFrom: "",
@@ -91,6 +92,7 @@ const BadgePopupForm = ({
       if (formData.coverFile?.[0]) badgeData.cover = formData.coverFile[0];
 
       if (formData.logoFile?.[0]) badgeData.logo = formData.logoFile[0];
+      console.log(badgeData);
 
       const { data } = await axios.post(`/api/badges`, badgeData, {
         headers: {
@@ -243,21 +245,19 @@ const BadgePopupForm = ({
                   </label>
                 </div>
               ) : (
-                <>
-                  <label
-                    htmlFor="coverFile"
-                    className={clsx(
-                      "border-2 w-full border-[#DADADA] h-20 rounded-xl relative bg-transparent shadow-[0px_0px_5px_-1px_#00000040] outline-none",
-                      "hover:border-primary focus:border-primary",
-                      "transition-colors duration-200 ease-in-out",
-                      "flex justify-center"
-                    )}
-                  >
-                    <div className="absolute w-[80%] h-full justify-items-center content-center bg-[#F5F5F5]">
-                      <PhotoIcon className="size-10" />
-                    </div>
-                  </label>
-                </>
+                <label
+                  htmlFor="coverFile"
+                  className={clsx(
+                    "border-2 w-full border-[#DADADA] h-20 rounded-xl relative bg-transparent shadow-[0px_0px_5px_-1px_#00000040] outline-none",
+                    "hover:border-primary focus:border-primary",
+                    "transition-colors duration-200 ease-in-out",
+                    "flex justify-center"
+                  )}
+                >
+                  <div className="absolute w-[80%] h-full justify-items-center content-center bg-[#F5F5F5]">
+                    <PhotoIcon className="size-10" />
+                  </div>
+                </label>
               )}
               <div className="col-span-full">
                 <ErrorMsg message={errors?.coverFile?.message as string} />
@@ -300,20 +300,18 @@ const BadgePopupForm = ({
                   </label>
                 </div>
               ) : (
-                <>
-                  <label
-                    htmlFor="logoFile"
-                    className={clsx(
-                      "border-2 border-[#DADADA] p-5 rounded-xl relative bg-transparent shadow-[0px_0px_5px_-1px_#00000040] outline-none",
-                      "hover:border-primary focus:border-primary",
-                      "transition-colors duration-200 ease-in-out"
-                    )}
-                  >
-                    <span className="absolute top-1/2 -translate-y-1/2 right-2 z-10 rounded-full p-1 bg-primary">
-                      <MoveUp className="size-5 text-white" />
-                    </span>
-                  </label>
-                </>
+                <label
+                  htmlFor="logoFile"
+                  className={clsx(
+                    "border-2 border-[#DADADA] p-5 rounded-xl relative bg-transparent shadow-[0px_0px_5px_-1px_#00000040] outline-none",
+                    "hover:border-primary focus:border-primary",
+                    "transition-colors duration-200 ease-in-out"
+                  )}
+                >
+                  <span className="absolute top-1/2 -translate-y-1/2 right-2 z-10 rounded-full p-1 bg-primary">
+                    <MoveUp className="size-5 text-white" />
+                  </span>
+                </label>
               )}
               <div className="col-span-full">
                 <ErrorMsg message={errors?.logoFile?.message as string} />
@@ -342,8 +340,8 @@ const BadgePopupForm = ({
                 roles={{
                   value: badge?.color,
                   required: t("colorIsRequired"),
-                  minLength: { value: 3, message: t("colorMinLength") },
                 }}
+                type="color"
               />
               <UserInput
                 defaultValue={badge?.points}
@@ -355,7 +353,8 @@ const BadgePopupForm = ({
                 roles={{
                   value: badge?.points,
                   required: t("pointsIsRequired"),
-                  validate: (value) => value > 0 || t("GreaterThanZero"),
+                  validate: (value) =>
+                    Number(value) > 0 || t("GreaterThanZero"),
                 }}
                 type="number"
                 min={0}
@@ -370,7 +369,8 @@ const BadgePopupForm = ({
                 roles={{
                   value: badge?.minAmount,
                   required: t("minAmountIsRequired"),
-                  validate: (value) => value >= 0 || t("GreaterThanZero"),
+                  validate: (value) =>
+                    Number(value) >= 0 || t("GreaterThanZero"),
                 }}
                 type="number"
                 min={0}
@@ -386,7 +386,8 @@ const BadgePopupForm = ({
                   value: badge?.maxAmount,
                   required: t("maxAmountIsRequired"),
                   validate: (value) =>
-                    value > minAmount || t("MaxAmountGreaterThanMin"),
+                    Number(value) > Number(minAmount) ||
+                    t("MaxAmountGreaterThanMin"),
                 }}
                 type="number"
                 min={1}
