@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 import { useAppDispatch } from "@/hooks/redux";
 import { addBadge, Badge } from "@/redux/reducers/badgesReducer";
 import UserInput from "../users/UserInput";
-import CustomDatePicker from "../CustomDatePicker";
 import {
   Dialog,
   DialogContent,
@@ -44,14 +43,12 @@ const BadgePopupForm = ({
     handleSubmit,
     formState: { errors },
     reset,
-    control,
-    setValue,
+
     setError,
     watch,
   } = useForm();
   const dispatch = useAppDispatch();
   const minAmount = watch("minAmount");
-  const validFrom = watch("validFrom");
   useEffect(() => {
     reset(
       badge || {
@@ -62,8 +59,6 @@ const BadgePopupForm = ({
         points: "",
         minAmount: "",
         maxAmount: "",
-        validFrom: "",
-        validTo: "",
       }
     );
   }, [badge, reset]);
@@ -81,18 +76,10 @@ const BadgePopupForm = ({
       const badgeData = { ...formData };
       delete badgeData.coverFile;
       delete badgeData.logoFile;
-      delete badgeData.validFrom;
-      delete badgeData.validTo;
-
-      if (formData.validFrom)
-        badgeData.validFrom = formData.validFrom.toISOString();
-
-      if (formData.validTo) badgeData.validTo = formData.validTo.toISOString();
 
       if (formData.coverFile?.[0]) badgeData.cover = formData.coverFile[0];
 
       if (formData.logoFile?.[0]) badgeData.logo = formData.logoFile[0];
-      console.log(badgeData);
 
       const { data } = await axios.post(`/api/badges`, badgeData, {
         headers: {
@@ -127,29 +114,17 @@ const BadgePopupForm = ({
       const badgeData = { ...formData };
       delete badgeData.coverFile;
       delete badgeData.logoFile;
-      delete badgeData.validFrom;
-      delete badgeData.validTo;
-
-      if (formData.validFrom && formData.validFrom instanceof Date)
-        badgeData.validFrom = formData.validFrom.toISOString();
-
-      if (formData.validTo && formData.validTo instanceof Date)
-        badgeData.validTo = formData.validTo.toISOString();
 
       if (formData.coverFile?.[0]) badgeData.cover = formData.coverFile[0];
 
       if (formData.logoFile?.[0]) badgeData.logo = formData.logoFile[0];
 
-      const { data } = await axios.put(
-        `/api/badges/${badge.id}`,
-        badgeData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const { data } = await axios.put(`/api/badges/${badge.id}`, badgeData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       await axios.put(
         `/api/user-types/${badge.userType?.id}`,
@@ -368,11 +343,11 @@ const BadgePopupForm = ({
                 register={register}
                 errors={errors}
                 fieldForm="minAmount"
-                label={t("badgeMinAmount")}
+                label={t("badgeMinPurchase")}
                 className="w-24 justify-self-end"
                 roles={{
                   value: badge?.minAmount,
-                  required: t("minAmountIsRequired"),
+                  required: t("minPurchaseIsRequired"),
                   validate: (value) =>
                     Number(value) >= 0 || t("GreaterThanZero"),
                 }}
@@ -384,50 +359,17 @@ const BadgePopupForm = ({
                 register={register}
                 errors={errors}
                 fieldForm="maxAmount"
-                label={t("badgeMaxAmount")}
+                label={t("badgeMaxPurchase")}
                 className="w-24 justify-self-end"
                 roles={{
                   value: badge?.maxAmount,
-                  required: t("maxAmountIsRequired"),
+                  required: t("maxPurchaseIsRequired"),
                   validate: (value) =>
                     Number(value) > Number(minAmount) ||
-                    t("MaxAmountGreaterThanMin"),
+                    t("MaxPurchaseGreaterThanMin"),
                 }}
                 type="number"
                 min={1}
-              />
-
-              <CustomDatePicker
-                defaultValue={
-                  badge?.validFrom ? new Date(badge?.validFrom) : null
-                }
-                label={t("validFrom")}
-                fieldForm="validFrom"
-                control={control}
-                errors={errors}
-                setValue={setValue}
-                rules={{
-                  required: false,
-                  valueAsDate: true,
-                }}
-                className="w-32 justify-self-end"
-              />
-              <CustomDatePicker
-                defaultValue={badge?.validTo ? new Date(badge?.validTo) : null}
-                label={t("validTo")}
-                fieldForm="validTo"
-                control={control}
-                errors={errors}
-                setValue={setValue}
-                rules={{
-                  required: false,
-                  valueAsDate: true,
-                  validate: (value) =>
-                    !validFrom ||
-                    new Date(value) > new Date(validFrom) ||
-                    t("ValidToAfterValidFrom"),
-                }}
-                className="w-32 justify-self-end"
               />
             </div>
 

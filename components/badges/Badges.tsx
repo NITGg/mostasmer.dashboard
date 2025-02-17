@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Table from "@/components/ui/Table";
-import { DateToText } from "@/lib/DateToText";
 import { DeleteIcon, LoadingIcon, EditIcon } from "../icons";
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -40,8 +39,6 @@ const Badges = ({
     { name: "name" },
     { name: "pointsBack" },
     { name: "users" },
-    { name: "validFrom" },
-    { name: "validTo" },
     { name: "action", className: "text-center" },
   ];
 
@@ -179,12 +176,6 @@ const Badges = ({
               <td className="px-6 py-4 whitespace-nowrap">{badge.name}</td>
               <td className="px-6 py-4 whitespace-nowrap">{badge.points}%</td>
               <td className="px-6 py-4 whitespace-nowrap">{badge?.users}</td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {badge?.validFrom ? DateToText(badge?.validFrom) : "--"}
-              </td>
-              <td className="px-6 py-4">
-                {badge?.validTo ? DateToText(badge.validTo) : "--"}
-              </td>
               <td className="px-6 py-4 text-right">
                 <div className="flex justify-end gap-6">
                   <button
