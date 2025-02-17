@@ -140,12 +140,16 @@ const BadgePopupForm = ({
 
       if (formData.logoFile?.[0]) badgeData.logo = formData.logoFile[0];
 
-      const { data } = await axios.put(`/api/badges/${badge.id}`, badgeData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const { data } = await axios.put(
+        `/api/badges/${badge.id}`,
+        badgeData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       await axios.put(
         `/api/user-types/${badge.userType?.id}`,
@@ -336,7 +340,7 @@ const BadgePopupForm = ({
                 errors={errors}
                 fieldForm="color"
                 label={t("badgeColor")}
-                className="w-24 justify-self-end"
+                className="w-16 h-10 border rounded-lg cursor-pointer shadow-md"
                 roles={{
                   value: badge?.color,
                   required: t("colorIsRequired"),
