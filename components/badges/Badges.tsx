@@ -19,6 +19,7 @@ import {
 } from "../ui/dialog";
 import ImageApi from "../ImageApi";
 import Image from "next/image";
+import BadgesSwiper from "./BadgesSwiper";
 
 const Badges = ({
   loading,
@@ -92,49 +93,18 @@ const Badges = ({
     <>
       <div className="flex gap-10 items-center w-full p-4">
         <div className="w-[80%] h-44 flex gap-4">
-          {(badgesRedux?.length ? badgesRedux : badges)
-            ?.slice(0, 3)
-            .map((badge: Badge) => (
-              <div
-                key={badge.id}
-                className="bg-[#F0F2F5] relative hover:-translate-y-2 transition-all  shadow-[0px_4px_10px_-4px_#00000040] w-48 h-44 rounded-2xl flex flex-col"
-              >
-                <div className="h-2/3 w-full p-2 relative rounded-t-2xl overflow-hidden flex flex-col justify-end text-white">
-                  <Image
-                    src={badge.cover}
-                    alt={badge.name}
-                    quality={100}
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                  <h1 className="capitalize text-xl font-bold z-10">
-                    {badge.name}
-                  </h1>
-                  <h3 className="capitalize text-lg font-bold z-10">
-                    total purchase
-                  </h3>
-                  <p className="text-lg z-10">{badge.minAmount} SR</p>
-                </div>
-                <div className="h-1/3 px-2 flex justify-between items-center">
-                  <span className="capitalize text-lg font-bold">points</span>
-                  <span className="text-lg font-bold">{badge.points}%</span>
-                </div>
-                <button
-                  className="absolute rounded-2xl inset-0 z-10"
-                  type="button"
-                  onClick={() => {
-                    setUpdateBadge(badge);
-                    setOpenForm(true);
-                  }}
-                />
-              </div>
-            ))}
+          {
+            <BadgesSwiper
+              badges={badgesRedux ?? badges}
+              setOpenForm={setOpenForm}
+              setUpdateBadge={setUpdateBadge}
+            />
+          }
         </div>
         <button
           type="button"
           onClick={() => setOpenForm(true)}
-          className="bg-[#F0F2F5] grid place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-1/5 h-44 rounded-2xl hover:-translate-y-2 transition-all"
+          className="bg-[#F0F2F5] grid place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-1/5 h-44 rounded-2xl hover:scale-95 focus-within:scale-95 transition-transform"
         >
           <span className="p-1 bg-primary rounded-md text-white font-medium hover:text-gray-700 transition-colors">
             <Plus className="size-6" />
