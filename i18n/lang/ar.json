@@ -222,6 +222,39 @@
     "digital_seal_table_title": "العنوان",
     "digital_seal_table_description": "الوصف",
     "add_special_offer": "إضافة عرض خاص",
+
+    
+
+
+    "failed_to_fetch_badges": "فشل جلب الشارات",
+    "failed_to_fetch_offers": "فشل جلب العروض",
+    "failed_to_load_badges": "فشل تحميل الشارات",
+    "failed_to_load_offers": "فشل تحميل العروض",
+    "following_offers_will_be_deleted": "سيتم حذف العروض التالية",
+    "offers_deleted_Failed": "فشل حذف العروض",
+    "offers_deleted_successfully": "تم حذف العروض بنجاح",
+
+    "selected_badge_not_found": "لم يتم العثور على الشارة",
+
+    "special_offers_table_Type": "النوع",
+    "special_offers_table_point_back": "استرجاع النقاط",
+    "special_offers_table_valid_from": "صالح من",
+    "special_offers_table_valid_to": "صالح إلى",
+
+
+    "name_already_exists": "اسم العلامة التجارية مستخدم بالفعل",
+    "email_already_exists": "البريد الإلكتروني مستخدم بالفعل",
+    "phone_already_exists": "رقم الهاتف مستخدم بالفعل",
+    "url_already_exists": "هذا الرابط مستخدم بالفعل",
+
+    "purchaseCount": "Purchase Count",
+    "validityPeriod": "فترة الصلاحية",
+    "upTo": "إلى",
+    "ratio": "النسبة",
+    "pointBack": "استرجاع النقاط",
+    "months": "أشهر",
+    "days": "أيام",
+    "totalPurchases": "إجمالي المشتريات",
     "selectType": "اختر النوع",
     "addBrand": "إضافة علامة تجارية",
     "addOffer": "إضافة عرض",
@@ -1025,7 +1058,7 @@
     "Bell": "جرس",
     "BellMuteIcon": "جرس غير مضغوط",
     "BellRingIcon": "جرس مضغوط",
-
+    "ShoppingCart": "عربة التسوق",
     "payment": "المدفوعات"
   },
 
