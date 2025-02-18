@@ -18,7 +18,6 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import ImageApi from "../ImageApi";
-import Image from "next/image";
 import BadgesSwiper from "./BadgesSwiper";
 
 const Badges = ({
@@ -91,8 +90,8 @@ const Badges = ({
 
   return (
     <>
-      <div className="flex gap-10 items-center w-full p-4">
-        <div className="w-[80%] h-44 flex gap-4">
+      <div className="flex gap-6 items-center w-full p-4 max-sm:flex-col">
+        <div className="w-[80%] h-44 flex gap-4 max-sm:w-full">
           {
             <BadgesSwiper
               badges={badgesRedux ?? badges}
@@ -104,7 +103,7 @@ const Badges = ({
         <button
           type="button"
           onClick={() => setOpenForm(true)}
-          className="bg-[#F0F2F5] grid place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-1/5 h-44 rounded-2xl hover:scale-95 focus-within:scale-95 transition-transform"
+          className="bg-[#F0F2F5] grid max-sm:w-full place-content-center shadow-[0px_4px_10px_-4px_#00000040] w-1/5 h-44 rounded-2xl hover:scale-95 focus-within:scale-95 transition-transform"
         >
           <span className="p-1 bg-primary rounded-md text-white font-medium hover:text-gray-700 transition-colors">
             <Plus className="size-6" />
