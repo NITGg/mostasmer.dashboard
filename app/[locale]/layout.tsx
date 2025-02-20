@@ -82,7 +82,7 @@ export default async function RootLayout({
   return (
     <html lang="en" dir={locale == 'ar' ? 'rtl' : "ltr"}>
       <body
-        className={`antialiased`}
+        className={`antialiased bg-[#f0f2f5]`}
       >
         <NextIntlClientProvider messages={messages}>
           <ReduxProvider>

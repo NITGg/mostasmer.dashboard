@@ -15,6 +15,20 @@ interface UserClass {
   description: string
 }
 
+interface CustomOffer {
+  brandId: any
+  id: number
+  brand: {
+    name: string
+  }
+  // user: {
+  //   name: string
+  // }
+  ratio: number
+  validFrom: string
+  validTo: string
+}
+
 interface FormData {
   name: string
   color: string
@@ -39,6 +53,8 @@ export default function UserClassList() {
   const [openDelete, setOpenDelete] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>(initialFormData)
+  const [customOffers, setCustomOffers] = useState<CustomOffer[]>([])
+  const [checkingOffers, setCheckingOffers] = useState(false)
 
   useEffect(() => {
     fetchUserClasses()
@@ -51,7 +67,7 @@ export default function UserClassList() {
           'Authorization': `Bearer ${token}`
         }
       })
-      if (!response.ok) throw new Error('Failed to fetch user classes')
+      if (!response.ok) throw new Error(t('failed_to_fetch'))
       const data = await response.json()
       setUserClasses(data.userClasses)
     } catch (error) {
@@ -74,7 +90,7 @@ export default function UserClassList() {
         body: JSON.stringify(formData)
       })
 
-      if (!response.ok) throw new Error('Failed to create user class')
+      if (!response.ok) throw new Error(t('failed_to_fetch'))
 
       const data = await response.json()
       setUserClasses([...userClasses, data.userClass])
@@ -90,27 +106,59 @@ export default function UserClassList() {
   }
 
   const handleDelete = async () => {
-    if (!openDelete) return
+    if (!openDelete) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user-class/${openDelete}`, {
-        method: 'DELETE',
+        // First delete all custom offers
+        for (const offer of customOffers) {
+            await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/brand/custom-offers/${offer.brandId}/${offer.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+        }
+
+        // Then delete the user class
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user-class/${openDelete}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) throw new Error(t('failed_to_delete'));
+
+        setUserClasses(userClasses.filter(c => c.id !== openDelete));
+        setOpenDelete(null);
+        setCustomOffers([]);
+        toast.success(t('deleted_successfully'));
+    } catch (error) {
+        console.error('Error:', error);
+        toast.error(t('failed_to_delete'));
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  const checkCustomOffers = async (id: number) => {
+    setCheckingOffers(true)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user-classes/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
-
-      if (!response.ok) throw new Error('Failed to delete user class')
-
-      setUserClasses(userClasses.filter(c => c.id !== openDelete))
-      setOpenDelete(null)
-      toast.success(t('deleted_successfully'))
+      if (!response.ok) throw new Error(t('failed_to_fetch'))
+      const data = await response.json()
+      setCustomOffers(data.customOffers)
+      setOpenDelete(id)
     } catch (error) {
       console.error('Error:', error)
-      toast.error(t('failed_to_delete'))
+      toast.error(t('failed_to_fetch'))
     } finally {
-      setLoading(false)
+      setCheckingOffers(false)
     }
   }
 
@@ -131,16 +179,16 @@ export default function UserClassList() {
         <table className="min-w-full">
           <thead>
             <tr className="border-b">
-              <th className="text-left py-3 px-4">{t('name')}</th>
-              <th className="text-left py-3 px-4">{t('purchase_count')}</th>
-              <th className="text-left py-3 px-4">{t('months_period')}</th>
-              <th className="text-left py-3 px-4">{t('description')}</th>
-              <th className="text-left py-3 px-4">{t('actions')}</th>
+              <th className=" text-left font-bold py-3 px-4">{t('name')}</th>
+              <th className="text-left font-bold py-3 px-4">{t('purchase_count')}</th>
+              <th className="text-left font-bold py-3 px-4-4">{t('months_period')}</th>
+              <th className="text-left font-bold py-3 px-4">{t('description')}</th>
+              <th className="text-left font-bold py-3 px-4">{t('actions')}</th>
             </tr>
           </thead>
           <tbody>
             {userClasses.map((userClass) => (
-              <tr key={userClass.id} className="border-b last:border-b-0">
+              <tr key={userClass.id} className="border-b last:border-b-0 hover:bg-gray-100">
                 <td className="py-3 px-4">
                   <Pill 
                     text={userClass.name} 
@@ -158,11 +206,11 @@ export default function UserClassList() {
                 </td>
                 <td className="py-3 px-4">
                   <button 
-                    onClick={() => setOpenDelete(userClass.id)}
+                    onClick={() => checkCustomOffers(userClass.id)}
                     className="text-teal-600 hover:text-red-600 transition-colors"
                     title={t('delete')}
                   >
-                    <TrashIcon className="h-5 w-5" />
+                    <TrashIcon className="h-5 w-5 hover:bg-red-100" />
                   </button>
                 </td>
               </tr>
@@ -213,7 +261,7 @@ export default function UserClassList() {
                   value={formData.purchaseCount}
                   onChange={(e) => setFormData({ ...formData, purchaseCount: parseInt(e.target.value) })}
                   className="w-full px-3 py-2 border rounded-md"
-                  min="1"
+                  min="0"
                   required
                 />
               </div>
@@ -270,12 +318,53 @@ export default function UserClassList() {
       {/* Delete Confirmation Modal */}
       {openDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
             <h3 className="text-lg font-semibold mb-4">{t('confirm_delete')}</h3>
-            <p className="mb-6">{t('confirm_delete_message')}</p>
+            <p className="mb-4">{t('confirm_delete_message')}</p>
+            
+            {customOffers.length > 0 && (
+              <div className="mb-6">
+                <h4 className="text-md font-medium text-red-600 mb-2">
+                  {t('following_offers_will_be_deleted')} ({customOffers.length}):
+                </h4>
+                <div className="max-h-60 overflow-y-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 text-center">{t('brand_name')}</th>
+                        {/* <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">User</th> */}
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 text-center">{t('ratio')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 text-center">{t('valid_from')}</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 text-center">{t('valid_to')}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {customOffers.map((offer) => (
+                        <tr key={offer.id}>
+                          <td className="px-4 py-2 text-sm">{offer.brand.name}</td>
+                          {/* <td className="px-4 py-2 text-sm">{offer.user.c}</td> */}
+                          <td className="px-4 py-2 text-sm">{offer.ratio}%</td>
+                          <td className="px-4 py-2 text-sm">
+                            {new Date(offer.validFrom).toLocaleDateString()}
+                          </td>
+                          
+                          <td className="px-4 py-2 text-sm">
+                            {new Date(offer.validTo).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-end space-x-3">
               <button
-                onClick={() => setOpenDelete(null)}
+                onClick={() => {
+                  setOpenDelete(null)
+                  setCustomOffers([])
+                }}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
                 disabled={loading}
               >

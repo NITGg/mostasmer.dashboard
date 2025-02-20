@@ -257,6 +257,29 @@
     "totalPurchases": "إجمالي المشتريات",
     "selectType": "اختر النوع",
     "addBrand": "إضافة علامة تجارية",
+    "addBrand2": "إضافة علامة تجارية جديدة",
+
+    "loading": "جارٍ التحميل",
+    "bank_account_updated": "تم تحديث الحساب المصرفي",
+    "bank_name": "اسم البنك",
+    "account_number": "رقم الحساب",
+    "iban": "رقم الحساب الدولي",
+    "BankInformation": "المعلومات المصرفية",
+
+    "brandNameExists": "اسم العلامة التجارية مستخدم بالفعل",
+    "phoneExists": "رقم الهاتف مستخدم بالفعل",
+    "emailExists": "البريد الإلكتروني مستخدم بالفعل",
+    "addFailed": "فشل إضافة العلامة التجارية",
+    "addFailedbrand": "فشل إضافة العلامة التجارية",
+    "brandCover": "غلاف العلامة التجارية",
+    "brandLogo": "شعار العلامة التجارية",
+    "addemail": "البريد الإلكتروني :",
+    "addphone": "رقم الهاتف* :",
+    "addurl": "الرابط* :",
+    "addname": "الاسم* :",
+    "enter_iban": "ادخل رقم الحساب الدولي",
+    "enter_account_number": "ادخل رقم الحساب",
+    "enter_bank_name": "ادخل اسم البنك",
     "addOffer": "إضافة عرض",
     "brandNotFound": "لم يتم العثور على العلامة التجارية",
     "brandNotFoundDesc": "وصف العلامة التجارية غير موجود",
@@ -312,6 +335,7 @@
         "message": "رسالة النافذة"
       }
     },
+
     "Tablecomponent": {
       "digital_seal_table_point_back": "نسبة الاسترجاع",
       "digital_seal_table_purchase_count": "عدد الشراء",
@@ -342,6 +366,8 @@
     "articles": "المقالات",
     "faqs": "الأسئلة الشائعة",
     "category": "الفئة",
+    "userClasses": "فئات المستخدمين",
+
     "categories": "الفئات",
     "contactrequest": "طلب الاتصال",
     "aboutapp": "حول التطبيق",
@@ -382,6 +408,7 @@
     "validFrom": "صالح من",
     "validTo": "صالح حتى",
     "enter": "ادخل",
+
     "category_select": "اختر الفئة",
     "category_required": "يجب اختيار الفئة",
     "custom_offer_table_edit_custom_offer": "تعديل العرض المخصص",
@@ -1299,7 +1326,34 @@
     "nameIsRequired": "يرجى إدخال اسم الدور.",
     "nameUnique": "هذا الدور موجود بالفعل"
   },
-
+  "userClass":{
+    "actions":"الإجراءات",
+          "add_new":"إضافة جديد",
+          "cancel":"إلغاء",
+          "color":"اللون",
+          "confirm_delete":"تأكيد الحذف",
+          "confirm_delete_message":"هل أنت متأكد من حذف هذه الفئة المستخدم؟",
+          "create":"إنشاء",
+          "created_successfully":"تم الإنشاء بنجاح",
+          "creating":"جاري الإنشاء",
+          "delete":"حذف",
+          "deleted_successfully":"تم الحذف بنجاح",
+          "deleting":"جاري الحذف",
+          "description":"الوصف",
+          "failed_to_create":"فشل إنشاء",
+          "failed_to_delete":"فشل حذف",
+          "failed_to_fetch":"فشل جلب",
+          "months_period":"فترة الاشهر",
+          "name":"الاسم",
+          "purchase_count":"عدد الشراء",
+          "months":"الاشهر",
+          "following_offers_will_be_deleted":"ستتم حذف العروض التالية",
+          "brand_name":"اسم العلامة التجارية",
+          "ratio":"النسبة",
+          "valid_from":"من",
+          "valid_to":"إلى",
+          "title":"العنوان"
+      },
   "settings": {
     "settings": "الإعدادات",
     "basicinformation": "المعلومات الأساسية",
