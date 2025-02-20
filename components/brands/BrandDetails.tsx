@@ -5788,7 +5788,7 @@ const locale = useLocale()
 
 
                             {/* Up to Percentage */}
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <label className="font-bold text-slate-950 text-sm">
                                     {t('upTo')}
                                 </label>
@@ -5807,7 +5807,7 @@ const locale = useLocale()
                                     />
                                     <span className="text-sm text-gray-500">%</span>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* Save Button */}
