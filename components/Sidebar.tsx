@@ -75,6 +75,12 @@ const Sidebar = ({
           icon: <UserCog className="size-6" />,
           role: "admin",
         },
+        {
+          href: "/user-class",
+          label: t("userClasses"),
+          icon: <UserCog className="size-6" />,
+          role: "admin",
+        },
       ],
       role: "admin",
       isAccordion: true,
