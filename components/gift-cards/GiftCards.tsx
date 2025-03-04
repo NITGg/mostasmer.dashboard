@@ -1,91 +1,92 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
-import { LoadingIcon } from "../icons";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { useAppContext } from "@/context/appContext";
-import { GiftCard } from "@/redux/reducers/giftCardsReducers";
-import Table from "../ui/Table";
+import { GiftCard, setGiftCards } from "@/redux/reducers/giftCardsReducers";
+import Table, { TableHeader } from "../ui/Table";
+import Pagination from "../ui/Pagination";
+import DownloadButton from "../ui/DownloadButton";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import GiftCardDialog from "./GiftCardDialog";
 
 const GiftCards = ({
   giftCards,
   count,
-  loading,
+  totalPages,
 }: {
   giftCards: GiftCard[];
   count: number;
-  loading: boolean;
+  totalPages: number;
 }) => {
-  console.log(giftCards);
-
   const t = useTranslations("giftCards");
-  const { token } = useAppContext();
-  const [pending, setPending] = useState<boolean>(false);
   const [openCard, setOpenCard] = useState<boolean>(false);
   const [gift, setGift] = useState<GiftCard | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const giftCardsRedux = useAppSelector((s) => s.giftCards.giftCards);
+  const dispatch = useAppDispatch();
 
-  const headers = [
+  const headers: TableHeader[] = [
     { name: "sender" },
     { name: "received" },
-    { name: "cardValue" },
-    { name: "cardValueInSr" },
+    { name: "cardValue", sortable: true, key: "point" },
+    { name: "cardValueInSr", sortable: true, key: "paymentamount" },
     { name: "used" },
     { name: "action" },
     { name: "status" },
   ];
 
-  const resendGift = async () => {
-    try {
-      setPending(true);
-      if (!gift) return;
-      const data = {
-        name: gift.userFrom.fullname,
-        phone: gift.userFrom.phone,
-        point: gift.point,
-        message: gift.message,
-      };
-      await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/gift`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      toast.success(t("giftResendSuccessfully"));
-      setOpenCard(false);
-      setGift(null);
-    } catch (error: any) {
-      toast.error(t("errorResendGift"));
-      setOpenCard(false);
-      setGift(null);
-      console.error(error);
-      toast.error(error?.response?.data?.message || "There is an Error");
-    } finally {
-      setPending(false);
-    }
-  };
+  useEffect(() => {
+    dispatch(setGiftCards(giftCards));
+  }, [giftCards]);
+
   return (
     <>
+      {gift && (
+        <GiftCardDialog
+          open={openCard}
+          onOpenChange={() => {
+            setOpenCard(false);
+            setGift(null);
+          }}
+          gift={gift}
+        />
+      )}
       <Table
-        data={giftCards}
-        count={giftCards.length}
-        loading={loading}
-        showDateFilter={false}
-        pageSize={pageSize}
-        currentPage={currentPage}
-        onPageChange={(page) => setCurrentPage(page)}
-        onPageSizeChange={(size) => setPageSize(size)}
         headers={headers}
+        pagination={
+          <Pagination
+            count={count}
+            totalPages={totalPages}
+            downloadButton={
+              <DownloadButton<GiftCard>
+                fields={[
+                  "id",
+                  "point",
+                  "validTo",
+                  "type",
+                  "userFrom",
+                  "userTo",
+                ]}
+                include={{
+                  userFrom: { select: { name: true } },
+                  userTo: { select: { name: true } },
+                }}
+                model="giftCard"
+              />
+            }
+          />
+        }
       >
-        {giftCards?.map((card) => (
+        {!giftCardsRedux.length && (
+          <tr className="odd:bg-white even:bg-primary/5 border-b">
+            <td
+              colSpan={headers.length}
+              scope="row"
+              className="px-6 py-4 text-center font-bold"
+            >
+              {t("no data yat")}
+            </td>
+          </tr>
+        )}
+        {giftCardsRedux?.map((card) => (
           <tr key={card.id} className="odd:bg-white even:bg-[#F0F2F5] border-b">
             <td scope="row" className="px-6 py-4 text-primary">
               {card.userFrom.fullname}
@@ -121,39 +122,6 @@ const GiftCards = ({
           </tr>
         ))}
       </Table>
-
-      <Dialog open={openCard} onOpenChange={setOpenCard}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("giftCardsDetails")}</DialogTitle>
-            <DialogDescription></DialogDescription>
-          </DialogHeader>
-          <div className="flex gap-4 flex-col items-center">
-            <div className="flex gap-4 w-1/2 flex-col items-center ">
-              <img
-                alt="card"
-                src={"/imgs/Untitled.svg"}
-                style={{ objectFit: "contain", width: "100%" }}
-              />
-              <p className="-mt-12 text-xl tracking-wider ">
-                {new Date(gift?.createdAt ?? "").getTime()}
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={resendGift}
-              className="py-3 w-1/3 rounded-3xl text-sm bg-primary text-white"
-            >
-              {pending ? (
-                <LoadingIcon className="w-6 h-6 animate-spin m-auto hover:stroke-white" />
-              ) : (
-                t("resend")
-              )}
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

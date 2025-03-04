@@ -1,55 +1,17 @@
-import Badges from "@/components/badges/Badges";
-import { LoadingIcon } from "@/components/icons";
-import { cookies } from "next/headers";
-import React from "react";
+import { Suspense } from "react";
+import BadgesData from "./BadgesData";
+import { SearchParams } from "../user-roles/page";
+import LoadingTable from "@/components/ui/LoadingTable";
 
-const Page = async ({ searchParams }: { searchParams: any }) => {
-  const token = cookies().get("token")?.value;
-  let loading: boolean = false;
-
-  const fetchDashboard = async (token: string) => {
-    try {
-      loading = true;
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/badges?sort=points`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!res.ok) {
-        return { data: null, error: await res.text() };
-      }
-      const data = await res.json();
-
-      return { data: data, error: null };
-    } catch (error: any) {
-      console.log(error.message);
-
-      return { data: null, error: error?.message };
-    } finally {
-      loading = false;
-    }
-  };
-  const { data, error } = await fetchDashboard(token as string);
-
+const Badges = ({ searchParams }: { searchParams: SearchParams }) => {
+  const key = JSON.stringify(searchParams);
   return (
-    <div className="p-container space-y-10 py-3">
-      {loading && <LoadingIcon />}
-      {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && data && (
-        <Badges
-          loading={loading}
-          badges={data?.badges}
-          count={data?.badges.length}
-        />
-      )}
+    <div className="p-container space-y-10">
+      <Suspense key={key} fallback={<LoadingTable />}>
+        <BadgesData searchParams={searchParams} />
+      </Suspense>
     </div>
   );
 };
 
-export default Page;
+export default Badges;

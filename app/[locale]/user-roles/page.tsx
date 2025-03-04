@@ -1,60 +1,78 @@
-import { LoadingIcon } from "@/components/icons";
 import { cookies } from "next/headers";
-import React from "react";
+import React, { Suspense } from "react";
 import UserRoles from "@/components/user-roles/UserRoles";
+import { UserRole } from "@/redux/reducers/userRolesReducer";
+import LoadingTable from "@/components/ui/LoadingTable";
 
-const Page = async ({ searchParams }: { searchParams: any }) => {
+interface RoleApiResponse {
+  roles: UserRole[];
+  totalRoles: number;
+  totalPages: number;
+}
+export type SearchParams = Record<string, string | string[] | undefined>;
+
+const fetchRoles = async (
+  searchParams: SearchParams
+): Promise<{ data: RoleApiResponse | null; error: string | null }> => {
   const token = cookies().get("token")?.value;
-  let loading: boolean = false;
+  try {
+    const queryParams = new URLSearchParams({
+      limit: searchParams.limit?.toString() ?? "10",
+      items: "name",
+      sort: searchParams.sort?.toString() ?? "",
+    });
 
-  const fetchDashboard = async (token: string) => {
-    try {
-      loading = true;
-      const queryParams = new URLSearchParams({
-        limit: searchParams.limit ?? "10",
-      });
+    if (searchParams.keyword)
+      queryParams.append("keyword", searchParams.keyword.toString());
 
-      if (searchParams.keyword) {
-        queryParams.append("keyword", searchParams.keyword);
-        queryParams.append("sort", "name");
-      }
+    if (searchParams.skip)
+      queryParams.append("skip", searchParams.skip.toString());
 
-      if (searchParams.skip) queryParams.append("skip", searchParams.skip);
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/roles`, {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/roles?${queryParams}`,
+      {
         method: "GET",
         credentials: "include",
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-
-      if (!res.ok) {
-        return { data: null, error: await res.text() };
       }
-      const data = await res.json();
+    );
 
-      return { data: data, error: null };
-    } catch (error: any) {
-      console.log(error.message);
-      return { data: null, error: error?.message };
-    } finally {
-      loading = false;
+    if (!res.ok) {
+      return { data: null, error: await res.text() };
     }
-  };
-  const { data, error } = await fetchDashboard(token as string);
+    const data = await res.json();
+
+    return { data: data, error: null };
+  } catch (error: any) {
+    console.log(error.message);
+    return { data: null, error: error?.message };
+  }
+};
+
+const RolesData = async ({ searchParams }: { searchParams: SearchParams }) => {
+  const { data, error } = await fetchRoles(searchParams);
+
+  if (error) return <div className="text-red-500">Error: {error}</div>;
+  if (!data) return <div className="text-red-500">no data</div>;
+
+  return (
+    <UserRoles
+      userRoles={data.roles}
+      count={data.totalRoles}
+      totalPages={data.totalPages}
+    />
+  );
+};
+const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
+  const key = JSON.stringify(searchParams);
 
   return (
     <div className="p-container space-y-10">
-      {loading && <LoadingIcon />}
-      {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && data && (
-        <UserRoles
-          userRoles={data.roles}
-          count={data.totalRoles}
-          loading={loading}
-        />
-      )}
+      <Suspense key={key} fallback={<LoadingTable />}>
+        <RolesData searchParams={searchParams} />
+      </Suspense>
     </div>
   );
 };

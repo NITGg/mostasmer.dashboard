@@ -1,42 +1,33 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Table from "@/components/ui/Table";
-import { DeleteIcon, LoadingIcon, EditIcon } from "../icons";
+import Table, { TableHeader } from "@/components/ui/Table";
+import { DeleteIcon, EditIcon } from "../icons";
 import { Plus } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { useAppContext } from "@/context/appContext";
-import { Badge, deleteBadge, setBadges } from "@/redux/reducers/badgesReducer";
+import { Badge, setBadges } from "@/redux/reducers/badgesReducer";
 import BadgePopupForm from "./BadgePopupForm";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
 import ImageApi from "../ImageApi";
 import BadgesSwiper from "./BadgesSwiper";
+import Pagination from "../ui/Pagination";
+import DownloadButton from "../ui/DownloadButton";
+import DeleteBadgePopup from "./DeleteBadgePopup";
+import { useTranslations } from "next-intl";
 
 const Badges = ({
-  loading,
+  totalPages,
   badges,
   count,
 }: {
-  loading: boolean;
+  totalPages: number;
   badges: Badge[];
   count: number;
 }) => {
-  const t = useTranslations("badges");
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const t = useTranslations("Tablecomponent");
 
-  const headers = [
+  const headers: TableHeader[] = [
     { name: "id" },
     { name: "logo" },
-    { name: "name" },
+    { name: "name", sortable: true, key: "name" },
     { name: "pointsBack" },
     { name: "users" },
     { name: "action", className: "text-center" },
@@ -48,8 +39,6 @@ const Badges = ({
   const [deleteBadgeId, setDeleteBadgeId] = useState<Badge | undefined>(
     undefined
   );
-  const [pending, setPending] = useState<boolean>(false);
-  const { token } = useAppContext();
 
   const badgesRedux = useAppSelector((state) => state.badges.badges);
   const dispatch = useAppDispatch();
@@ -58,47 +47,32 @@ const Badges = ({
     dispatch(setBadges(badges));
   }, [badges, dispatch]);
 
-  const handleDeleteBadge = async () => {
-    if (!deleteBadgeId) return;
-    try {
-      setPending(true);
-      await axios.delete(`/api/user-types/${deleteBadgeId.userType?.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      await axios.delete(`/api/badges/${deleteBadgeId.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      dispatch(deleteBadge(deleteBadgeId.id));
-      setOpenDelete(false);
-      toast.success(t("successDelete"));
-      setPending(false);
-    } catch (error: any) {
-      setPending(false);
-      console.error(error);
-      toast.error(error?.response?.data?.message || "There is an Error");
-    }
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   return (
-    <>
+    <div className="flex flex-col gap-3">
+      <BadgePopupForm
+        openForm={openForm}
+        setOpenForm={setOpenForm}
+        badge={updateBadge}
+        setBadge={setUpdateBadge}
+      />
+
+      {deleteBadgeId && (
+        <DeleteBadgePopup
+          deleteBadgeId={deleteBadgeId}
+          openDelete={openDelete}
+          setOpenDelete={setOpenDelete}
+        />
+      )}
+
       <div className="flex gap-6 items-center w-full p-4 max-sm:flex-col">
-        <div className="w-[80%] h-44 flex gap-4 max-sm:w-full">
-          {
+        <div className="w-[80%] flex gap-4 max-sm:w-full">
+          {!!badgesRedux.length && (
             <BadgesSwiper
               badges={badgesRedux ?? badges}
               setOpenForm={setOpenForm}
               setUpdateBadge={setUpdateBadge}
             />
-          }
+          )}
         </div>
         <button
           type="button"
@@ -112,103 +86,81 @@ const Badges = ({
       </div>
 
       <Table
-        data={badgesRedux?.length ? badgesRedux : badges}
         headers={headers}
-        count={count}
-        loading={loading}
-        bgColor="#02161e"
-        currentPage={currentPage}
-        pageSize={pageSize}
-        onPageChange={handlePageChange}
-        showCount={true}
-        currentItems={badgesRedux?.length || badges?.length || 0}
+        pagination={
+          <Pagination
+            count={count}
+            totalPages={totalPages}
+            downloadButton={
+              <DownloadButton<Badge>
+                model="badge"
+                fields={["id", "name", "points", "minAmount", "maxAmount"]}
+              />
+            }
+          />
+        }
       >
-        {(badgesRedux?.length ? badgesRedux : badges)?.map(
-          (badge: Badge, index) => (
-            <tr
-              key={badge.id}
-              className="group odd:bg-white even:bg-[#F0F2F5] border-b"
+        {!badgesRedux.length && (
+          <tr className="odd:bg-white even:bg-primary/5 border-b">
+            <td
+              colSpan={headers.length}
+              scope="row"
+              className="px-6 py-4 text-center font-bold"
             >
-              <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-              <td className="px-6 py-4">
-                <div className="w-7 h-7 p-1 rounded-full group-even:bg-white justify-items-center content-center">
-                  <ImageApi
-                    src={badge.logo}
-                    alt={badge.name + " logo"}
-                    height={150}
-                    width={150}
-                    priority
-                    className="object-scale-down"
-                  />
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">{badge.name}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{badge.points}%</td>
-              <td className="px-6 py-4 whitespace-nowrap">{badge?.users}</td>
-              <td className="px-6 py-4 text-right">
-                <div className="flex justify-end gap-6">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUpdateBadge(badge);
-                      setOpenForm(true);
-                    }}
-                    className="text-primary hover:text-gray-700 transition-colors"
-                  >
-                    <EditIcon className="size-4" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOpenDelete(true);
-                      setDeleteBadgeId(badge);
-                    }}
-                    className="text-primary hover:text-gray-700 transition-colors"
-                  >
-                    <DeleteIcon className="size-4" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          )
+              {t("no data yat")}
+            </td>
+          </tr>
         )}
+        {badgesRedux?.map((badge: Badge, index) => (
+          <tr
+            key={badge.id}
+            className="odd:bg-white even:bg-[#F0F2F5] border-b"
+          >
+            <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+            <td className="px-6 py-4">
+              <div className="w-7 h-7 p-1 rounded-full group-even:bg-white justify-items-center content-center">
+                <ImageApi
+                  src={badge.logo}
+                  alt={badge.name + " logo"}
+                  height={150}
+                  width={150}
+                  priority
+                  className="object-scale-down"
+                />
+              </div>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap">{badge.name}</td>
+            <td className="px-6 py-4 whitespace-nowrap">{badge.points}%</td>
+            <td className="px-6 py-4 whitespace-nowrap">{badge?.users}</td>
+            <td className="px-6 py-4">
+              <div className="flex gap-2 items-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUpdateBadge(badge);
+                    setOpenForm(true);
+                  }}
+                  className="text-primary hover:text-gray-700 transition-colors"
+                >
+                  <EditIcon className="size-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpenDelete(true);
+                    setDeleteBadgeId(badge);
+                  }}
+                  className="text-primary hover:text-gray-700 transition-colors"
+                >
+                  <DeleteIcon className="size-4" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        ))}
       </Table>
-
-      <BadgePopupForm
-        openForm={openForm}
-        setOpenForm={setOpenForm}
-        badge={updateBadge}
-        setBadge={setUpdateBadge}
-      />
-
-      <Dialog open={openDelete} onOpenChange={setOpenDelete}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("deleteBadge")}</DialogTitle>
-            <DialogDescription>{t("deleteMessage")}</DialogDescription>
-          </DialogHeader>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setOpenDelete(false)}
-              className="px-3 py-2 rounded-md border"
-            >
-              {t("cancel")}
-            </button>
-            <button
-              onClick={handleDeleteBadge}
-              className="px-3 py-2 rounded-md bg-red-500 text-white"
-            >
-              {pending ? (
-                <LoadingIcon className="size-5 animate-spin" />
-              ) : (
-                t("delete")
-              )}
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+    </div>
   );
 };
 

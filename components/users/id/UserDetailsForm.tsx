@@ -32,7 +32,7 @@ const UserDetailsForm = ({
 
   const t = useTranslations("user");
   return (
-    <div className="space-y-5">
+    <div className="flex flex-col gap-5">
       <UserInput
         roles={{
           value: user.fullname,
@@ -59,7 +59,7 @@ const UserDetailsForm = ({
           { value: "FEMALE", label: t("female") },
         ]}
       />
-      <div onClick={handleFieldClick}>
+      <button type="button" className="contents" onClick={handleFieldClick}>
         <CustomDatePicker
           setValue={setValue}
           errors={errors}
@@ -68,7 +68,7 @@ const UserDetailsForm = ({
           control={control}
           defaultValue={user.birthDate ? new Date(user.birthDate) : null}
         />
-      </div>
+      </button>
 
       <UserInput
         roles={{ value: user.email }}

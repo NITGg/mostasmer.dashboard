@@ -7,7 +7,7 @@ import axios from "axios";
 import { useAppContext } from "@/context/appContext";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "@/hooks/redux";
-import { addAds, Ads, AdsType, updateAds } from "@/redux/reducers/ads";
+import { addAds, Ad, AdsType, updateAds } from "@/redux/reducers/adsReducer";
 import "react-datepicker/dist/react-datepicker.css";
 import UserInput from "../users/UserInput";
 import clsx from "clsx";
@@ -18,7 +18,7 @@ import { CircleAlert } from "lucide-react";
 import CustomDatePicker from "../CustomDatePicker";
 import FetchSelect from "../FetchSelect";
 
-const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ads }) => {
+const AddAds = ({ handleClose, ad }: { handleClose: () => void; ad?: Ad }) => {
   const t = useTranslations("ads");
   const {
     register,

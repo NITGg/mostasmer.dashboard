@@ -129,7 +129,7 @@ const BadgePopupForm = ({
       await axios.put(
         `/api/user-types/${badge.userType?.id}`,
         {
-          buyAmount: data.badge.maxAmount,
+          buyAmount: data.badge.minAmount,
           ratio: data.badge.points,
           userType: data.badge.name,
         },

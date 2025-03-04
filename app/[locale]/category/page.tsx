@@ -1,43 +1,22 @@
-import Categories from '@/components/category/Categories';
-import Products from '@/components/products/Products'
-import React from 'react'
+import React, { Suspense } from "react";
+import { SearchParams } from "../user-roles/page";
+import CategoryData from "./categoryData";
+import LoadingTable from "@/components/ui/LoadingTable";
 
-const page = async ({ searchParams }: { searchParams: any }) => {
-    let loading = false;
-    const fetchData = async () => {
-        try {
-            loading = true
-            const queryParams = new URLSearchParams({
-                // fields: "id,name,images=url-id",
-                // limit: searchParams.limit ?? '10',
-                items: 'fullname,phone,email',
-                parent: 'null'
-            });
-            if (searchParams.skip) queryParams.append("skip", searchParams.skip);
-            if (searchParams.keyword) queryParams.append("keyword", searchParams.keyword);
-            const res = await fetch(`${process.env.BASE_URL}/api/categories?${queryParams.toString()}`, {
-                method: "GET",
-                credentials: "include",
-                cache: "no-cache"
-            })
-            if (!res.ok) {
-                return { data: null, error: await res.text() }
-            }
-            const data = await res.json();
-            return { data: data, error: null }
-        } catch (error: any) {
-            return { data: null, error: error?.message }
-        } finally {
-            loading = false
-        }
-    }
-    const { data, error } = await fetchData();
+const page = async ({
+  searchParams,
+  params: { locale },
+}: {
+  searchParams: SearchParams;
+  params: { locale: string };
+}) => {
+  return (
+    <div>
+      <Suspense fallback={<LoadingTable />}>
+        <CategoryData locale={locale} searchParams={searchParams} />
+      </Suspense>
+    </div>
+  );
+};
 
-    return (
-        <div>
-            <Categories categories={data?.categories} count={data?.count} />
-        </div>
-    )
-}
-
-export default page
+export default page;

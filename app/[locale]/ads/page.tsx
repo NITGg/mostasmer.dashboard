@@ -1,54 +1,16 @@
-import AdsHeader from "@/components/ads/AdsHeader";
-import { LoadingIcon } from "@/components/icons";
-import React from "react";
+import React, { Suspense } from "react";
+import { SearchParams } from "../user-roles/page";
+import LoadingTable from "@/components/ui/LoadingTable";
+import AdsData from "./AdsData";
 
-const page = async ({ searchParams }: { searchParams: any }) => {
-  let loading = false;
+const page = async ({ searchParams }: { searchParams: SearchParams }) => {
+  const key = JSON.stringify(searchParams);
 
-  const fetchDashboard = async () => {
-    try {
-      loading = true;
-      const queryParams = new URLSearchParams({
-        limit: searchParams.limit ?? "10",
-        items: "title,description",
-      });
-      if (searchParams.keyword) {
-        queryParams.append("keyword", searchParams.keyword);
-        queryParams.append("sort", "-title");
-      }
-
-      if (searchParams.skip) queryParams.append("skip", searchParams.skip);
-      if (searchParams.items) queryParams.append("items", searchParams.items);
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/ads?${queryParams.toString()}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-
-      if (!res.ok) {
-        return { data: null, error: await res.text() };
-      }
-      const data = await res.json();
-      return { data: data, error: null };
-    } catch (error: any) {
-      console.log(error.message);
-
-      return { data: null, error: error?.message };
-    } finally {
-      loading = false;
-    }
-  };
-  const { data, error } = await fetchDashboard();
   return (
     <div className="p-container space-y-10 pb-5">
-      {loading && <LoadingIcon />}
-      {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && data && (
-        <AdsHeader data={data?.ads} count={data?.count} />
-      )}
+      <Suspense key={key} fallback={<LoadingTable />}>
+        <AdsData searchParams={searchParams} />
+      </Suspense>
     </div>
   );
 };

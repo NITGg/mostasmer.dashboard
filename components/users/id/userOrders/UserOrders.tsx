@@ -1,0 +1,90 @@
+"use client";
+import { UserOrder } from "@/app/[locale]/users/[id]/UserOrdersData";
+import { EditIcon } from "@/components/icons";
+import DownloadButton from "@/components/ui/DownloadButton";
+import Pagination from "@/components/ui/Pagination";
+import Table, { TableHeader } from "@/components/ui/Table";
+import { DateToText } from "@/lib/DateToText";
+import { useTranslations } from "next-intl";
+import React from "react";
+
+const UserOrders = ({
+  userOrders,
+  totalUserOrders,
+  totalPages,
+}: {
+  userOrders: UserOrder[];
+  totalUserOrders: number;
+  totalPages: number;
+}) => {
+  const t = useTranslations("Tablecomponent");
+
+  const headers: TableHeader[] = [
+    { name: "createdAt", sortable: true, key: "createdAt" },
+    { name: "brandName" },
+    { name: "userName" },
+    { name: "totalPrice", sortable: true, key: "totalPrice" },
+    { name: "action", className: "text-center" },
+  ];
+  return (
+    <Table
+      headers={headers}
+      bgColor
+      pagination={
+        <Pagination
+          bgColor
+          count={totalUserOrders}
+          totalPages={totalPages}
+          downloadButton={
+            <DownloadButton<UserOrder>
+              model="order"
+              fields={["id", "brand", "createdAt", "totalPrice", "user"]}
+              filters={{ userId: userOrders[0].userId }}
+              include={{
+                brand: { select: { name: true } },
+                user: { select: { fullname: true } },
+              }}
+            />
+          }
+        />
+      }
+    >
+      {!userOrders.length && (
+        <tr className="odd:bg-white even:bg-primary/5 border-b">
+          <td
+            colSpan={headers.length}
+            scope="row"
+            className="px-6 py-4 text-center font-bold"
+          >
+            {t("no data yat")}
+          </td>
+        </tr>
+      )}
+      {userOrders?.map((order: UserOrder) => (
+        <tr
+          key={order.id}
+          className={"odd:bg-white even:bg-[#F0F2F5]  border-b"}
+        >
+          <td className="px-6 py-4 whitespace-nowrap">
+            {DateToText(order.createdAt)}
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap">{order.brand.name}</td>
+          <td className="px-6 py-4 whitespace-nowrap">{order.user.fullname}</td>
+          <td className="px-6 py-4 whitespace-nowrap">{order.totalPrice} SR</td>
+          <td className="px-6 py-4">
+            <div className="flex gap-2 items-center">
+              <button
+                type="button"
+                className="text-primary hover:text-gray-700 transition-colors"
+              >
+                <EditIcon className="size-4" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      ))}
+    </Table>
+  );
+};
+
+export default UserOrders;

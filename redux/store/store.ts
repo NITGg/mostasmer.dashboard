@@ -14,7 +14,7 @@ import { couponsSlice } from "../reducers/couponReducer";
 import { petsSlice } from "../reducers/petsReducer";
 import { speciesSlice } from "../reducers/speciesReducer";
 import { onboardingSlice } from "../reducers/onBoardsReducer";
-import { adsSlice } from "../reducers/ads";
+import { adsSlice } from "../reducers/adsReducer";
 import { badgesSlice } from "../reducers/badgesReducer";
 import { giftCardsSlice } from "../reducers/giftCardsReducers";
 import { userRolesSlice } from "../reducers/userRolesReducer";

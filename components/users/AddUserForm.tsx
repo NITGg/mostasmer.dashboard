@@ -12,8 +12,9 @@ import { useAppContext } from "@/context/appContext";
 import toast from "react-hot-toast";
 import AddImageInput from "../AddImageInput";
 import { useAppDispatch } from "@/hooks/redux";
-import { addUser, Role } from "@/redux/reducers/usersReducer";
+import { addUser } from "@/redux/reducers/usersReducer";
 import MultipleSelect from "../MultipleSelect";
+import { UserRole } from "@/redux/reducers/userRolesReducer";
 
 export const fetchRoles = async ({
   search,
@@ -61,11 +62,14 @@ export const fetchBrands = async ({
   token: string;
 }) => {
   try {
+    const today = new Date().toISOString();
     const queryParams = new URLSearchParams({
       keyword: search,
       limit: String(limit),
       skip: String(skip),
       sort: "name",
+      "validTo[gte]": today,
+      "validFrom[lte]": today,
     }).toString();
 
     const { data } = await axios.get(`/api/brand?${queryParams}`, {
@@ -255,7 +259,7 @@ const AddUserForm = ({ handelClose }: { handelClose: () => void }) => {
               { value: "en", label: "English" },
             ]}
           />
-          <MultipleSelect<Role>
+          <MultipleSelect<UserRole>
             fieldForm="roles"
             label={t("role")}
             placeholder={""}

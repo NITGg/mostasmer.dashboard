@@ -14,12 +14,13 @@ import UserTypeAndPoints from "./UserTypeAndPoints";
 import UserDetailsForm from "./UserDetailsForm";
 import { LoadingIcon } from "@/components/icons";
 import { useRouter } from "next/navigation";
-import { Role, updateUser, User } from "@/redux/reducers/usersReducer";
+import { updateUser, User } from "@/redux/reducers/usersReducer";
 import { useAppDispatch } from "@/hooks/redux";
 import MultipleSelect from "../../MultipleSelect";
 import { Brand } from "../BrandSelect";
 import { fetchBrands, fetchRoles } from "../AddUserForm";
 import { UserType } from "@/redux/reducers/badgesReducer";
+import { UserRole } from "@/redux/reducers/userRolesReducer";
 
 type Wallet = {
   id: number;
@@ -148,8 +149,8 @@ const UserDetails = ({
   };
 
   return (
-    <div className="p-container">
-      <div className="space-y-10 bg-white p-3 md:p-5 rounded-lg">
+    <div>
+      <div className="space-y-10 bg-white p-3 md:p-5 rounded-3xl">
         <form
           onSubmit={onSubmit}
           className="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-7"
@@ -173,7 +174,7 @@ const UserDetails = ({
               <h2 className="text-lg font-bold">{user?.roles[0].name}</h2>
             )}
             <div onClick={handleFieldClick}>
-              <MultipleSelect<Role>
+              <MultipleSelect<UserRole>
                 fieldForm="roles"
                 label={t("role")}
                 placeholder={""}
